@@ -1,3 +1,11 @@
+/Makefile~
+/log.txt
+/log.txt~
+/parser.out
+/parsetab.py
+/reader.py~
+/test_lexer.py
+/test_lexer.py~
 *.py[cod]
 
 # C extensions

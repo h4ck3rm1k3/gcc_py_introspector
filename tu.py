@@ -1,3 +1,6 @@
+'''
+lexer
+'''
 import pprint
 import ply.lex as lex
 import ply.yacc as yacc
@@ -10,7 +13,7 @@ def make_re(s):
         x.strip().rstrip() for x in s.split()
     ]
     newre= r'(%s)' % '|'.join(items)
-    print newre
+    #print newre
     return newre
 
 NTYPES = """
@@ -39,7 +42,6 @@ compound_expr
 cond_expr
 const_cast_expr
 const_decl
-constructor
 continue_stmt
 ctor_initializer
 decl_expr
@@ -137,12 +139,14 @@ t_NTYPE = r'%s\s?' % make_re(NTYPES)
 #print(t_NTYPE)
 
 tokens = (
+    'CONSTRUCTOR',
     'QUAL',
     'FLOAT',
     'PSEUDO_TMPL',
     'STRG',
     "NODE",
     "SPACE",
+    'SPEC',
     "NTYPE",
     "ATTR",
     "BUILTIN_FILE",
@@ -166,13 +170,34 @@ tokens = (
 )
 t_PSEUDO_TMPL='pseudo|tmpl'
 t_DTYPE='long|int'
-t_STRG  = r'strg:\s+.+\s+lngt:\s\d+'
+
+
+# can be used as a node type or a note
+t_CONSTRUCTOR = 'constructor'
+
+def t_STRG(t):
+    r'strg:\s+(.+)\s+lngt:\s\d+'
+    strval = t.lexer.lexmatch.group(2)
+    #print ("CHECK:%s" % strval)
+    t.value = strval
+    return t
+
 #t_STRG2 = r'.+\s+lngt:\s\d+?'
 t_QUAL=  r'c\s|v\s|cv\s|r\s'
-t_LANG=  r'\sC\s'
+t_LANG=  r'C\s'
 t_R=  r'\sr\s'
-t_NODE= r'\@\d+'
-t_SPACE= r'\s+'
+
+def t_NODE(t):
+    r'\@(\d+)'
+    strval = t.lexer.lexmatch.group(4)
+    #print ("NODEID:%s" % strval)
+    t.value = strval
+    return t
+
+def t_SPACE(t):
+    r'\s+'
+    pass
+
 t_ERROR = 'error_mark'
 #try_block|scope_ref|component_ref|indirect_ref|template_type_parm|template_parm_index|[a-z_]+_(cst|decl|expr|type|stmt)|identifier_node|tree_list|tree_vec|statement_list)\s?'
 
@@ -252,9 +277,17 @@ decl
 nmsp
 val
 '''
+def t_ATTR(t):
+    strval = t.lexer.lexmatch.group(7)
+    t.value = strval
+    #print "FIELD chec:%s" % (t.lexer.lexmatch.groups())
+    #    print "FIELD:%s(%s)" % (t.type, strval)
+    return t
 
 FIELD_STR = r'%s\s?' %  make_re(FIELD)
-t_ATTR =  r'(%s|E\d+|OP\d+)\s*:' % FIELD_STR
+t_ATTR.__doc__=r'(%s|E\d+|OP\d+)\s*:' % FIELD_STR
+
+
 t_BUILTIN_FILE = r'\<built\-in\>:0'
 t_HXX_FILE = r'(yes_no_type.hpp|[\-\+A-Za-z_\-0-9]+(\.(h|hdl|txx|tcc|hpp|cxx|hxx))?):\d+'
 t_SIGNED = 'signed|unsigned'
@@ -263,13 +296,20 @@ t_INTCONST = r'(\-)?\d+'
 t_FLOAT=r'[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?'
 t_ARTIFICIAL = 'artificial'
 t_LINK = 'static|undefined|extern'
-t_ACC='pub|priv|prot'
+t_ACC='pub|priv|prot|bitfield'
 t_STRUCT = 'struct|union'
-t_MEMBER = 'constructor|member|destructor|binfo|pure|virt|mutable|bitfield|ptrmem'
-t_NOTE= 'operator|spec|conversion'
+t_MEMBER = 'constructor|member|destructor|binfo|pure|virt|mutable|ptrmem'
+t_NOTE= 'operator|conversion'
+t_SPEC='spec'
 
 #OPERATORS
-t_OP='operator\s+%s\s' % (
+
+def t_OP(t):
+    strval = t.lexer.lexmatch.group(2)
+    t.value = strval
+    #print "OP%s" % strval
+    return t
+t_OP.__doc__='operator\s+(%s)\s' % (
     make_re('''
     add
     and
@@ -317,6 +357,7 @@ t_OP='operator\s+%s\s' % (
     subs
     '''))
 
+
 t_INTERNAL='\*INTERNAL\*'
 #spec: pure spec: virt
 
@@ -324,66 +365,6 @@ def t_error(t):
     raise TypeError("Unknown text '%s'" % (t.value,))
 
 lex.lex()
-import sys
-fd = open(sys.argv[1])
-import re
 
-OPRE=r'op\s([0-9]+)\s*:\s\@'
-ERE=r'\s([0-9]+)\s+:\s\@'
-vals={}
 
-def parse_l(l):
-    global vals
-    if not l:
-        raise Exception()
-    if l[0]!='@':
-        raise Exception()
-    stack = []
-    #array element 0
-    x=re.search(ERE,l)
-    while(x):
-        n= x.group(1)
-        #print ("Find %s in %s" % (n,l))
-        l = re.sub(r'\s%s\s+:\s\@' % n," E%s :@" % n,l)
-        x=re.search(ERE,l)
-    # replace op 0
-    x=re.search(OPRE,l)
-    while(x):
-        n= x.group(1)
-        #print ("Find %s in %s" % (n,l))
-        l = re.sub(r'op\s%s\s*:\s\@' % n," OP%s :@" % n,l)
-        x=re.search(OPRE,l)
-    try :
-        lex.input(l)
-        for tok in iter(lex.token, None):
-            pval = repr(tok.value)
-            ptype= repr(tok.type)
-            if ptype not in vals:
-                vals[ptype]={}
-            vals[ptype][pval]=1
-            stack.append([ptype,pval])
-    except Exception, exp:
-        print ptype, pval
-        print l
-        print exp
-        print stack
-        #raise exp
 
-def main():
-    line =""
-    for l in fd.readlines():
-        l = l.strip()
-        if l[0]=='@' :
-            if (line):
-                parse_l(line)
-            line = l
-        else:
-            line = line +" "+ l
-    fd.close()
-
-try:
-    main()
-except Exception, e:
-    print e
-
-#pprint.pprint(vals)

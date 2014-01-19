@@ -43,15 +43,25 @@ def parse_l(l):
             stack.append(ptype) #,pval
 
     except Exception, exp:
-        print "ERROR %s %s" % (ptype, pval)
+        print "LEX ERROR %s %s" % (ptype, pval)
         print l
         print exp
         print stack
         #raise exp
-    #print "Stack %s" % stack
+
     #print "Line %s" % l
-    x = parser.parse(l) 
-    print ("Results %s" % x)
+
+    try:
+        x = parser.parse(l) 
+        if not x:
+            print "Line:%s" % l
+            print "Stack:%s" % stack
+        else:
+            #print ("Results %s" % x)
+            pass
+
+    except:
+        print "Line:%s" % l
 
 def main():
     fd = open(sys.argv[1])
