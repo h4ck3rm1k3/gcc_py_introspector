@@ -4,6 +4,40 @@ lexer
 import pprint
 import ply.lex as lex
 import ply.yacc as yacc
+from ply.lex import TOKEN
+
+tokens = (
+    'ATTR',
+    'SPEC_ATTR',
+    'SPEC_VALU',
+    'CONSTRUCTOR',
+    'QUAL',
+    'FLOAT',
+    'PSEUDO_TMPL',
+    'STRG',
+    "NODE",
+    "SPACE",
+    'SPEC',
+    "NTYPE",
+    "BUILTIN_FILE",
+    'SCOPE',
+    "INTCONST",
+    'HXX_FILE',
+    'ARTIFICIAL',
+    'LANG',
+    'ERROR',
+    'SIGNED',
+    'LINK',
+    'STRUCT',
+    'ACC',
+    'DTYPE',
+    'MEMBER',
+    'INTERNAL',
+    'STRG2',
+    'OP',
+    'NOTE',
+    'R'
+)
 
 def make_re(s):
     '''
@@ -138,36 +172,7 @@ while_stmt
 t_NTYPE = r'%s\s?' % make_re(NTYPES)
 #print(t_NTYPE)
 
-tokens = (
-    'CONSTRUCTOR',
-    'QUAL',
-    'FLOAT',
-    'PSEUDO_TMPL',
-    'STRG',
-    "NODE",
-    "SPACE",
-    'SPEC',
-    "NTYPE",
-    "ATTR",
-    "BUILTIN_FILE",
-    'SCOPE',
-    "INTCONST",
-    'HXX_FILE',
-    'ARTIFICIAL',
-    'LANG',
-    'ERROR',
-    'SIGNED',
-    'LINK',
-    'STRUCT',
-    'ACC',
-    'DTYPE',
-    'MEMBER',
-    'INTERNAL',
-    'STRG2',
-    'OP',
-    'NOTE',
-    'R'
-)
+
 t_PSEUDO_TMPL='pseudo|tmpl'
 t_DTYPE='long|int'
 
@@ -201,8 +206,15 @@ def t_SPACE(t):
 t_ERROR = 'error_mark'
 #try_block|scope_ref|component_ref|indirect_ref|template_type_parm|template_parm_index|[a-z_]+_(cst|decl|expr|type|stmt)|identifier_node|tree_list|tree_vec|statement_list)\s?'
 
-#FIELDS
-FIELD='''
+
+def t_ATTR(t):
+    strval = t.lexer.lexmatch.group(7)
+    t.value = strval
+    #print "FIELD chec:%s" % (t.lexer.lexmatch.groups())
+    #    print "FIELD:%s(%s)" % (t.type, strval)
+#    print (__func__.__doc__)
+    return t
+t_ATTR.__doc__=r'(%s|E\d+|OP\d+)\s*:' % r'%s\s?' %  make_re('''
 cnst
 csts
 clnp
@@ -259,7 +271,6 @@ scpe
 sign
 size
 spcs
-spec
 srcp
 sts
 tag
@@ -276,17 +287,16 @@ ctor
 decl
 nmsp
 val
-'''
-def t_ATTR(t):
-    strval = t.lexer.lexmatch.group(7)
+''')
+
+#print "CHECK:%s" %  t_ATTR.__doc__
+
+def t_SPEC_ATTR(t):
+    strval = t.lexer.lexmatch.group(10)
     t.value = strval
-    #print "FIELD chec:%s" % (t.lexer.lexmatch.groups())
-    #    print "FIELD:%s(%s)" % (t.type, strval)
+    #print "SPEC_ATTR:%s(%s)" % (t.type, strval)
     return t
-
-FIELD_STR = r'%s\s?' %  make_re(FIELD)
-t_ATTR.__doc__=r'(%s|E\d+|OP\d+)\s*:' % FIELD_STR
-
+t_SPEC_ATTR.__doc__=r'%s\s*:' % make_re('spec')
 
 t_BUILTIN_FILE = r'\<built\-in\>:0'
 t_HXX_FILE = r'(yes_no_type.hpp|[\-\+A-Za-z_\-0-9]+(\.(h|hdl|txx|tcc|hpp|cxx|hxx))?):\d+'
@@ -296,11 +306,12 @@ t_INTCONST = r'(\-)?\d+'
 t_FLOAT=r'[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?'
 t_ARTIFICIAL = 'artificial'
 t_LINK = 'static|undefined|extern'
-t_ACC='pub|priv|prot|bitfield'
+t_ACC='pub|priv|prot'
 t_STRUCT = 'struct|union'
-t_MEMBER = 'constructor|member|destructor|binfo|pure|virt|mutable|ptrmem'
+t_MEMBER = 'member|destructor|binfo|ptrmem'
 t_NOTE= 'operator|conversion'
-t_SPEC='spec'
+t_SPEC='spec\s'
+t_SPEC_VALU='mutable|bitfield|pure|virt'
 
 #OPERATORS
 

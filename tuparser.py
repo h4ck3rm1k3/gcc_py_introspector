@@ -26,6 +26,13 @@ def p_attrs(p):
     #print "CHECK list %s" % p[3]
     p[0] = "%s:%s,%s" % (p[1],p[2],p[3])
 
+def p_attrs_spec2(p):
+    'attrs :  SPEC_ATTR SPEC_VALU SPEC_VALU attrs'
+    #print "CHECK2 ATTR %s" % p[1]
+    #print "CHECK val %s" % p[2]
+    #print "CHECK list %s" % p[3]
+    p[0] = "%s:%s,%s" % (p[1],p[2],p[3])
+
 def p_attrs_note(p):
     'attrs :  NOTE'
     p[0]="NOTE(%s)" % p
@@ -79,8 +86,12 @@ def p_attrval_op(p):
     p[0]="OP(%s)" % p
 
 
-def p_attrval_PSEUDO_TMPL(p):
+def p_attrval_PSEUDO_TMPL2(p):
     'attrval :  PSEUDO_TMPL PSEUDO_TMPL'
+    p[0]="PSEUDO_TMPL(%s)" % p
+
+def p_attrval_PSEUDO_TMPL(p):
+    'attrval :  PSEUDO_TMPL'
     p[0]="PSEUDO_TMPL(%s)" % p
 
 def p_attrval_access(p):
@@ -114,6 +125,11 @@ def p_attrval_node(p):
 #    print "CHECK5 NODEREF %s" % p[1]
     p[0]="NodeRef(%s)" % p[1]
 
+def p_attrval_node_SPEC(p):
+    'attrval : NODE SPEC'
+#    print "CHECK5 NODEREF %s" % p[1]
+    p[0]="NodeRef(%s)" % p[1]
+
 
 def p_attrval_FILE(p):
     'attrval : BUILTIN_FILE'
@@ -123,9 +139,9 @@ def p_attrval_HXXFILE(p):
     'attrval : HXX_FILE'
     p[0]= "FILE(%s)" % p[1]
 
-def p_attrval_float2(p): # used in algn
-    'attrval : FLOAT SPEC'
-    p[0]="FLOAT(%s)" % p
+# def p_attrval_float2(p): # used in algn
+#     'attrval : FLOAT'
+#     p[0]="FLOAT(%s)" % p
 
 def p_attrval_float(p):
     'attrval : FLOAT'
@@ -136,11 +152,16 @@ def p_attrval_LANG(p):
     p[0]="lang(%s)" % p
 
 
-# Error rule for syntax errors
-def p_error(p):
-    print "Syntax error in input! %s" % p
+
 
 # Build the parser
 parser = yacc.yacc()
 
 #   result = parser.parse(s)
+
+# Error rule for syntax errors
+def p_error(p):
+    print "Check Syntax error in input! %s" % p
+    #print "Line Number: %s" % p.lineno(2)
+    #print "Line Pos: %s" % p.lexpos(2)
+    print ("Parser %s" % parser)

@@ -1,5 +1,6 @@
 import sys
 import re
+import traceback
 from tu import lex
 from tuparser import parser
 OPRE=r'op\s([0-9]+)\s*:\s\@'
@@ -49,19 +50,22 @@ def parse_l(l):
         print stack
         #raise exp
 
-    #print "Line %s" % l
+    print "Line %s" % l
 
     try:
-        x = parser.parse(l) 
+        x = parser.parse(l, debug=1) 
         if not x:
             print "Line:%s" % l
             print "Stack:%s" % stack
+            print "parser %s" % parser
         else:
-            #print ("Results %s" % x)
-            pass
+            print ("Results %s" % x)
+    except Exception, exp:
+        traceback.print_exc()
+        print exp
+        print "EXP Line:%s" % l
+        print "EXP Stack:%s" % stack
 
-    except:
-        print "Line:%s" % l
 
 def main():
     fd = open(sys.argv[1])
