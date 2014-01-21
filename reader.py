@@ -66,6 +66,9 @@ def parse_l(l,debug):
         else:
             if (debug):
                 print ("Results %s" % x)
+            else:
+                print ("Results %s" % x)
+                
     except Exception, exp:
         traceback.print_exc()
         print exp
