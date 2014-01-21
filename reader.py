@@ -1,60 +1,64 @@
+'''
+reader module
+'''
+
 import sys
 import re
 import traceback
 from tu import lex
 from tuparser import parser
-OPRE=r'op\s([0-9]+)\s*:\s\@'
-ERE=r'\s([0-9]+)\s+:\s\@'
-vals={}
+OPRE = r'op\s([0-9]+)\s*:\s\@'
+ERE = r'\s([0-9]+)\s+:\s\@'
+vals = {}
 
-def parse_l(l,debug):
+def parse_l(l, debug):
     '''
     preprocessing of the line
     '''
-    global vals
+
     pval = None
-    ptype= None
+    ptype = None
     if not l:
         raise Exception()
-    if l[0]!='@':
+    if l[0] != '@':
         raise Exception()
     stack = []
-    #array element 0
-    x=re.search(ERE,l)
-    while(x):
-        n= x.group(1)
-        #print ("Find %s in %s" % (n,l))
-        l = re.sub(r'\s%s\s+:\s\@' % n," E%s :@" % n,l)
-        x=re.search(ERE,l)
+    # array element 0
+    x = re.search(ERE, l)
+    while x:
+        n = x.group(1)
+        # print ("Find %s in %s" % (n,l))
+        l = re.sub(r'\s%s\s+:\s\@' % n, " E%s :@" % n, l)
+        x = re.search(ERE, l)
     # replace op 0
-    x=re.search(OPRE,l)
-    while(x):
-        n= x.group(1)
-        #print ("Find %s in %s" % (n,l))
-        l = re.sub(r'op\s%s\s*:\s\@' % n," OP%s :@" % n,l)
-        x=re.search(OPRE,l)
-    try :
+    x = re.search(OPRE, l)
+    while x:
+        n = x.group(1)
+        # print ("Find %s in %s" % (n,l))
+        l = re.sub(r'op\s%s\s*:\s\@' % n, " OP%s :@" % n, l)
+        x = re.search(OPRE, l)
+    try:
         lex.input(l)
         for tok in iter(lex.token, None):
             pval = repr(tok.value)
-            ptype= repr(tok.type)
+            ptype = repr(tok.type)
             if ptype not in vals:
-                vals[ptype]={}
-            vals[ptype][pval]=1
-            stack.append(ptype) #,pval
+                vals[ptype] = {}
+            vals[ptype][pval] = 1
+            stack.append(ptype)  # ,pval
 
-    except Exception, exp:
+    except Exception as exp:
         print "LEX ERROR %s %s" % (ptype, pval)
         print l
         print exp
         print stack
-        #raise exp
+        # raise exp
 
-    if (debug):
+    if debug:
         print "Line %s" % l
 
     try:
-        x = parser.parse(l, debug=debug) 
+        x = parser.parse(l, debug=debug)
         if not x:
             print "Line:%s" % l
             print "Stack:%s" % stack
@@ -64,12 +68,12 @@ def parse_l(l,debug):
                 x = parser.parse(l, debug=True)
 
         else:
-            if (debug):
-                print ("Results %s" % x)
+            if debug:
+                print("Results %s" % x)
             else:
-                print ("Results %s" % x)
-                
-    except Exception, exp:
+                print("Results %s" % x)
+
+    except Exception as exp:
         traceback.print_exc()
         print exp
         print "EXP Line:%s" % l
@@ -83,20 +87,21 @@ def main():
     else:
         debug = False
 
-    line =""
+    line = ""
     for l in fd.readlines():
         l = l.strip()
-        if l[0]=='@' :
-            if (line):
-                parse_l(line,debug)
+        if l[0] == '@':
+            if line:
+                parse_l(line, debug)
             line = l
         else:
-            line = line +" "+ l
+            line = line + " " + l
     fd.close()
 
 try:
     main()
-except Exception, e:
+except Exception as e:
     print "error %s" % e
 
+#import pprint
 #pprint.pprint(vals)

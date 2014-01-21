@@ -15,3 +15,19 @@ tu1 :
 
 tu :
 	python reader.py tests/test.tu 
+
+FILES=tu.py tuparser.py tuast.py reader.py
+
+auto2:
+	~/.local/bin/autopep8 -v -a -a -a -a  -i $(FILES)
+
+auto :
+	~/.local/bin/pep8ify -v -w $(FILES)
+
+fixlines:
+	~/.local/bin/autopep8 -v --select=E501 --max-line-length=78 -i -a -a -a -a $(FILES)
+
+lint :
+	~/.local/bin/pyflakes $(FILES)
+	~/.local/bin/pylint --rcfile=.pylintrc  $(FILES)
+

@@ -1,201 +1,292 @@
 '''
-reader 
+reader
 '''
 
 import ply.yacc as yacc
-import copy
-# Get the token map from the lexer.  This is required.
+  # Get the token map from the lexer.  This is required.
+
 from tu import tokens
-from tu import *
+print(tokens)
 
-def p_node(p):
+import tuast  # import Link
+
+
+def p_node(psr_val):
     'node : NODE NTYPE attrs'
-    #print "CHECK1 NODE %s" % p[1]
-    #print "CHECK1 TYPE %s" % p[2]
-    #print "CHECK1 ATTRS %s" % p[3]
-    p[0] = "%s(id: %s, %s )" % (p[2],p[1],p[3])
+    # print "CHECK1 NODE %s" % psr_val[1]
+    # print "CHECK1 TYPE %s" % psr_val[2]
+    print "CHECK1 ATTRS %s" % psr_val[3]
+    # psr_val[0] = "%s(id: %s, %s )" % (psr_val[2],psr_val[1],psr_val[3])
+    psr_val[0] = tuast.Node(psr_val[2], psr_val[1], psr_val[3])
 
-def p_node_constructor(p):
+
+def p_node_constructor(psr_val):
+    #            1             2
     'node : NODE CONSTRUCTOR attrs'
-    p[0] = "%s(id: %s, %s )" % (p[2],p[1],p[3])
+    print "CHECK LIST1 %s" % psr_val[3]
+    # psr_val[0] = "%s(id: %s, %s )" % (psr_val[2],psr_val[1],psr_val[3])
+    psr_val[0] = tuast.NodeConstructor(psr_val[2], psr_val[1], psr_val[3])
 
-def p_attrs(p):
+
+def p_attrs(psr_val):
+    #           1     2     3
     'attrs :  ATTR attrval attrs'
-    #print "CHECK2 ATTR %s" % p[1]
-    #print "CHECK attrval %s" % p[2]
-    #print "CHECK list %s" % p[3]
-    p[0] = "%s:%s,%s" % (p[1],p[2],p[3])
+    # print "CHECK2 ATTR %s" % psr_val[1]
+    # print "CHECK attrval %s" % psr_val[2]
+    
+    print "CHECK LIST2 %s" % psr_val[3]
 
-def p_attrs_spec2(p):
-    'attrs :  SPEC_ATTR SPEC_VALU SPEC_VALU attrs'
-    #print "CHECK2 ATTR %s" % p[1]
-    #print "CHECK val %s" % p[2]
-    #print "CHECK list %s" % p[3]
-    p[0] = "%s:%s,%s" % (p[1],p[2],p[3])
+    #psr_val[0] = "%s:%s,%s" % (psr_val[1],psr_val[2],psr_val[3])
+    if psr_val[3] :
+        print "CHECK3 attrval %s" % psr_val[3]
+        result = psr_val[3].append(tuast.Attr(psr_val[1], psr_val[2]))
+    else:
+#        print "CHECK31 attrval %s" % psr_val[3]
+        result = [tuast.Attr(psr_val[1], psr_val[2])]
 
-def p_attrs_spec1(p):
-    'attrs :  SPEC_ATTR SPEC_VALU attrs'
-    #print "CHECK2 ATTR %s" % p[1]
-    #print "CHECK val %s" % p[2]
-    #print "CHECK list %s" % p[3]
-    p[0] = "%s:%s,%s" % (p[1],p[2],p[3])
+    print "check result %s" % result
+    psr_val[0] = result
+    
 
-def p_attrs_note(p):
-    'attrs :  NOTE'
-    p[0]="NOTE(%s)" % p
 
-def p_attrval_note(p):
-    'attrval :  NOTE'
-    p[0]="NOTE(%s)" % p
 
-def p_attrs_done(p):
+def p_attrs_done(psr_val):
     'attrs : '
-    #print "final attrs %s" % p
-#    print (stack)
+    # print "final attrs %s" % p
+    #print (stack)
+    psr_val[0] = [] # empty list
 
-    p[0]="ATTR"
+def p_attrs_spec2(psr_val):
+    #            1          2        3        4
+    'attrs :  SPEC_ATTR SPEC_VALU SPEC_VALU attrs'
+    # this manages a list of tiems
+    # print "CHECK2 ATTR %s" % psr_val[1]
+    # print "CHECK val %s" % psr_val[2]
+    print "CHECK list3 %s" % psr_val[4]
+    psr_val[0] = psr_val[4].append(tuast.SpecAttr(psr_val[1], psr_val[2], psr_val[3]))
 
-def p_attrs_STRG(p):
+    # psr_val[0] = "%s:%s,%s" % (
+    #     "test1:%s" % psr_val[1],
+    #     tuast.Spec(psr_val[2]),
+    #     "test3:%s" % psr_val[3]
+    # )
+
+def p_attrs_spec1(psr_val):
+    #           1          2       3
+    'attrs :  SPEC_ATTR SPEC_VALU attrs'
+    print "CHECK5 ATTR %s" % psr_val[1]
+    print "CHECK5 val %s" % psr_val[2]
+    print "CHECK list5 %s" % psr_val[3]
+    #    psr_val[0] = "%s:TEST1:%s,TEST2:%s" % (psr_val[1],psr_val[2],psr_val[3])
+    if psr_val[3]:
+        psr_val[0] = psr_val[3].append(tuast.SpecAttr2(psr_val[1], psr_val[2]))
+    else:
+        psr_val[0] = [tuast.SpecAttr2(psr_val[1], psr_val[2])]
+
+    print "RESULT %s" % psr_val[0]
+
+
+def p_attrs_note(psr_val):
+    'attrs :  NOTE'
+    # psr_val[0]="NOTE(%s)" % p
+    psr_val[0] = tuast.NoteAttr(psr_val[1])
+
+
+
+def p_attrs_strg(psr_val):
     'attrs : STRG'
-#    print "CHECKSTR %s" % p[1]
-    p[0]="STRG(%s)" % p[1]
+    # print "CHECKSTR %s" % psr_val[1]
+    #psr_val[0]="STRG(%s)" % psr_val[1]
+    psr_val[0] = tuast.String(psr_val[1])
 
-def p_attrs_MEMBER(p):
+
+def p_attrs_member(psr_val):
     'attrs : MEMBER'
-    p[0]="MEMBER(%s)" % p[1]
+    # psr_val[0]="MEMBER(%s)" % psr_val[1]
+    psr_val[0] = tuast.MemberAttr(psr_val[1])
 
-def p_attrval_MEMBER(p):
+
+
+def p_attrval_note(psr_val):
+    'attrval :  NOTE'
+    # psr_val[0]="NOTE(%s)" % p
+    psr_val[0] = tuast.Note(psr_val[1])
+
+def p_attrval_member(psr_val):
     'attrval : MEMBER'
-    p[0]="MEMBER(%s)" % p[1]
+    # psr_val[0]="MEMBER(%s)" % psr_val[1]
+    psr_val[0] = tuast.Member(psr_val[1])
 
-def p_attrval_qual(p):
+
+def p_attrval_qual(psr_val):
     'attrval :  QUAL'
-    p[0]="OTHER(%s)" % p[1]
+    # psr_val[0]="OTHER(%s)" % psr_val[1]
+    psr_val[0] = tuast.Qual(psr_val[1])
 
-def p_attrval_artificial(p):
+
+def p_attrval_artificial(psr_val):
     'attrval :  ARTIFICIAL'
-    p[0]="ARTIFICAL(%s)" % p[1]
+    # psr_val[0]="ARTIFICAL(%s)" % psr_val[1]
+    psr_val[0] = tuast.Artificial(psr_val[1])
 
-def p_attrval_signed(p):
+
+def p_attrval_signed(psr_val):
     'attrval :  SIGNED'
-    p[0]="SIGNED(%s)" % p[1]
+    # psr_val[0]="SIGNED(%s)" % psr_val[1]
+    psr_val[0] = tuast.Signed(psr_val[1])
 
-def p_attrval_struct(p):
+
+def p_attrval_struct(psr_val):
     'attrval :  STRUCT'
-    p[0]="STRUCT(%s)" % p[1]
+    # psr_val[0]="STRUCT(%s)" % psr_val[1]
+    psr_val[0] = tuast.Struct(psr_val[1])
 
-def p_attrval_constructor(p):
+
+def p_attrval_constructor(psr_val):
     'attrval :  CONSTRUCTOR'
-    p[0]="CONSTRUCTOR(%s)" % p[1]
+    # psr_val[0]="CONSTRUCTOR(%s)" % psr_val[1]
+    psr_val[0] = tuast.VConstructor(psr_val[1])
 
-def p_attrval_op(p):
+
+def p_attrval_op(psr_val):
     'attrval :  OP'
-    p[0]="OP(%s)" % p[1]
+    # psr_val[0]="OP(%s)" % psr_val[1]
+    psr_val[0] = tuast.Op(psr_val[1])
 
-def p_attrval_PSEUDO_TMPL2(p):
+
+def p_attrval_pseudo_tmpl(psr_val):
     'attrval :  PSEUDO_TMPL PSEUDO_TMPL'
-    p[0]="PSEUDO_TMPL2(%s,%s)" % (p[1],p[2])
+    # psr_val[0]="PSEUDO_TMPL2(%s,%s)" % (psr_val[1],psr_val[2])
+    psr_val[0] = tuast.PseudoTempl(psr_val[1], psr_val[2])
 
-def p_attrval_PSEUDO_TMPL(p):
-    'attrval :  PSEUDO_TMPL'
-    p[0]="PSEUDO_TMPL(%s)" % p[1]
+# def p_attrval_PSEUDO_TMPL(psr_val):
+#     'attrval :  PSEUDO_TMPL'
+# psr_val[0]="PSEUDO_TMPL(%s)" % psr_val[1]
+#     psr_val[0]=tuast.PseudoTempl(psr_val[1])
 
-def p_attrval_access(p):
+def p_attrval_access(psr_val):
     'attrval :  ACC '
-    p[0]="ACC(%s)" % p[1]
+    # psr_val[0]="ACC(%s)" % psr_val[1]
+    psr_val[0] = tuast.AccVal(psr_val[1])
 
-def p_attrval_access_spec(p):
+
+def p_attrval_access_spec(psr_val):
     'attrval :  ACC SPEC_VALU'
-    p[0]="ACC2(%s,%s)" % (p[1],p[2])
+    # psr_val[0]="ACC2(%s,%s)" % (psr_val[1],psr_val[2])
+    psr_val[0] = tuast.AccSpec(psr_val[1], psr_val[2])
 
-def p_attrval_link(p):
+
+def p_attrval_link(psr_val):
     'attrval :  LINK'
-    p[0]="LINK(%s)" % p[1]
+    # "LINK(%s)" %
+    psr_val[0] = tuast.Link(psr_val[1])
 
-def p_attrval_node(p):
+
+def p_attrval_node(psr_val):
     'attrval : NODE'
-    v = "NodeRef(%s)" % p[1]
-    #print "CHECK5 NODEREF %s" % v
-    p[0]=v
+    # v = "NodeRef(%s)" % psr_val[1]
+    # print "CHECK5 NODEREF %s" % v
+    psr_val[0] = tuast.NodeRef(psr_val[1])
 
-def p_attrval_node_SPEC(p):
+
+def p_attrval_node_spec(psr_val):
     'attrval : NODE SPEC'
-#    print "CHECK5 NODEREF %s" % p[1]
-    p[0]="NodeRef(%s)" % p[1]
+    # print "CHECK5 NODEREF %s" % psr_val[1]
+    #psr_val[0]="NodeRef(%s)" % psr_val[1]
+    psr_val[0] = tuast.NodeRefSpec(psr_val[1], psr_val[2])
 
-def p_attrval_FILE(p):
+
+def p_attrval_file(psr_val):
     'attrval : BUILTIN_FILE'
-    p[0]= "FILE(%s)" % p[1]
+    # psr_val[0]= "FILE(%s)" % psr_val[1]
+    psr_val[0] = tuast.FileBuiltin()
 
-def p_attrval_HXXFILE(p):
+
+def p_attrval_hxx_file(psr_val):
     'attrval : HXX_FILE'
-    p[0]= "FILE(%s)" % p[1]
+    # psr_val[0]= "FILE(%s)" % psr_val[1]
+    psr_val[0] = tuast.FilePos(psr_val[1])
 
-def p_attrval_float(p):
+
+def p_attrval_float(psr_val):
     'attrval : FLOAT'
-    p[0]="FLOAT(%s)" % p
+    # psr_val[0]="FLOAT(%s)" % p
+    psr_val[0] = tuast.Float(psr_val[1])
 
-def p_attrval_float_SPEC(p):
+
+def p_attrval_float_spec(psr_val):
     'attrval : FLOAT SPEC'
-    p[0]="FLOAT(%s)" % p
+    # psr_val[0]="FLOAT(%s)" % p
+    psr_val[0] = tuast.FloatSpec(psr_val[1], psr_val[2])
 
-def p_attrval_LANG(p):
+
+def p_attrval_lang(psr_val):
     'attrval : LANG'
-    p[0]="lang(%s)" % p
-
+    # psr_val[0]="lang(%s)" % p
+    psr_val[0] = tuast.Lang(psr_val[1])
 
 # Build the parser
 parser = yacc.yacc()
 
+
 #   result = parser.parse(s)
 
 # Error rule for syntax errors
-def p_error(p):
-    print "Check Syntax error in input! %s" % p
-    #print "Line Number: %s" % p.lineno(2)
-    #print "Line Pos: %s" % p.lexpos(2)
-    print ("Parser %s" % parser)
+def p_error(psr_val):
+    print "Check Syntax error in input! %s" % psr_val
+    # print "Line Number: %s" % psr_val.lineno(2)
+    # print "Line Pos: %s" % psr_val.lexpos(2)
+    print("Parser %s" % parser)
 
 
-
-def debug(p):
-    print "final attrs %s" % dir(p)
-    print ("doc %s" % p.__doc__)
-    #p.__getitem__
-    #p.__getslice__
-    #p.__init__
-    plen = p.__len__()
-    print("len:%s" % plen )
-    #'__module__', '__setitem__', 'error', 
-    print dir(p.lexer)
-    print "pos:%s" % p.lexpos
-    #p4: 'action', 'errok', 'errorfunc', 'goto', 'parse', 'parsedebug', 'parseopt', 'parseopt_notrack', 'productions', 'restart', 'statestack', 'symstack']
-#    print "p4:%s" % dir(p.parser)
-#    print "p4action:%s" % p.parser.action
-    print "p4symstac:%s" % p.parser.symstack
-    print "p4statestack:%s" % p.parser.statestack
-    print "SLICE:%s" % p.slice
-    print "p6:%s" % p.stack
-    print "p2:%s" % p.lineno(plen-1)
-    x = p.lexspan(plen-1)
+def debug(psr_val):
+    print("final attrs %s" % dir(psr_val))
+    print("doc %s" % psr_val.__doc__)
+    # psr_val.__getitem__
+    # psr_val.__getslice__
+    # psr_val.__init__
+    plen = psr_val.__len__()
+    print("len:%s" % plen)
+    # '__module__', '__setitem__', 'error',
+    print(dir(psr_val.lexer))
+    print("pos:%s" % psr_val.lexpos)
+    # p4: 'action', 'errok', 'errorfunc', 'goto', 'parse', 'parsedebug', 'parseopt', 'parseopt_notrack', 'productions', 'restart', 'statestack', 'symstack']
+#    print "p4:%s" % dir(psr_val.parser)
+#    print "p4action:%s" % psr_val.parser.action
+    print "p4symstac:%s" % psr_val.parser.symstack
+    print "p4statestack:%s" % psr_val.parser.statestack
+    print "SLICE:%s" % psr_val.slice
+    print "p6:%s" % psr_val.stack
+    print "p2:%s" % psr_val.lineno(plen - 1)
+    x = psr_val.lexspan(plen - 1)
     print (x)
     print "p1:%s,%s" % x
-    print "p3:%s,%s" % p.linespan(plen-1)
+    print "p3:%s,%s" % psr_val.linespan(plen - 1)
 
-def report_stack(p):
-    print (p.parser.symstack)
-#    print ( p.parser.symstack[0].reverse())
-    #stack = copy.copy(p.parser.symstack)
-    for x in  p.parser.symstack :
+
+def report_stack(psr_val):
+    print (psr_val.parser.symstack)
+  # print ( psr_val.parser.symstack[0].reverse())
+    #stack = copy.copy(psr_val.parser.symstack)
+    for x in psr_val.parser.symstack:
         if x.type == '$end':
             continue
 
         print ("Token %s" % x)
-#        print (dir(x))
+  # print (dir(x))
 
         print ("Value:%s" % x.value)
         print ("Type:%s" % x.type)
         if 'lexpos' in dir(x):
             print ("Lex %s" % x.lexpos)
             print ("Line %s" % x.lineno)
-        #print (type(x))
+        # print (type(x))
+
+
+#WARNING: Token 'R' defined, but not used
+#WARNING: Token 'ERROR' defined, but not used
+#WARNING: Token 'INTCONST' defined, but not used
+#WARNING: Token 'SCOPE' defined, but not used
+#WARNING: Token 'STRG2' defined, but not used
+#WARNING: Token 'DTYPE' defined, but not used
+#WARNING: Token 'INTERNAL' defined, but not used

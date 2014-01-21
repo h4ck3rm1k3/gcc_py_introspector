@@ -1,10 +1,10 @@
 '''
 lexer
 '''
-import pprint
+  # import pprint
 import ply.lex as lex
-import ply.yacc as yacc
-from ply.lex import TOKEN
+  # import ply.yacc as yacc
+#from ply.lex import TOKEN
 
 tokens = (
     'ATTR',
@@ -39,15 +39,16 @@ tokens = (
     'R'
 )
 
-def make_re(s):
+
+def make_re(tstr):
     '''
     create a regex like a|b|c
     '''
     items = [
-        x.strip().rstrip() for x in s.split()
+        x.strip().rstrip() for x in tstr.split()
     ]
-    newre= r'(%s)' % '|'.join(items)
-    #print newre
+    newre = r'(%s)' % '|'.join(items)
+    # print newre
     return newre
 
 NTYPES = """
@@ -170,51 +171,54 @@ while_stmt
 """
 
 t_NTYPE = r'%s\s?' % make_re(NTYPES)
-#print(t_NTYPE)
+  # print(t_NTYPE)
 
-
-t_PSEUDO_TMPL='pseudo|tmpl'
-t_DTYPE='long|int'
-
+t_PSEUDO_TMPL = 'pseudo|tmpl'
+t_DTYPE = 'long|int'
 
 # can be used as a node type or a note
 t_CONSTRUCTOR = 'constructor'
 
-def t_STRG(t):
+
+def t_STRG(tok):
     r'strg:\s+(.+)\s+lngt:\s\d+'
-    strval = t.lexer.lexmatch.group(2)
-    #print ("CHECK:%s" % strval)
-    t.value = strval
-    return t
+    strval = tok.lexer.lexmatch.group(2)
+    # print ("CHECK:%s" % strval)
+    tok.value = strval
+    return tok
 
 #t_STRG2 = r'.+\s+lngt:\s\d+?'
-t_QUAL=  r'c\s|v\s|cv\s|r\s'
-t_LANG=  r'C\s'
-t_R=  r'\sr\s'
+t_QUAL = r'c\s|v\s|cv\s|r\s'
+t_LANG = r'C\s'
+t_R = r'\sr\s'
 
-def t_NODE(t):
+
+def t_NODE(tok):
     r'\@(\d+)'
-    strval = t.lexer.lexmatch.group(4)
-    #print ("NODEID:%s" % strval)
-    t.value = strval
-    return t
+    strval = tok.lexer.lexmatch.group(4)
+    # print ("NODEID:%s" % strval)
+    tok.value = strval
+    return tok
 
-def t_SPACE(t):
+
+def t_SPACE(tok):
     r'\s+'
     pass
 
 t_ERROR = 'error_mark'
-#try_block|scope_ref|component_ref|indirect_ref|template_type_parm|template_parm_index|[a-z_]+_(cst|decl|expr|type|stmt)|identifier_node|tree_list|tree_vec|statement_list)\s?'
 
 
-def t_ATTR(t):
-    strval = t.lexer.lexmatch.group(7)
-    t.value = strval
-    #print "FIELD chec:%s" % (t.lexer.lexmatch.groups())
+def t_ATTR(tok):
+    '''
+    attribute name
+    '''
+    strval = tok.lexer.lexmatch.group(7)
+    tok.value = strval
+    # print "FIELD chec:%s" % (t.lexer.lexmatch.groups())
     #    print "FIELD:%s(%s)" % (t.type, strval)
 #    print (__func__.__doc__)
-    return t
-t_ATTR.__doc__=r'(%s|E\d+|OP\d+)\s*:' % r'%s\s?' %  make_re('''
+    return tok
+t_ATTR.__doc__ = r'(%s|E\d+|OP\d+)\s*:' % r'%s\s?' % make_re('''
 cnst
 csts
 clnp
@@ -289,38 +293,47 @@ nmsp
 val
 ''')
 
-#print "CHECK:%s" %  t_ATTR.__doc__
+# print "CHECK:%s" %  t_ATTR.__doc__
 
-def t_SPEC_ATTR(t):
-    strval = t.lexer.lexmatch.group(10)
-    t.value = strval
-    #print "SPEC_ATTR:%s(%s)" % (t.type, strval)
-    return t
-t_SPEC_ATTR.__doc__=r'%s\s*:' % make_re('spec')
+def t_SPEC_ATTR(tok):
+    '''
+    spec attr
+    '''
+    strval = tok.lexer.lexmatch.group(10)
+    tok.value = strval
+    # print "SPEC_ATTR:%s(%s)" % (t.type, strval)
+    return tok
+
+t_SPEC_ATTR.__doc__ = r'%s\s*:' % make_re('spec')
 
 t_BUILTIN_FILE = r'\<built\-in\>:0'
-t_HXX_FILE = r'(yes_no_type.hpp|[\-\+A-Za-z_\-0-9]+(\.(h|hdl|txx|tcc|hpp|cxx|hxx))?):\d+'
+t_HXX_FILE = r'(yes_no_type.hpp|' + \
+             r'[\-\+A-Za-z_\-0-9]+(\.(h|hdl|txx|tcc|hpp|cxx|hxx))?):\d+'
 t_SIGNED = 'signed|unsigned'
 t_SCOPE = r'\:\:'
 t_INTCONST = r'(\-)?\d+'
-t_FLOAT=r'[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?'
-t_ARTIFICIAL = 'artificial'
-t_LINK = 'static|undefined|extern'
-t_ACC='pub|priv|prot'
-t_STRUCT = 'struct|union'
-t_MEMBER = 'member|destructor|binfo|ptrmem'
-t_NOTE= 'operator|conversion'
-t_SPEC='spec\s'
-t_SPEC_VALU='mutable|bitfield|pure|virt'
+t_FLOAT = r'[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?'
+t_ARTIFICIAL = r'artificial'
+t_LINK = r'static|undefined|extern'
+t_ACC = r'pub|priv|prot'
+t_STRUCT = r'struct|union'
+t_MEMBER = r'member|destructor|binfo|ptrmem'
+t_NOTE = r'operator|conversion'
+t_SPEC = r'spec\s'
+t_SPEC_VALU = r'mutable|bitfield|pure|virt'
 
-#OPERATORS
+# OPERATORS
 
-def t_OP(t):
-    strval = t.lexer.lexmatch.group(2)
-    t.value = strval
-    #print "OP%s" % strval
-    return t
-t_OP.__doc__='operator\s+(%s)\s' % (
+def t_OP(tok):
+    '''
+    OP token
+    '''
+    strval = tok.lexer.lexmatch.group(2)
+    tok.value = strval
+    # print "OP%s" % strval
+    return tok
+
+t_OP.__doc__ = r'operator\s+(%s)\s' % (
     make_re('''
     add
     and
@@ -368,14 +381,11 @@ t_OP.__doc__='operator\s+(%s)\s' % (
     subs
     '''))
 
+t_INTERNAL = r'\*INTERNAL\*'
 
-t_INTERNAL='\*INTERNAL\*'
-#spec: pure spec: virt
+  # spec: pure spec: virt
 
 def t_error(t):
-    raise TypeError("Unknown text '%s'" % (t.value,))
+    raise TypeError("Unknown text '%s'" % (t.value, ))
 
 lex.lex()
-
-
-
