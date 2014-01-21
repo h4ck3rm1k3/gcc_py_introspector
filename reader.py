@@ -7,7 +7,7 @@ OPRE=r'op\s([0-9]+)\s*:\s\@'
 ERE=r'\s([0-9]+)\s+:\s\@'
 vals={}
 
-def parse_l(l):
+def parse_l(l,debug):
     '''
     preprocessing of the line
     '''
@@ -50,16 +50,22 @@ def parse_l(l):
         print stack
         #raise exp
 
-    print "Line %s" % l
+    if (debug):
+        print "Line %s" % l
 
     try:
-        x = parser.parse(l, debug=1) 
+        x = parser.parse(l, debug=debug) 
         if not x:
             print "Line:%s" % l
             print "Stack:%s" % stack
             print "parser %s" % parser
+
+            if not debug:
+                x = parser.parse(l, debug=True)
+
         else:
-            print ("Results %s" % x)
+            if (debug):
+                print ("Results %s" % x)
     except Exception, exp:
         traceback.print_exc()
         print exp
@@ -69,12 +75,17 @@ def parse_l(l):
 
 def main():
     fd = open(sys.argv[1])
+    if len(sys.argv) > 2:
+        debug = True
+    else:
+        debug = False
+
     line =""
     for l in fd.readlines():
         l = l.strip()
         if l[0]=='@' :
             if (line):
-                parse_l(line)
+                parse_l(line,debug)
             line = l
         else:
             line = line +" "+ l

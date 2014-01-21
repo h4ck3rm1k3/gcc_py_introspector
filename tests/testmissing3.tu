@@ -1,0 +1,2 @@
+@1713   function_decl    name: @1857    type: @1858    scpe: @1662 srcp: IInterface.hxx:38       chain: @1859 note: member   accs: pub      spec: pure spec: virt     args: @1860    body: undefined link: extern
+@1713   function_decl    name: @1857    type: @1858    scpe: @1662 srcp: IInterface.hxx:38       chain: @1859 note: member   accs: pub      spec: pure spec: virt     args: @1860    body: undefined link: extern

@@ -33,6 +33,13 @@ def p_attrs_spec2(p):
     #print "CHECK list %s" % p[3]
     p[0] = "%s:%s,%s" % (p[1],p[2],p[3])
 
+def p_attrs_spec1(p):
+    'attrs :  SPEC_ATTR SPEC_VALU attrs'
+    #print "CHECK2 ATTR %s" % p[1]
+    #print "CHECK val %s" % p[2]
+    #print "CHECK list %s" % p[3]
+    p[0] = "%s:%s,%s" % (p[1],p[2],p[3])
+
 def p_attrs_note(p):
     'attrs :  NOTE'
     p[0]="NOTE(%s)" % p
@@ -98,6 +105,10 @@ def p_attrval_access(p):
     'attrval :  ACC '
     p[0]="ACC(%s)" % p
 
+def p_attrval_access_spec(p):
+    'attrval :  ACC SPEC_VALU'
+    p[0]="ACC(%s)" % p
+
 def p_attrval_access2(p):
     'attrval :  ACC ACC'
     p[0]="ACC(%s)" % p
@@ -145,6 +156,10 @@ def p_attrval_HXXFILE(p):
 
 def p_attrval_float(p):
     'attrval : FLOAT'
+    p[0]="FLOAT(%s)" % p
+
+def p_attrval_float_SPEC(p):
+    'attrval : FLOAT SPEC'
     p[0]="FLOAT(%s)" % p
 
 def p_attrval_LANG(p):
