@@ -38,8 +38,14 @@ def p_attrs(psr_val):
 
     #psr_val[0] = "%s:%s,%s" % (psr_val[1],psr_val[2],psr_val[3])
     if psr_val[3] :
-        print "CHECK3 attrval %s" % psr_val[3]
-        result = psr_val[3].append(tuast.Attr(psr_val[1], psr_val[2]))
+        current_list = psr_val[3]
+        print "CHECK3 attrval %s" % current_list
+        node = tuast.Attr(psr_val[1], psr_val[2])
+        print "CHECK3 nose %s" % node
+        current_list.append(node)
+        print "CHECK3 list %s" % current_list
+        result = current_list
+        print "CHECK3 res %s" % result
     else:
 #        print "CHECK31 attrval %s" % psr_val[3]
         result = [tuast.Attr(psr_val[1], psr_val[2])]
@@ -79,7 +85,9 @@ def p_attrs_spec1(psr_val):
     print "CHECK list5 %s" % psr_val[3]
     #    psr_val[0] = "%s:TEST1:%s,TEST2:%s" % (psr_val[1],psr_val[2],psr_val[3])
     if psr_val[3]:
-        psr_val[0] = psr_val[3].append(tuast.SpecAttr2(psr_val[1], psr_val[2]))
+        node_list = psr_val[3]
+        node_list.append(tuast.SpecAttr2(psr_val[1], psr_val[2]))
+        psr_val[0] = node_list
     else:
         psr_val[0] = [tuast.SpecAttr2(psr_val[1], psr_val[2])]
 
