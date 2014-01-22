@@ -11,6 +11,10 @@ class NodeBase:
         val=""
         if (self.vals):
             if isinstance(self.vals, list):
+                #print "CHECK VALS %s" % str(self.vals)
+                #print "CHECK VALS2 %s" % str( [attr.type for attr in self.vals]                )
+                #print "CHECK VALS3 %s" % str( [str(attr) for attr in self.vals]               )
+                
                 val="|".join([attr.type for attr in self.vals])
             else:
                 val=self.vals.type
@@ -21,6 +25,25 @@ class Node(NodeBase):
     def __init__(self, ntype, nid, vals):
         NodeBase.__init__(self,nid, ntype, vals)
 
+class ExprBase(Node):
+    pass
+
+class AddrExpr(ExprBase):
+    def __init__(self, ntype, nid, op_0):
+        ExprBase.__init__(self,ntype, nid,[])
+        self.op_0=op_0
+
+    def __str__(self):
+        return "T|%s|OP_0|%s"  % (self.node_type,self.op_0)
+
+class AddrExprTyped(AddrExpr):
+    def __init__(self, ntype, nid, op_0, expr_type):
+        AddrExpr.__init__(self,ntype, nid, op_0)
+        self.expr_type=expr_type
+
+    def __str__(self):
+        return "T|%s|OP_0|%s|TYPE|%s"  % (self.node_type,self.op_0, self.expr_type)
+    
 
 class NodeConstructor(NodeBase):
 

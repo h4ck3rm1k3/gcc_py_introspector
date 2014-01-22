@@ -1,3 +1,9 @@
+op0:
+	python reader.py tests/op_0.tu
+
+tuaddr :
+	python reader.py tests/addr_expr.tu
+
 tu7 :
 	python reader.py tests/report1.tu
 

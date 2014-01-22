@@ -4,10 +4,13 @@ lexer
   # import pprint
 import ply.lex as lex
   # import ply.yacc as yacc
-#from ply.lex import TOKEN
+from ply.lex import TOKEN
 
 tokens = (
     'ATTR',
+    'OP0_ATTR',
+    'TYPE_ATTR',
+    'ADDR_EXPR',
     'SPEC_ATTR',
     'SPEC_VALU',
     'CONSTRUCTOR',
@@ -51,8 +54,9 @@ def make_re(tstr):
     # print newre
     return newre
 
+       
+
 NTYPES = """
-addr_expr
 aggr_init_expr
 alignof_expr
 array_ref
@@ -207,16 +211,31 @@ def t_SPACE(tok):
 
 t_ERROR = 'error_mark'
 
+@TOKEN(r'addr_expr\s?')
+def t_ADDR_EXPR(tok) :
+    tok.value = str(tok.lexer.lexmatch.group(6))
+    #print("NTYPE ADDR EXPR %s " % tok.value)
+    return tok
+
+def t_OP0_ATTR(tok):
+    r'(OP0)\s*:'
+    tok.value = str(tok.lexer.lexmatch.group(8))
+    #print("OP0_ATTR %s " % tok.value)
+    return tok
+
+def t_TYPE_ATTR(tok):
+    r'type\s*:'
+    tok.value = 'type'
+    #print("TYPE_ATTR:%s" % tok.value)
+    return tok
 
 def t_ATTR(tok):
     '''
     attribute name
     '''
-    strval = tok.lexer.lexmatch.group(7)
-    tok.value = strval
-    # print "FIELD chec:%s" % (t.lexer.lexmatch.groups())
-    #    print "FIELD:%s(%s)" % (t.type, strval)
-#    print (__func__.__doc__)
+    #print("ATTR:%s" % str(tok.lexer.lexmatch.groups()))
+    tok.value = tok.lexer.lexmatch.group(11)
+    #print("ATTR:%s" % tok.value)
     return tok
 t_ATTR.__doc__ = r'(%s|E\d+|OP\d+)\s*:' % r'%s\s?' % make_re('''
 cnst
@@ -279,7 +298,6 @@ srcp
 sts
 tag
 then
-type
 unql
 used
 valu
