@@ -5,14 +5,16 @@ class NodeBase:
     def __init__(self, nid, ntype, vals):
         self.node_id = nid
         self.node_type = ntype
-        
-        if (vals):
-            for attr in vals:
-                print ("ATTR %s" % attr)
+        self.vals=vals
 
     def __str__(self):
-
-        return "str %s %s"  % (self.node_type, self.node_id)
+        val=""
+        if (self.vals):
+            if isinstance(self.vals, list):
+                val="|".join([attr.type for attr in self.vals])
+            else:
+                val=self.vals.type
+        return "T|%s|%s"  % (self.node_type,val)
 
 class Node(NodeBase):
 
@@ -134,6 +136,10 @@ class String(Value):
     def __init__(self, v):
         Value.__init__(self, v)
 
+    @property
+    def type(self):
+        return "STR"
+
 
 class Note(Value):
 
@@ -149,7 +155,10 @@ class FloatSpec(Float):
 
 
 class AttrBase(object):
-    pass
+
+    @property
+    def type(self):
+        return "TODO(%s)" % self.__class__.__name__
 
 
 class MemberAttr(AttrBase):
@@ -170,6 +179,10 @@ class Attr(AttrBase):
         self.name = name
         self.value = value
 
+    @property
+    def type(self):
+        return self.name
+
 
 class EmptyAttr(AttrBase):
     pass
@@ -181,6 +194,10 @@ class SpecAttr2(AttrBase):
         self.name = 'spec'
         self.value = value
         self.value2 = value2
+
+    @property
+    def type(self):
+        return self.name
 
 
 class SpecAttr(AttrBase):

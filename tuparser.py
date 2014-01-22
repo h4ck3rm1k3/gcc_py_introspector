@@ -6,7 +6,7 @@ import ply.yacc as yacc
   # Get the token map from the lexer.  This is required.
 
 from tu import tokens
-print(tokens)
+#print(tokens)
 
 import tuast  # import Link
 
@@ -15,7 +15,7 @@ def p_node(psr_val):
     'node : NODE NTYPE attrs'
     # print "CHECK1 NODE %s" % psr_val[1]
     # print "CHECK1 TYPE %s" % psr_val[2]
-    print "CHECK1 ATTRS %s" % psr_val[3]
+    #print "CHECK1 ATTRS %s" % psr_val[3]
     # psr_val[0] = "%s(id: %s, %s )" % (psr_val[2],psr_val[1],psr_val[3])
     psr_val[0] = tuast.Node(psr_val[2], psr_val[1], psr_val[3])
 
@@ -23,7 +23,7 @@ def p_node(psr_val):
 def p_node_constructor(psr_val):
     #            1             2
     'node : NODE CONSTRUCTOR attrs'
-    print "CHECK LIST1 %s" % psr_val[3]
+    #print "CHECK LIST1 %s" % psr_val[3]
     # psr_val[0] = "%s(id: %s, %s )" % (psr_val[2],psr_val[1],psr_val[3])
     psr_val[0] = tuast.NodeConstructor(psr_val[2], psr_val[1], psr_val[3])
 
@@ -33,29 +33,25 @@ def p_attrs(psr_val):
     'attrs :  ATTR attrval attrs'
     # print "CHECK2 ATTR %s" % psr_val[1]
     # print "CHECK attrval %s" % psr_val[2]
-    
-    print "CHECK LIST2 %s" % psr_val[3]
+    #print "CHECK LIST2 %s" % psr_val[3]
 
     #psr_val[0] = "%s:%s,%s" % (psr_val[1],psr_val[2],psr_val[3])
     if psr_val[3] :
         current_list = psr_val[3]
-        print "CHECK3 attrval %s" % current_list
+        #print "CHECK3 attrval %s" % current_list
         node = tuast.Attr(psr_val[1], psr_val[2])
-        print "CHECK3 nose %s" % node
+        #print "CHECK3 nose %s" % node
         current_list.append(node)
-        print "CHECK3 list %s" % current_list
+        #print "CHECK3 list %s" % current_list
         result = current_list
-        print "CHECK3 res %s" % result
+        #print "CHECK3 res %s" % result
     else:
 #        print "CHECK31 attrval %s" % psr_val[3]
         result = [tuast.Attr(psr_val[1], psr_val[2])]
 
-    print "check result %s" % result
+    #print "check result %s" % result
     psr_val[0] = result
     
-
-
-
 def p_attrs_done(psr_val):
     'attrs : '
     # print "final attrs %s" % p
@@ -68,7 +64,7 @@ def p_attrs_spec2(psr_val):
     # this manages a list of tiems
     # print "CHECK2 ATTR %s" % psr_val[1]
     # print "CHECK val %s" % psr_val[2]
-    print "CHECK list3 %s" % psr_val[4]
+    # print "CHECK list3 %s" % psr_val[4]
     psr_val[0] = psr_val[4].append(tuast.SpecAttr(psr_val[1], psr_val[2], psr_val[3]))
 
     # psr_val[0] = "%s:%s,%s" % (
@@ -80,9 +76,9 @@ def p_attrs_spec2(psr_val):
 def p_attrs_spec1(psr_val):
     #           1          2       3
     'attrs :  SPEC_ATTR SPEC_VALU attrs'
-    print "CHECK5 ATTR %s" % psr_val[1]
-    print "CHECK5 val %s" % psr_val[2]
-    print "CHECK list5 %s" % psr_val[3]
+    # print "CHECK5 ATTR %s" % psr_val[1]
+    # print "CHECK5 val %s" % psr_val[2]
+    # print "CHECK list5 %s" % psr_val[3]
     #    psr_val[0] = "%s:TEST1:%s,TEST2:%s" % (psr_val[1],psr_val[2],psr_val[3])
     if psr_val[3]:
         node_list = psr_val[3]
@@ -90,15 +86,12 @@ def p_attrs_spec1(psr_val):
         psr_val[0] = node_list
     else:
         psr_val[0] = [tuast.SpecAttr2(psr_val[1], psr_val[2])]
-
-    print "RESULT %s" % psr_val[0]
-
+    #print "RESULT %s" % psr_val[0]
 
 def p_attrs_note(psr_val):
     'attrs :  NOTE'
     # psr_val[0]="NOTE(%s)" % p
     psr_val[0] = tuast.NoteAttr(psr_val[1])
-
 
 
 def p_attrs_strg(psr_val):
@@ -114,11 +107,11 @@ def p_attrs_member(psr_val):
     psr_val[0] = tuast.MemberAttr(psr_val[1])
 
 
-
 def p_attrval_note(psr_val):
     'attrval :  NOTE'
     # psr_val[0]="NOTE(%s)" % p
     psr_val[0] = tuast.Note(psr_val[1])
+
 
 def p_attrval_member(psr_val):
     'attrval : MEMBER'
@@ -279,10 +272,8 @@ def report_stack(psr_val):
     for x in psr_val.parser.symstack:
         if x.type == '$end':
             continue
-
         print ("Token %s" % x)
   # print (dir(x))
-
         print ("Value:%s" % x.value)
         print ("Type:%s" % x.type)
         if 'lexpos' in dir(x):
