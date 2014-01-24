@@ -7,6 +7,9 @@ tuaddr :
 tu7 :
 	python reader.py tests/report1.tu
 
+tu8 :
+	python reader.py tests/testmissing4.tu
+
 tu6 :
 	python reader.py tests/testmissing4.tu
 

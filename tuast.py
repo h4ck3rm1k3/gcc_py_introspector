@@ -15,6 +15,7 @@ class NodeBase:
                 #print "CHECK VALS2 %s" % str( [attr.type for attr in self.vals]                )
                 #print "CHECK VALS3 %s" % str( [str(attr) for attr in self.vals]               )
                 
+                #val="|".join(sorted([attr.type for attr in self.vals]))
                 val="|".join([attr.type for attr in self.vals])
             else:
                 val=self.vals.type
@@ -211,7 +212,13 @@ class EmptyAttr(AttrBase):
     pass
 
 
-class SpecAttr2(AttrBase):
+class SpecAttrBase(AttrBase):
+
+    @property
+    def type(self):
+        return "spec"
+
+class SpecAttr2(SpecAttrBase):
 
     def __init__(self, value, value2):
         self.name = 'spec'
@@ -223,7 +230,7 @@ class SpecAttr2(AttrBase):
         return self.name
 
 
-class SpecAttr(AttrBase):
+class SpecAttr(SpecAttrBase):
 
     def __init__(self, name, value, value2):
         self.name = name

@@ -11,6 +11,8 @@ OPRE = r'op\s([0-9]+)\s*:\s\@'
 ERE = r'\s([0-9]+)\s+:\s\@'
 vals = {}
 
+seen = {} 
+
 def parse_l(l, debug):
     '''
     preprocessing of the line
@@ -32,6 +34,7 @@ def parse_l(l, debug):
         x = re.search(ERE, l)
     # replace op 0
     x = re.search(OPRE, l)
+
     while x:
         n = x.group(1)
         # print ("Find %s in %s" % (n,l))
@@ -69,9 +72,13 @@ def parse_l(l, debug):
 
         else:
             if debug:
-                print("Results %s" % x)
+                print("Results1 %s" % x)
             else:
-                print("Results %s" % x)
+                s = str(x)
+                if not s in seen:
+                    seen[s]=1
+                    print("Results2 '%s'" % s)
+
 
     except Exception as exp:
         traceback.print_exc()
@@ -105,3 +112,4 @@ except Exception as e:
 
 #import pprint
 #pprint.pprint(vals)
+print "\n".join(sorted(seen.keys()))
