@@ -35,7 +35,8 @@ class AddrExpr(ExprBase):
         self.op_0=op_0
 
     def __str__(self):
-        return "T|%s|OP_0|%s"  % (self.node_type,self.op_0)
+#        return "T|%s|OP_0|%s"  % (self.node_type,self.op_0)
+        return "T|%s|OP_0" % self.node_type
 
 class AddrExprTyped(AddrExpr):
     def __init__(self, ntype, nid, op_0, expr_type):
@@ -43,7 +44,8 @@ class AddrExprTyped(AddrExpr):
         self.expr_type=expr_type
 
     def __str__(self):
-        return "T|%s|OP_0|%s|TYPE|%s"  % (self.node_type,self.op_0, self.expr_type)
+        #return "T|%s|OP_0|%s|TYPE|%s"  % (self.node_type,self.op_0, self.expr_type)
+        return "T|%s|OP_0|TYPE"  % (self.node_type)
     
 
 class NodeConstructor(NodeBase):

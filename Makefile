@@ -25,6 +25,9 @@ tu3 :
 tu1 :
 	python reader.py tests/testqual.tu 
 
+dummy :
+	python reader.py tests/test4.tu 
+
 tu :
 	python reader.py tests/test.tu 
 

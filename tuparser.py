@@ -7,14 +7,622 @@ import ply.yacc as yacc # Get the token map from the lexer.  This is required.
 from tu import tokens
 import tuast  # import Link
 
-
+# the first rule is important
 def p_node(psr_val):
-    'node : NODE NTYPE attrs'
+    'node : NODE ntype attrs'
     # print "CHECK1 NODE %s" % psr_val[1]
     # print "CHECK1 TYPE %s" % psr_val[2]
     #print "CHECK1 ATTRS %s" % psr_val[3]
     # psr_val[0] = "%s(id: %s, %s )" % (psr_val[2],psr_val[1],psr_val[3])
     psr_val[0] = tuast.Node(psr_val[2], psr_val[1], psr_val[3])
+
+
+def ntype_base(psr_val):
+    #print "debug 1 %s" % psr_val
+    ntype = psr_val[1]
+    #print "debug 2 %s" % ntype
+    #print "debug 3 %s" % psr_val.stack
+    #psr_val[0] = ntype
+    return ntype
+
+def std_attrs(psr_val):
+    type_str= psr_val.stack[2].value
+    #print "type_str1 %s " % type_str
+    assert(type_str)
+    node = tuast.Attr(type_str, psr_val[2])
+    result = append_list(psr_val[3], node)
+    return result
+
+
+import sys
+def create_rules():
+    for token in ('NTYPE_AGGR_INIT_EXPR',
+                  'NTYPE_ALIGNOF_EXPR',
+                  'NTYPE_ARRAY_REF',
+                  'NTYPE_ARRAY_TYPE',
+                  'NTYPE_ARROW_EXPR',
+                  'NTYPE_BASELINK',
+                  'NTYPE_BIND_EXPR',
+                  'NTYPE_BINFO',
+                  'NTYPE_BIT_AND_EXPR',
+                  'NTYPE_BIT_IOR_EXPR',
+                  'NTYPE_BIT_NOT_EXPR',
+                  'NTYPE_BIT_XOR_EXPR',
+                  'NTYPE_BOOLEAN_TYPE',
+                  'NTYPE_BOUND_TEMPLATE_TEMPLATE_PARM',
+                  'NTYPE_BREAK_STMT',
+                  'NTYPE_CALL_EXPR',
+                  'NTYPE_CASE_LABEL_EXPR',
+                  'NTYPE_CAST_EXPR',
+                  'NTYPE_COMPLEX_TYPE',
+                  'NTYPE_COMPONENT_REF',
+                  'NTYPE_COMPOUND_EXPR',
+                  'NTYPE_COND_EXPR',
+                  'NTYPE_CONST_CAST_EXPR',
+                  'NTYPE_CONST_DECL',
+                  'NTYPE_CONTINUE_STMT',
+                  'NTYPE_CTOR_INITIALIZER',
+                  'NTYPE_DECL_EXPR',
+                  'NTYPE_DECLTYPE_TYPE',
+                  'NTYPE_DL_EXPR',
+                  'NTYPE_DO_STMT',
+                  'NTYPE_DOTSTAR_EXPR',
+                  'NTYPE_DYNAMIC_CAST_EXPR',
+                  'NTYPE_ENUMERAL_TYPE',
+                  'NTYPE_EQ_EXPR',
+                  'NTYPE_ERROR_MARK',
+                  'NTYPE_EXPR_STMT',
+                  'NTYPE_FIELD_DECL',
+                  'NTYPE_FOR_STMT',
+                  'NTYPE_FUNCTION_DECL',
+                  'NTYPE_FUNCTION_TYPE',
+                  'NTYPE_GE_EXPR',
+                  'NTYPE_GT_EXPR',
+                  'NTYPE_HANDLER',
+                  'NTYPE_IDENTIFIER_NODE',
+                  'NTYPE_IF_STMT',
+                  'NTYPE_INDIRECT_REF',
+                  'NTYPE_INTEGER_CST',
+                  'NTYPE_INTEGER_TYPE',
+                  'NTYPE_LABEL_DECL',
+                  'NTYPE_LANG_TYPE',
+                  'NTYPE_LE_EXPR',
+                  'NTYPE_LSHIFT_EXPR',
+                  'NTYPE_LT_EXPR',
+                  'NTYPE_MEMBER_REF',
+                  'NTYPE_METHOD_TYPE',
+                  'NTYPE_MINUS_EXPR',
+                  'NTYPE_MODOP_EXPR',
+                  'NTYPE_MULT_EXPR',
+                  'NTYPE_NAMESPACE_DECL',
+                  'NTYPE_NE_EXPR',
+                  'NTYPE_NEGATE_EXPR',
+                  'NTYPE_NOP_EXPR',
+                  'NTYPE_NW_EXPR',
+                  'NTYPE_OFFSET_TYPE',
+                  'NTYPE_OVERLOAD',
+                  'NTYPE_PARM_DECL',
+                  'NTYPE_PLUS_EXPR',
+                  'NTYPE_POINTER_TYPE',
+                  'NTYPE_POSTDECREMENT_EXPR',
+                  'NTYPE_POSTINCREMENT_EXPR',
+                  'NTYPE_PREDECREMENT_EXPR',
+                  'NTYPE_PREINCREMENT_EXPR',
+                  'NTYPE_PTRMEM_CST',
+                  'NTYPE_REAL_CST',
+                  'NTYPE_REAL_TYPE',
+                  'NTYPE_RECORD_TYPE',
+                  'NTYPE_REFERENCE_TYPE',
+                  'NTYPE_REINTERPRET_CAST_EXPR',
+                  'NTYPE_RETURN_EXPR',
+                  'NTYPE_RSHIFT_EXPR',
+                  'NTYPE_SCOPE_REF',
+                  'NTYPE_SIZEOF_EXPR',
+                  'NTYPE_STATEMENT_LIST',
+                  'NTYPE_STATIC_CAST_EXPR',
+                  'NTYPE_STRING_CST',
+                  'NTYPE_SWITCH_STMT',
+                  'NTYPE_TAG_DEFN',
+                  'NTYPE_TARGET_EXPR',
+                  'NTYPE_TEMPLATE_DECL',
+                  'NTYPE_TEMPLATE_ID_EXPR',
+                  'NTYPE_TEMPLATE_PARM_INDEX',
+                  'NTYPE_TEMPLATE_TEMPLATE_PARM',
+                  'NTYPE_TEMPLATE_TYPE_PARM',
+                  'NTYPE_THROW_EXPR',
+                  'NTYPE_TRAIT_EXPR',
+                  'NTYPE_TRANSLATION_UNIT_DECL',
+                  'NTYPE_TREE_LIST',
+                  'NTYPE_TREE_VEC',
+                  'NTYPE_TRUNC_DIV_EXPR',
+                  'NTYPE_TRUNC_MOD_EXPR',
+                  'NTYPE_TRUTH_ANDIF_EXPR',
+                  'NTYPE_TRUTH_NOT_EXPR',
+                  'NTYPE_TRUTH_ORIF_EXPR',
+                  'NTYPE_TRY_BLOCK',
+                  'NTYPE_TYPE_DECL',
+                  'NTYPE_TYPEID_EXPR',
+                  'NTYPE_TYPENAME_TYPE',
+                  'NTYPE_TYPEOF_TYPE',
+                  'NTYPE_UNION_TYPE',
+                  'NTYPE_USING_DECL',
+                  'NTYPE_USING_STMT',
+                  'NTYPE_VAR_DECL',
+                  'NTYPE_VECTOR_TYPE',
+                  'NTYPE_VOID_TYPE',
+                  'NTYPE_WHILE_STMT'):
+        func = lambda x: x
+        rule = "ntype : %s" % token
+        func.__doc__ = rule
+        current_module = sys.modules[__name__]
+        name = "p_%s" % (token.lower())
+        print "name %s(psr_val):\n    \'%s\'\n    return ntype_base(psr_val)\n" %(name, rule)
+        setattr(current_module, name , func)
+
+#create_rules()
+
+
+def p_ntype_aggr_init_expr(psr_val):
+    'ntype : NTYPE_AGGR_INIT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_alignof_expr(psr_val):
+    'ntype : NTYPE_ALIGNOF_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_array_ref(psr_val):
+    'ntype : NTYPE_ARRAY_REF'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_array_type(psr_val):
+    'ntype : NTYPE_ARRAY_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_arrow_expr(psr_val):
+    'ntype : NTYPE_ARROW_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_baselink(psr_val):
+    'ntype : NTYPE_BASELINK'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_bind_expr(psr_val):
+    'ntype : NTYPE_BIND_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_binfo(psr_val):
+    'ntype : NTYPE_BINFO'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_bit_and_expr(psr_val):
+    'ntype : NTYPE_BIT_AND_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_bit_ior_expr(psr_val):
+    'ntype : NTYPE_BIT_IOR_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_bit_not_expr(psr_val):
+    'ntype : NTYPE_BIT_NOT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_bit_xor_expr(psr_val):
+    'ntype : NTYPE_BIT_XOR_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_boolean_type(psr_val):
+    'ntype : NTYPE_BOOLEAN_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_bound_template_template_parm(psr_val):
+    'ntype : NTYPE_BOUND_TEMPLATE_TEMPLATE_PARM'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_break_stmt(psr_val):
+    'ntype : NTYPE_BREAK_STMT'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_call_expr(psr_val):
+    'ntype : NTYPE_CALL_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_case_label_expr(psr_val):
+    'ntype : NTYPE_CASE_LABEL_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_cast_expr(psr_val):
+    'ntype : NTYPE_CAST_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_complex_type(psr_val):
+    'ntype : NTYPE_COMPLEX_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_component_ref(psr_val):
+    'ntype : NTYPE_COMPONENT_REF'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_compound_expr(psr_val):
+    'ntype : NTYPE_COMPOUND_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_cond_expr(psr_val):
+    'ntype : NTYPE_COND_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_const_cast_expr(psr_val):
+    'ntype : NTYPE_CONST_CAST_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_const_decl(psr_val):
+    'ntype : NTYPE_CONST_DECL'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_continue_stmt(psr_val):
+    'ntype : NTYPE_CONTINUE_STMT'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_ctor_initializer(psr_val):
+    'ntype : NTYPE_CTOR_INITIALIZER'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_decl_expr(psr_val):
+    'ntype : NTYPE_DECL_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_decltype_type(psr_val):
+    'ntype : NTYPE_DECLTYPE_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_dl_expr(psr_val):
+    'ntype : NTYPE_DL_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_do_stmt(psr_val):
+    'ntype : NTYPE_DO_STMT'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_dotstar_expr(psr_val):
+    'ntype : NTYPE_DOTSTAR_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_dynamic_cast_expr(psr_val):
+    'ntype : NTYPE_DYNAMIC_CAST_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_enumeral_type(psr_val):
+    'ntype : NTYPE_ENUMERAL_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_eq_expr(psr_val):
+    'ntype : NTYPE_EQ_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_error_mark(psr_val):
+    'ntype : NTYPE_ERROR_MARK'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_expr_stmt(psr_val):
+    'ntype : NTYPE_EXPR_STMT'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_field_decl(psr_val):
+    'ntype : NTYPE_FIELD_DECL'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_for_stmt(psr_val):
+    'ntype : NTYPE_FOR_STMT'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_function_decl(psr_val):
+    'ntype : NTYPE_FUNCTION_DECL'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_function_type(psr_val):
+    'ntype : NTYPE_FUNCTION_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_ge_expr(psr_val):
+    'ntype : NTYPE_GE_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_gt_expr(psr_val):
+    'ntype : NTYPE_GT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_handler(psr_val):
+    'ntype : NTYPE_HANDLER'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_identifier_node(psr_val):
+    'ntype : NTYPE_IDENTIFIER_NODE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_if_stmt(psr_val):
+    'ntype : NTYPE_IF_STMT'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_indirect_ref(psr_val):
+    'ntype : NTYPE_INDIRECT_REF'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_integer_cst(psr_val):
+    'ntype : NTYPE_INTEGER_CST'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_integer_type(psr_val):
+    'ntype : NTYPE_INTEGER_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_label_decl(psr_val):
+    'ntype : NTYPE_LABEL_DECL'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_lang_type(psr_val):
+    'ntype : NTYPE_LANG_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_le_expr(psr_val):
+    'ntype : NTYPE_LE_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_lshift_expr(psr_val):
+    'ntype : NTYPE_LSHIFT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_lt_expr(psr_val):
+    'ntype : NTYPE_LT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_member_ref(psr_val):
+    'ntype : NTYPE_MEMBER_REF'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_method_type(psr_val):
+    'ntype : NTYPE_METHOD_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_minus_expr(psr_val):
+    'ntype : NTYPE_MINUS_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_modop_expr(psr_val):
+    'ntype : NTYPE_MODOP_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_mult_expr(psr_val):
+    'ntype : NTYPE_MULT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_namespace_decl(psr_val):
+    'ntype : NTYPE_NAMESPACE_DECL'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_ne_expr(psr_val):
+    'ntype : NTYPE_NE_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_negate_expr(psr_val):
+    'ntype : NTYPE_NEGATE_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_nop_expr(psr_val):
+    'ntype : NTYPE_NOP_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_nw_expr(psr_val):
+    'ntype : NTYPE_NW_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_offset_type(psr_val):
+    'ntype : NTYPE_OFFSET_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_overload(psr_val):
+    'ntype : NTYPE_OVERLOAD'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_parm_decl(psr_val):
+    'ntype : NTYPE_PARM_DECL'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_plus_expr(psr_val):
+    'ntype : NTYPE_PLUS_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_pointer_type(psr_val):
+    'ntype : NTYPE_POINTER_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_postdecrement_expr(psr_val):
+    'ntype : NTYPE_POSTDECREMENT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_postincrement_expr(psr_val):
+    'ntype : NTYPE_POSTINCREMENT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_predecrement_expr(psr_val):
+    'ntype : NTYPE_PREDECREMENT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_preincrement_expr(psr_val):
+    'ntype : NTYPE_PREINCREMENT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_ptrmem_cst(psr_val):
+    'ntype : NTYPE_PTRMEM_CST'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_real_cst(psr_val):
+    'ntype : NTYPE_REAL_CST'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_real_type(psr_val):
+    'ntype : NTYPE_REAL_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_record_type(psr_val):
+    'ntype : NTYPE_RECORD_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_reference_type(psr_val):
+    'ntype : NTYPE_REFERENCE_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_reinterpret_cast_expr(psr_val):
+    'ntype : NTYPE_REINTERPRET_CAST_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_return_expr(psr_val):
+    'ntype : NTYPE_RETURN_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_rshift_expr(psr_val):
+    'ntype : NTYPE_RSHIFT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_scope_ref(psr_val):
+    'ntype : NTYPE_SCOPE_REF'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_sizeof_expr(psr_val):
+    'ntype : NTYPE_SIZEOF_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_statement_list(psr_val):
+    'ntype : NTYPE_STATEMENT_LIST'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_static_cast_expr(psr_val):
+    'ntype : NTYPE_STATIC_CAST_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_string_cst(psr_val):
+    'ntype : NTYPE_STRING_CST'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_switch_stmt(psr_val):
+    'ntype : NTYPE_SWITCH_STMT'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_tag_defn(psr_val):
+    'ntype : NTYPE_TAG_DEFN'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_target_expr(psr_val):
+    'ntype : NTYPE_TARGET_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_template_decl(psr_val):
+    'ntype : NTYPE_TEMPLATE_DECL'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_template_id_expr(psr_val):
+    'ntype : NTYPE_TEMPLATE_ID_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_template_parm_index(psr_val):
+    'ntype : NTYPE_TEMPLATE_PARM_INDEX'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_template_template_parm(psr_val):
+    'ntype : NTYPE_TEMPLATE_TEMPLATE_PARM'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_template_type_parm(psr_val):
+    'ntype : NTYPE_TEMPLATE_TYPE_PARM'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_throw_expr(psr_val):
+    'ntype : NTYPE_THROW_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_trait_expr(psr_val):
+    'ntype : NTYPE_TRAIT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_translation_unit_decl(psr_val):
+    'ntype : NTYPE_TRANSLATION_UNIT_DECL'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_tree_list(psr_val):
+    'ntype : NTYPE_TREE_LIST'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_tree_vec(psr_val):
+    'ntype : NTYPE_TREE_VEC'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_trunc_div_expr(psr_val):
+    'ntype : NTYPE_TRUNC_DIV_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_trunc_mod_expr(psr_val):
+    'ntype : NTYPE_TRUNC_MOD_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_truth_andif_expr(psr_val):
+    'ntype : NTYPE_TRUTH_ANDIF_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_truth_not_expr(psr_val):
+    'ntype : NTYPE_TRUTH_NOT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_truth_orif_expr(psr_val):
+    'ntype : NTYPE_TRUTH_ORIF_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_try_block(psr_val):
+    'ntype : NTYPE_TRY_BLOCK'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_type_decl(psr_val):
+    'ntype : NTYPE_TYPE_DECL'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_typeid_expr(psr_val):
+    'ntype : NTYPE_TYPEID_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_typename_type(psr_val):
+    'ntype : NTYPE_TYPENAME_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_typeof_type(psr_val):
+    'ntype : NTYPE_TYPEOF_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_union_type(psr_val):
+    'ntype : NTYPE_UNION_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_using_decl(psr_val):
+    'ntype : NTYPE_USING_DECL'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_using_stmt(psr_val):
+    'ntype : NTYPE_USING_STMT'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_var_decl(psr_val):
+    'ntype : NTYPE_VAR_DECL'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_vector_type(psr_val):
+    'ntype : NTYPE_VECTOR_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_void_type(psr_val):
+    'ntype : NTYPE_VOID_TYPE'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_while_stmt(psr_val):
+    'ntype : NTYPE_WHILE_STMT'
+    psr_val[0] = ntype_base(psr_val)
+
+
 
 
 def p_node_constructor(psr_val):
@@ -42,12 +650,6 @@ def append_list(current_list, node):
         result = node
     return result
 
-def std_attrs(psr_val):
-    type_str=psr_val[1]
-    assert(type_str)
-    node = tuast.Attr(type_str, psr_val[2])
-    result = append_list(psr_val[3], node)
-    return result
 
 def p_attrs_type(psr_val):
     #           1     2     3
@@ -892,6 +1494,12 @@ def p_node_addr_expr_type(psr_val):
 # void_type |algn|unql|name|qual
 # while_stmt |body|cond|line|type
 
+def p_error(psr_val):
+    print "Check Syntax error in input! %s" % psr_val
+    # print "Line Number: %s" % psr_val.lineno(2)
+    # print "Line Pos: %s" % psr_val.lexpos(2)
+    print("Parser %s" % parser)
+
 # Build the parser
 parser = yacc.yacc()
 
@@ -899,11 +1507,6 @@ parser = yacc.yacc()
 #   result = parser.parse(s)
 
 # Error rule for syntax errors
-def p_error(psr_val):
-    print "Check Syntax error in input! %s" % psr_val
-    # print "Line Number: %s" % psr_val.lineno(2)
-    # print "Line Pos: %s" % psr_val.lexpos(2)
-    print("Parser %s" % parser)
 
 
 def debug(psr_val):

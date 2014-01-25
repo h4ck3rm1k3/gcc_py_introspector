@@ -6,7 +6,7 @@ import ply.lex as lex
   # import ply.yacc as yacc
 from ply.lex import TOKEN
 
-tokens = (
+tokens = [
     'ATTR',
     'OP0_ATTR',
     'TYPE_ATTR',
@@ -19,28 +19,28 @@ tokens = (
     'PSEUDO_TMPL',
     'STRG',
     "NODE",
-    "SPACE",
+#    "SPACE",
     'SPEC',
-    "NTYPE",
+
     "BUILTIN_FILE",
-    'SCOPE',
-    "INTCONST",
+#    'SCOPE',
+#    "INTCONST",
     'HXX_FILE',
     'ARTIFICIAL',
     'LANG',
-    'ERROR',
+#    'ERROR',
     'SIGNED',
     'LINK',
     'STRUCT',
     'ACC',
-    'DTYPE',
+#    'DTYPE',
     'MEMBER',
-    'INTERNAL',
-    'STRG2',
+#    'INTERNAL',
+#    'STRG2',
     'OP',
     'NOTE',
-    'R'
-)
+#    'R'
+]
 
 
 def make_re(tstr):
@@ -173,12 +173,32 @@ vector_type
 void_type
 while_stmt
 """
+import sys
+def make_token(prefix,tstr):
+    '''
+    create tokens
+    '''
+    for x in tstr.split():
+        item = x.strip().rstrip()
+        func = lambda x: x
+        regex = r'(%s)' % item
+        func.__doc__ = regex
+        current_module = sys.modules[__name__]
+        base_name = "%s_%s" % (prefix, item.upper())
+        name = "t_%s" % (base_name)
+        #append the global token
+        tokens.append(base_name)
+        #print "name %s regex %s"  %( name, regex )
+        #print "%s"  %( base_name )
+        setattr(current_module, name , func)
+    
+make_token("NTYPE",NTYPES)
 
-t_NTYPE = r'%s\s?' % make_re(NTYPES)
-  # print(t_NTYPE)
+#t_NTYPE = r'%s\s?' % make_re(NTYPES)
+# print(t_NTYPE)
 
 t_PSEUDO_TMPL = 'pseudo|tmpl'
-t_DTYPE = 'long|int'
+#t_DTYPE = 'long|int'
 
 # can be used as a node type or a note
 t_CONSTRUCTOR = 'constructor'
@@ -194,7 +214,7 @@ def t_STRG(tok):
 #t_STRG2 = r'.+\s+lngt:\s\d+?'
 t_QUAL = r'c\s|v\s|cv\s|r\s'
 t_LANG = r'C\s'
-t_R = r'\sr\s'
+#t_R = r'\sr\s'
 
 
 def t_NODE(tok):
@@ -209,7 +229,7 @@ def t_SPACE(tok):
     r'\s+'
     pass
 
-t_ERROR = 'error_mark'
+#t_ERROR = 'error_mark'
 
 @TOKEN(r'addr_expr\s?')
 def t_ADDR_EXPR(tok) :
@@ -328,8 +348,8 @@ t_BUILTIN_FILE = r'\<built\-in\>:0'
 t_HXX_FILE = r'(yes_no_type.hpp|' + \
              r'[\-\+A-Za-z_\-0-9]+(\.(h|hdl|txx|tcc|hpp|cxx|hxx))?):\d+'
 t_SIGNED = 'signed|unsigned'
-t_SCOPE = r'\:\:'
-t_INTCONST = r'(\-)?\d+'
+#t_SCOPE = r'\:\:'
+#t_INTCONST = r'(\-)?\d+'
 t_FLOAT = r'[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?'
 t_ARTIFICIAL = r'artificial'
 t_LINK = r'static|undefined|extern'
@@ -399,7 +419,7 @@ t_OP.__doc__ = r'operator\s+(%s)\s' % (
     subs
     '''))
 
-t_INTERNAL = r'\*INTERNAL\*'
+#t_INTERNAL = r'\*INTERNAL\*'
 
   # spec: pure spec: virt
 
