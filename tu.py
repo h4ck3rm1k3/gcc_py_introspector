@@ -7,7 +7,8 @@ import ply.lex as lex
 from ply.lex import TOKEN
 
 tokens = [
-    'ATTR',
+    'ATTR_OP',
+    'ATTR_En',
     'OP0_ATTR',
     'TYPE_ATTR',
     'ADDR_EXPR',
@@ -191,6 +192,18 @@ def make_token(prefix,tstr):
         #print "name %s regex %s"  %( name, regex )
         #print "%s"  %( base_name )
         setattr(current_module, name , func)
+
+# create parser rules
+def create_rules(tstr):
+    for token in tstr.split():
+        token = token.upper()
+        func = lambda x: x
+        rule = "ntype : %s" % token
+        func.__doc__ = rule
+        current_module = sys.modules[__name__]
+        name = "p_%s" % (token.lower())
+        print "name %s(psr_val):\n    \'%s\'\n    return ntype_base(psr_val)\n" %(name, rule)
+        setattr(current_module, name , func)
     
 make_token("NTYPE",NTYPES)
 
@@ -212,9 +225,17 @@ def t_STRG(tok):
     return tok
 
 #t_STRG2 = r'.+\s+lngt:\s\d+?'
-t_QUAL = r'c\s|v\s|cv\s|r\s'
+
 t_LANG = r'C\s'
 #t_R = r'\sr\s'
+
+
+def t_QUAL(tok):
+    r'c\s|v\s|cv\s|r\s'
+    strval = tok.value
+    #print ("QUAL:%s" % strval)
+    #tok.value = strval
+    return tok
 
 
 def t_NODE(tok):
@@ -239,7 +260,8 @@ def t_ADDR_EXPR(tok) :
 
 def t_OP0_ATTR(tok):
     r'(OP0)\s*:'
-    tok.value = str(tok.lexer.lexmatch.group(8))
+    #count_non_null(tok)
+    tok.value = str(tok.lexer.lexmatch.group(28))
     #print("OP0_ATTR %s " % tok.value)
     return tok
 
@@ -249,19 +271,75 @@ def t_TYPE_ATTR(tok):
     #print("TYPE_ATTR:%s" % tok.value)
     return tok
 
-def t_ATTR(tok):
-    '''
-    attribute name
-    '''
+
+def t_ATTR_En(tok):
+    '''(%s|E\d+)\s*:'''
     #print("ATTR:%s" % str(tok.lexer.lexmatch.groups()))
-    tok.value = tok.lexer.lexmatch.group(11)
+    #tok.value = tok.lexer.lexmatch.group(11
+    tok.value = tok.value.replace(" :","")
     #print("ATTR:%s" % tok.value)
+    #print("ATTREN:%s" % tok.value)
     return tok
-t_ATTR.__doc__ = r'(%s|E\d+|OP\d+)\s*:' % r'%s\s?' % make_re('''
-cnst
-csts
-clnp
+
+def count_non_null(tok):
+    count = 0 
+    for v in tok.lexer.lexmatch.groups():
+        if v is not None :
+            print "check %s %d"  % (v, count)
+        count = count + 1
+
+def t_ATTR_OP(tok):
+    '''(OP\d+)\s*:'''
+    # count_non_null(tok)
+    tok.value = tok.lexer.lexmatch.group(33)
+    #print("ATTR:%s" % tok.value)
+    #print("OPATTR:%s" % tok.value)
+    return tok
+
+def emit_parser_rule(base_name):
+    # parser
+    rule = "attrtype : %s" % base_name
+    parser_name = "p_%s" % (base_name.lower())
+    print "def %s(psr_val):\n    \'%s\'\n    psr_val[0] = attr_base(psr_val)\n" %(parser_name, rule)
+
+def make_attrs_token(prefix,pattern,val_func, tstr):
+    '''
+    create tokens
+    * prefix for the token name
+    * pattern to create for each token with one %s
+    * val_fun to process the data
+    * tstr for the tokens
+
+    '''
+    for x in tstr.split():
+        item = x.strip().rstrip()
+        regex = pattern % item
+        func = lambda x : val_func(x)
+        func.__doc__ = regex
+        current_module = sys.modules[__name__]
+        base_name = "%s_%s" % (prefix, item.upper())
+        name = "t_%s" % (base_name)
+        tokens.append(base_name)
+        #print "created name %s regex %s"  %( name, regex )
+
+        #emit_parser_rule(base_name)
+
+        #print "%s"  %( base_name )
+        setattr(current_module, name , func)
+
+def attr_val(tok):
+
+    val = None
+    #print("IN ATTR:%s" % tok.value)
+    #print("UNMATCHED ATTR:%s" % tok.value)
+    tok.value = tok.value.replace(":","")
+    tok.value = tok.value.replace(" ","")
+    return tok
+
+
+make_attrs_token("ATTR", "%s\s*:",attr_val, '''
 accs
+addr
 algn
 alis
 args
@@ -274,10 +352,15 @@ bpos
 chain
 chan
 clas
+clnp
 cls
-crnt
+cnst
 cond
+crnt
+csts
+ctor
 dcls
+decl
 domn
 else
 elts
@@ -295,15 +378,17 @@ link
 lngt
 low
 max
+mbr
 min
 mngl
 name
+nmsp
 note
 nst
 orig
+parm
 prec
 prms
-parm
 ptd
 purp
 qual
@@ -320,18 +405,10 @@ tag
 then
 unql
 used
+val
 valu
 vfld
-mbr
-addr
-csts
-ctor
-decl
-nmsp
-val
 ''')
-
-# print "CHECK:%s" %  t_ATTR.__doc__
 
 def t_SPEC_ATTR(tok):
     '''

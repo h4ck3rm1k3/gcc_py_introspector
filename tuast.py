@@ -11,13 +11,16 @@ class NodeBase:
         val=""
         if (self.vals):
             if isinstance(self.vals, list):
+                #print "CHECK node type %s" % str(self.node_type)
+                #print "CHECK node id %s" % str(self.node_id)
                 #print "CHECK VALS %s" % str(self.vals)
                 #print "CHECK VALS2 %s" % str( [attr.type for attr in self.vals]                )
                 #print "CHECK VALS3 %s" % str( [str(attr) for attr in self.vals]               )
                 
                 #val="|".join(sorted([attr.type for attr in self.vals]))
-                val="|".join([attr.type for attr in self.vals])
+                val="|".join([str(attr.type) for attr in self.vals])
             else:
+                #print "CHECK VAL TYPE %s" % str(self.vals.type)
                 val=self.vals.type
         return "T|%s|%s"  % (self.node_type,val)
 

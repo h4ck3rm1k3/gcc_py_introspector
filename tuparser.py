@@ -10,9 +10,10 @@ import tuast  # import Link
 # the first rule is important
 def p_node(psr_val):
     'node : NODE ntype attrs'
-    # print "CHECK1 NODE %s" % psr_val[1]
-    # print "CHECK1 TYPE %s" % psr_val[2]
-    #print "CHECK1 ATTRS %s" % psr_val[3]
+    #print "main NODE %s" % psr_val[1]
+    #print "main TYPE %s" % psr_val[2]
+    #print "main ATTRS %s" % psr_val[3]
+    #print "main stack : %s" % psr_val.stack
     # psr_val[0] = "%s(id: %s, %s )" % (psr_val[2],psr_val[1],psr_val[3])
     psr_val[0] = tuast.Node(psr_val[2], psr_val[1], psr_val[3])
 
@@ -20,144 +21,45 @@ def p_node(psr_val):
 def ntype_base(psr_val):
     #print "debug 1 %s" % psr_val
     ntype = psr_val[1]
-    #print "debug 2 %s" % ntype
+    #print "debug node type %s" % ntype
     #print "debug 3 %s" % psr_val.stack
     #psr_val[0] = ntype
     return ntype
 
+def attr_base(psr_val):
+    attr = psr_val[1]
+    #print "debug attr %s" % attr
+    #print "debug stack %s" % psr_val.stack
+    return attr
+
 def std_attrs(psr_val):
-    type_str= psr_val.stack[2].value
-    #print "type_str1 %s " % type_str
+    type_str= psr_val[1]
+#    print "std_attrs 1 %s " % psr_val[1]
+#    print "std_attrs 2 %s " % psr_val[2]
+#    print "std_attrs 3 %s " % psr_val[3]
+#    print "std_attrs type_str %s " % type_str
+#    print "std attrs stack : %s" % psr_val.stack
+
     assert(type_str)
     node = tuast.Attr(type_str, psr_val[2])
     result = append_list(psr_val[3], node)
     return result
 
+def std_attrs2(psr_val):
 
-import sys
-def create_rules():
-    for token in ('NTYPE_AGGR_INIT_EXPR',
-                  'NTYPE_ALIGNOF_EXPR',
-                  'NTYPE_ARRAY_REF',
-                  'NTYPE_ARRAY_TYPE',
-                  'NTYPE_ARROW_EXPR',
-                  'NTYPE_BASELINK',
-                  'NTYPE_BIND_EXPR',
-                  'NTYPE_BINFO',
-                  'NTYPE_BIT_AND_EXPR',
-                  'NTYPE_BIT_IOR_EXPR',
-                  'NTYPE_BIT_NOT_EXPR',
-                  'NTYPE_BIT_XOR_EXPR',
-                  'NTYPE_BOOLEAN_TYPE',
-                  'NTYPE_BOUND_TEMPLATE_TEMPLATE_PARM',
-                  'NTYPE_BREAK_STMT',
-                  'NTYPE_CALL_EXPR',
-                  'NTYPE_CASE_LABEL_EXPR',
-                  'NTYPE_CAST_EXPR',
-                  'NTYPE_COMPLEX_TYPE',
-                  'NTYPE_COMPONENT_REF',
-                  'NTYPE_COMPOUND_EXPR',
-                  'NTYPE_COND_EXPR',
-                  'NTYPE_CONST_CAST_EXPR',
-                  'NTYPE_CONST_DECL',
-                  'NTYPE_CONTINUE_STMT',
-                  'NTYPE_CTOR_INITIALIZER',
-                  'NTYPE_DECL_EXPR',
-                  'NTYPE_DECLTYPE_TYPE',
-                  'NTYPE_DL_EXPR',
-                  'NTYPE_DO_STMT',
-                  'NTYPE_DOTSTAR_EXPR',
-                  'NTYPE_DYNAMIC_CAST_EXPR',
-                  'NTYPE_ENUMERAL_TYPE',
-                  'NTYPE_EQ_EXPR',
-                  'NTYPE_ERROR_MARK',
-                  'NTYPE_EXPR_STMT',
-                  'NTYPE_FIELD_DECL',
-                  'NTYPE_FOR_STMT',
-                  'NTYPE_FUNCTION_DECL',
-                  'NTYPE_FUNCTION_TYPE',
-                  'NTYPE_GE_EXPR',
-                  'NTYPE_GT_EXPR',
-                  'NTYPE_HANDLER',
-                  'NTYPE_IDENTIFIER_NODE',
-                  'NTYPE_IF_STMT',
-                  'NTYPE_INDIRECT_REF',
-                  'NTYPE_INTEGER_CST',
-                  'NTYPE_INTEGER_TYPE',
-                  'NTYPE_LABEL_DECL',
-                  'NTYPE_LANG_TYPE',
-                  'NTYPE_LE_EXPR',
-                  'NTYPE_LSHIFT_EXPR',
-                  'NTYPE_LT_EXPR',
-                  'NTYPE_MEMBER_REF',
-                  'NTYPE_METHOD_TYPE',
-                  'NTYPE_MINUS_EXPR',
-                  'NTYPE_MODOP_EXPR',
-                  'NTYPE_MULT_EXPR',
-                  'NTYPE_NAMESPACE_DECL',
-                  'NTYPE_NE_EXPR',
-                  'NTYPE_NEGATE_EXPR',
-                  'NTYPE_NOP_EXPR',
-                  'NTYPE_NW_EXPR',
-                  'NTYPE_OFFSET_TYPE',
-                  'NTYPE_OVERLOAD',
-                  'NTYPE_PARM_DECL',
-                  'NTYPE_PLUS_EXPR',
-                  'NTYPE_POINTER_TYPE',
-                  'NTYPE_POSTDECREMENT_EXPR',
-                  'NTYPE_POSTINCREMENT_EXPR',
-                  'NTYPE_PREDECREMENT_EXPR',
-                  'NTYPE_PREINCREMENT_EXPR',
-                  'NTYPE_PTRMEM_CST',
-                  'NTYPE_REAL_CST',
-                  'NTYPE_REAL_TYPE',
-                  'NTYPE_RECORD_TYPE',
-                  'NTYPE_REFERENCE_TYPE',
-                  'NTYPE_REINTERPRET_CAST_EXPR',
-                  'NTYPE_RETURN_EXPR',
-                  'NTYPE_RSHIFT_EXPR',
-                  'NTYPE_SCOPE_REF',
-                  'NTYPE_SIZEOF_EXPR',
-                  'NTYPE_STATEMENT_LIST',
-                  'NTYPE_STATIC_CAST_EXPR',
-                  'NTYPE_STRING_CST',
-                  'NTYPE_SWITCH_STMT',
-                  'NTYPE_TAG_DEFN',
-                  'NTYPE_TARGET_EXPR',
-                  'NTYPE_TEMPLATE_DECL',
-                  'NTYPE_TEMPLATE_ID_EXPR',
-                  'NTYPE_TEMPLATE_PARM_INDEX',
-                  'NTYPE_TEMPLATE_TEMPLATE_PARM',
-                  'NTYPE_TEMPLATE_TYPE_PARM',
-                  'NTYPE_THROW_EXPR',
-                  'NTYPE_TRAIT_EXPR',
-                  'NTYPE_TRANSLATION_UNIT_DECL',
-                  'NTYPE_TREE_LIST',
-                  'NTYPE_TREE_VEC',
-                  'NTYPE_TRUNC_DIV_EXPR',
-                  'NTYPE_TRUNC_MOD_EXPR',
-                  'NTYPE_TRUTH_ANDIF_EXPR',
-                  'NTYPE_TRUTH_NOT_EXPR',
-                  'NTYPE_TRUTH_ORIF_EXPR',
-                  'NTYPE_TRY_BLOCK',
-                  'NTYPE_TYPE_DECL',
-                  'NTYPE_TYPEID_EXPR',
-                  'NTYPE_TYPENAME_TYPE',
-                  'NTYPE_TYPEOF_TYPE',
-                  'NTYPE_UNION_TYPE',
-                  'NTYPE_USING_DECL',
-                  'NTYPE_USING_STMT',
-                  'NTYPE_VAR_DECL',
-                  'NTYPE_VECTOR_TYPE',
-                  'NTYPE_VOID_TYPE',
-                  'NTYPE_WHILE_STMT'):
-        func = lambda x: x
-        rule = "ntype : %s" % token
-        func.__doc__ = rule
-        current_module = sys.modules[__name__]
-        name = "p_%s" % (token.lower())
-        print "name %s(psr_val):\n    \'%s\'\n    return ntype_base(psr_val)\n" %(name, rule)
-        setattr(current_module, name , func)
+    #print "val1: %s " %  psr_val[1]
+    #print "val2: %s " %  psr_val[2]
+    #print "val3: %s " %  psr_val[3]
+
+    type_str= psr_val[1]
+    #print "std attrs 2 type_str %s " % psr_val[1]
+    if not type_str :
+        type_str = "UNKNOWN_TODO"
+        
+    node = tuast.Attr(type_str, psr_val[2])
+    result = append_list(psr_val[3], node)
+    return result
+
 
 #create_rules()
 
@@ -623,7 +525,297 @@ def p_ntype_while_stmt(psr_val):
     psr_val[0] = ntype_base(psr_val)
 
 
+##
+def p_attr_accs(psr_val):
+    'attrtype : ATTR_ACCS'
+    psr_val[0] = attr_base(psr_val)
 
+def p_attr_addr(psr_val):
+    'attrtype : ATTR_ADDR'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_algn(psr_val):
+    'attrtype : ATTR_ALGN'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_alis(psr_val):
+    'attrtype : ATTR_ALIS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_args(psr_val):
+    'attrtype : ATTR_ARGS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_argt(psr_val):
+    'attrtype : ATTR_ARGT'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_base(psr_val):
+    'attrtype : ATTR_BASE'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_bases(psr_val):
+    'attrtype : ATTR_BASES'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_binf(psr_val):
+    'attrtype : ATTR_BINF'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_body(psr_val):
+    'attrtype : ATTR_BODY'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_bpos(psr_val):
+    'attrtype : ATTR_BPOS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_chain(psr_val):
+    'attrtype : ATTR_CHAIN'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_chan(psr_val):
+    'attrtype : ATTR_CHAN'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_clas(psr_val):
+    'attrtype : ATTR_CLAS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_clnp(psr_val):
+    'attrtype : ATTR_CLNP'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_cls(psr_val):
+    'attrtype : ATTR_CLS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_cnst(psr_val):
+    'attrtype : ATTR_CNST'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_cond(psr_val):
+    'attrtype : ATTR_COND'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_crnt(psr_val):
+    'attrtype : ATTR_CRNT'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_csts(psr_val):
+    'attrtype : ATTR_CSTS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_ctor(psr_val):
+    'attrtype : ATTR_CTOR'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_dcls(psr_val):
+    'attrtype : ATTR_DCLS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_decl(psr_val):
+    'attrtype : ATTR_DECL'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_domn(psr_val):
+    'attrtype : ATTR_DOMN'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_else(psr_val):
+    'attrtype : ATTR_ELSE'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_elts(psr_val):
+    'attrtype : ATTR_ELTS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_expr(psr_val):
+    'attrtype : ATTR_EXPR'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_flds(psr_val):
+    'attrtype : ATTR_FLDS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_fn(psr_val):
+    'attrtype : ATTR_FN'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_fncs(psr_val):
+    'attrtype : ATTR_FNCS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_hdlr(psr_val):
+    'attrtype : ATTR_HDLR'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_high(psr_val):
+    'attrtype : ATTR_HIGH'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_init(psr_val):
+    'attrtype : ATTR_INIT'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_inst(psr_val):
+    'attrtype : ATTR_INST'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_lang(psr_val):
+    'attrtype : ATTR_LANG'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_line(psr_val):
+    'attrtype : ATTR_LINE'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_link(psr_val):
+    'attrtype : ATTR_LINK'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_lngt(psr_val):
+    'attrtype : ATTR_LNGT'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_low(psr_val):
+    'attrtype : ATTR_LOW'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_max(psr_val):
+    'attrtype : ATTR_MAX'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_mbr(psr_val):
+    'attrtype : ATTR_MBR'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_min(psr_val):
+    'attrtype : ATTR_MIN'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_mngl(psr_val):
+    'attrtype : ATTR_MNGL'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_name(psr_val):
+    'attrtype : ATTR_NAME'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_nmsp(psr_val):
+    'attrtype : ATTR_NMSP'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_note(psr_val):
+    'attrtype : ATTR_NOTE'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_nst(psr_val):
+    'attrtype : ATTR_NST'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_orig(psr_val):
+    'attrtype : ATTR_ORIG'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_parm(psr_val):
+    'attrtype : ATTR_PARM'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_prec(psr_val):
+    'attrtype : ATTR_PREC'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_prms(psr_val):
+    'attrtype : ATTR_PRMS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_ptd(psr_val):
+    'attrtype : ATTR_PTD'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_purp(psr_val):
+    'attrtype : ATTR_PURP'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_qual(psr_val):
+    'attrtype : ATTR_QUAL'
+    #print ("QUAL:")
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_refd(psr_val):
+    'attrtype : ATTR_REFD'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_retn(psr_val):
+    'attrtype : ATTR_RETN'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_rslt(psr_val):
+    'attrtype : ATTR_RSLT'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_scpe(psr_val):
+    'attrtype : ATTR_SCPE'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_sign(psr_val):
+    'attrtype : ATTR_SIGN'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_size(psr_val):
+    'attrtype : ATTR_SIZE'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_spcs(psr_val):
+    'attrtype : ATTR_SPCS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_srcp(psr_val):
+    'attrtype : ATTR_SRCP'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_sts(psr_val):
+    'attrtype : ATTR_STS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_tag(psr_val):
+    'attrtype : ATTR_TAG'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_then(psr_val):
+    'attrtype : ATTR_THEN'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_unql(psr_val):
+    'attrtype : ATTR_UNQL'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_used(psr_val):
+    'attrtype : ATTR_USED'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_val(psr_val):
+    'attrtype : ATTR_VAL'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_valu(psr_val):
+    'attrtype : ATTR_VALU'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_vfld(psr_val):
+    'attrtype : ATTR_VFLD'
+    psr_val[0] = attr_base(psr_val)
+
+# special case for attribute OP 1 ... OP n
+def p_attr_OP(psr_val):
+    'attrtype : ATTR_OP'
+    psr_val[0] = attr_base(psr_val)
+
+# special case for attribute E 1 ... E n
+def p_attr_En(psr_val):
+    'attrtype : ATTR_En'
+    psr_val[0] = attr_base(psr_val)
 
 def p_node_constructor(psr_val):
     #            1             2
@@ -634,9 +826,9 @@ def p_node_constructor(psr_val):
 
 
 def p_attrs(psr_val):
-    'attrs :  ATTR attrval attrs'
+    'attrs :  attrtype attrval attrs'
     # refactored to std function
-    psr_val[0] = std_attrs(psr_val)
+    psr_val[0] = std_attrs2(psr_val)
 
 
 def append_list(current_list, node):
@@ -715,7 +907,7 @@ def p_attrval_member(psr_val):
 
 def p_attrval_qual(psr_val):
     'attrval :  QUAL'
-    # psr_val[0]="OTHER(%s)" % psr_val[1]
+    #print "QUAL(%s)" % psr_val[1]
     psr_val[0] = tuast.Qual(psr_val[1])
 
 

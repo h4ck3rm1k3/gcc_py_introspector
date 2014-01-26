@@ -97,6 +97,9 @@ def main():
     line = ""
     for l in fd.readlines():
         l = l.strip()
+        if len(l) <= 0  :
+            continue
+
         if l[0] == '@':
             if line:
                 parse_l(line, debug)
@@ -104,6 +107,9 @@ def main():
         else:
             line = line + " " + l
     fd.close()
+
+    if line:
+        parse_l(line, debug)
 
 try:
     main()

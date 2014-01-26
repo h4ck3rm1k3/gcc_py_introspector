@@ -1,3 +1,9 @@
+qual:
+	python reader.py tests/test_one_qual.tu x
+
+op01:
+	python reader.py tests/op_0_1.tu 
+
 op0:
 	python reader.py tests/op_0.tu
 
