@@ -79,6 +79,10 @@ def parse_l(l, debug):
                     seen[s]=1
                     print("Results2 '%s'" % s)
 
+        if debug :
+            print "Stack:%s" % stack
+            print "parser %s" % parser
+
 
     except Exception as exp:
         traceback.print_exc()

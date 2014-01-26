@@ -817,6 +817,187 @@ def p_attr_En(psr_val):
     'attrtype : ATTR_En'
     psr_val[0] = attr_base(psr_val)
 
+
+##########################################
+
+def p_operator_add(psr_val):
+    'op_type : OPERATOR_ADD'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_and(psr_val):
+    'op_type : OPERATOR_AND'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_andassign(psr_val):
+    'op_type : OPERATOR_ANDASSIGN'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_addr(psr_val):
+    'op_type : OPERATOR_ADDR'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_assign(psr_val):
+    'op_type : OPERATOR_ASSIGN'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_call(psr_val):
+    'op_type : OPERATOR_CALL'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_compound(psr_val):
+    'op_type : OPERATOR_COMPOUND'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_delete(psr_val):
+    'op_type : OPERATOR_DELETE'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_deref(psr_val):
+    'op_type : OPERATOR_DEREF'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_div(psr_val):
+    'op_type : OPERATOR_DIV'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_divassign(psr_val):
+    'op_type : OPERATOR_DIVASSIGN'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_eq(psr_val):
+    'op_type : OPERATOR_EQ'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_ge(psr_val):
+    'op_type : OPERATOR_GE'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_gt(psr_val):
+    'op_type : OPERATOR_GT'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_le(psr_val):
+    'op_type : OPERATOR_LE'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_lnot(psr_val):
+    'op_type : OPERATOR_LNOT'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_lshift(psr_val):
+    'op_type : OPERATOR_LSHIFT'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_lshiftassign(psr_val):
+    'op_type : OPERATOR_LSHIFTASSIGN'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_lt(psr_val):
+    'op_type : OPERATOR_LT'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_minus(psr_val):
+    'op_type : OPERATOR_MINUS'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_minusassign(psr_val):
+    'op_type : OPERATOR_MINUSASSIGN'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_mult(psr_val):
+    'op_type : OPERATOR_MULT'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_multassign(psr_val):
+    'op_type : OPERATOR_MULTASSIGN'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_ne(psr_val):
+    'op_type : OPERATOR_NE'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_neg(psr_val):
+    'op_type : OPERATOR_NEG'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_new(psr_val):
+    'op_type : OPERATOR_NEW'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_or(psr_val):
+    'op_type : OPERATOR_OR'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_orassign(psr_val):
+    'op_type : OPERATOR_ORASSIGN'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_plus(psr_val):
+    'op_type : OPERATOR_PLUS'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_plusassign(psr_val):
+    'op_type : OPERATOR_PLUSASSIGN'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_postdec(psr_val):
+    'op_type : OPERATOR_POSTDEC'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_postinc(psr_val):
+    'op_type : OPERATOR_POSTINC'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_predec(psr_val):
+    'op_type : OPERATOR_PREDEC'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_preinc(psr_val):
+    'op_type : OPERATOR_PREINC'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_rshift(psr_val):
+    'op_type : OPERATOR_RSHIFT'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_vecdelete(psr_val):
+    'op_type : OPERATOR_VECDELETE'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_vecnew(psr_val):
+    'op_type : OPERATOR_VECNEW'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_xor(psr_val):
+    'op_type : OPERATOR_XOR'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_xorassign(psr_val):
+    'op_type : OPERATOR_XORASSIGN'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_not(psr_val):
+    'op_type : OPERATOR_NOT'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_pos(psr_val):
+    'op_type : OPERATOR_POS'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_ref(psr_val):
+    'op_type : OPERATOR_REF'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_rshiftassign(psr_val):
+    'op_type : OPERATOR_RSHIFTASSIGN'
+    psr_val[0] = operator_base(psr_val)
+
+def p_operator_subs(psr_val):
+    'op_type : OPERATOR_SUBS'
+    psr_val[0] = operator_base(psr_val)
+
+
+##########################################
 def p_node_constructor(psr_val):
     #            1             2
     'node : NODE CONSTRUCTOR attrs'
@@ -936,7 +1117,7 @@ def p_attrval_constructor(psr_val):
 
 
 def p_attrval_op(psr_val):
-    'attrval :  OP'
+    'attrval :  op_type'
     # psr_val[0]="OP(%s)" % psr_val[1]
     psr_val[0] = tuast.Op(psr_val[1])
 

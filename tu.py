@@ -55,9 +55,57 @@ def make_re(tstr):
     # print newre
     return newre
 
-       
+import sys
 
-NTYPES = """
+# create parser rules
+def create_rules(tstr):
+    for token in tstr.split():
+        token = token.upper()
+        func = lambda x: x
+        rule = "ntype : %s" % token
+        func.__doc__ = rule
+        current_module = sys.modules[__name__]
+        name = "p_%s" % (token.lower())
+        print "name %s(psr_val):\n    \'%s\'\n    return ntype_base(psr_val)\n" %(name, rule)
+        setattr(current_module, name , func)
+
+
+def emit_parser_rule(base_name, prefix):
+    # parser
+    rule = "%s_type : %s" % (prefix, base_name)
+    parser_name = "p_%s" % (base_name.lower())
+    print "def %s(psr_val):\n    \'%s\'\n    psr_val[0] = %s_base(psr_val)\n" %(parser_name, rule, prefix)
+
+def make_tokens(prefix,pattern,val_func, tstr):
+    '''
+    create tokens
+    * prefix for the token name
+    * pattern to create for each token with one %s
+    * val_fun to process the data
+    * tstr for the tokens
+
+    '''
+    for x in tstr.split():
+        item = x.strip().rstrip()
+        regex = pattern % item
+        func = lambda x : val_func(x)
+        func.__doc__ = regex
+        current_module = sys.modules[__name__]
+        base_name = "%s_%s" % (prefix, item.upper())
+        name = "t_%s" % (base_name)
+        tokens.append(base_name)
+        #print "created name %s regex %s"  %( name, regex )
+
+        emit_parser_rule(base_name, prefix)
+
+        #print "%s"  %( base_name )
+        setattr(current_module, name , func)
+
+
+def ntype_value(tok) :
+    return tok 
+
+make_tokens("NTYPE", "(%s)",ntype_value,"""
 aggr_init_expr
 alignof_expr
 array_ref
@@ -173,39 +221,8 @@ var_decl
 vector_type
 void_type
 while_stmt
-"""
-import sys
-def make_token(prefix,tstr):
-    '''
-    create tokens
-    '''
-    for x in tstr.split():
-        item = x.strip().rstrip()
-        func = lambda x: x
-        regex = r'(%s)' % item
-        func.__doc__ = regex
-        current_module = sys.modules[__name__]
-        base_name = "%s_%s" % (prefix, item.upper())
-        name = "t_%s" % (base_name)
-        #append the global token
-        tokens.append(base_name)
-        #print "name %s regex %s"  %( name, regex )
-        #print "%s"  %( base_name )
-        setattr(current_module, name , func)
-
-# create parser rules
-def create_rules(tstr):
-    for token in tstr.split():
-        token = token.upper()
-        func = lambda x: x
-        rule = "ntype : %s" % token
-        func.__doc__ = rule
-        current_module = sys.modules[__name__]
-        name = "p_%s" % (token.lower())
-        print "name %s(psr_val):\n    \'%s\'\n    return ntype_base(psr_val)\n" %(name, rule)
-        setattr(current_module, name , func)
-    
-make_token("NTYPE",NTYPES)
+""")
+#make_token("NTYPE",NTYPES)
 
 #t_NTYPE = r'%s\s?' % make_re(NTYPES)
 # print(t_NTYPE)
@@ -296,36 +313,7 @@ def t_ATTR_OP(tok):
     #print("OPATTR:%s" % tok.value)
     return tok
 
-def emit_parser_rule(base_name):
-    # parser
-    rule = "attrtype : %s" % base_name
-    parser_name = "p_%s" % (base_name.lower())
-    print "def %s(psr_val):\n    \'%s\'\n    psr_val[0] = attr_base(psr_val)\n" %(parser_name, rule)
 
-def make_attrs_token(prefix,pattern,val_func, tstr):
-    '''
-    create tokens
-    * prefix for the token name
-    * pattern to create for each token with one %s
-    * val_fun to process the data
-    * tstr for the tokens
-
-    '''
-    for x in tstr.split():
-        item = x.strip().rstrip()
-        regex = pattern % item
-        func = lambda x : val_func(x)
-        func.__doc__ = regex
-        current_module = sys.modules[__name__]
-        base_name = "%s_%s" % (prefix, item.upper())
-        name = "t_%s" % (base_name)
-        tokens.append(base_name)
-        #print "created name %s regex %s"  %( name, regex )
-
-        #emit_parser_rule(base_name)
-
-        #print "%s"  %( base_name )
-        setattr(current_module, name , func)
 
 def attr_val(tok):
 
@@ -337,7 +325,7 @@ def attr_val(tok):
     return tok
 
 
-make_attrs_token("ATTR", "%s\s*:",attr_val, '''
+make_tokens("ATTR", "%s\s*:",attr_val, '''
 accs
 addr
 algn
@@ -437,9 +425,8 @@ t_NOTE = r'operator|conversion'
 t_SPEC = r'spec\s'
 t_SPEC_VALU = r'mutable|bitfield|pure|virt'
 
-# OPERATORS
 
-def t_OP(tok):
+def op_token_value(tok) :
     '''
     OP token
     '''
@@ -448,8 +435,7 @@ def t_OP(tok):
     # print "OP%s" % strval
     return tok
 
-t_OP.__doc__ = r'operator\s+(%s)\s' % (
-    make_re('''
+make_tokens("OPERATOR", r'operator\s+(%s)\s',op_token_value,"""
     add
     and
     andassign
@@ -494,11 +480,8 @@ t_OP.__doc__ = r'operator\s+(%s)\s' % (
     ref
     rshiftassign
     subs
-    '''))
+""")
 
-#t_INTERNAL = r'\*INTERNAL\*'
-
-  # spec: pure spec: virt
 
 def t_error(t):
     raise TypeError("Unknown text '%s'" % (t.value, ))
