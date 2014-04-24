@@ -324,7 +324,7 @@ def attr_val(tok):
     tok.value = tok.value.replace(" ","")
     return tok
 
-
+# this next call creates tokens for the following fields.
 make_tokens("ATTR", "%s\s*:",attr_val, '''
 accs
 addr
@@ -411,7 +411,7 @@ t_SPEC_ATTR.__doc__ = r'%s\s*:' % make_re('spec')
 
 t_BUILTIN_FILE = r'\<built\-in\>:0'
 t_HXX_FILE = r'(yes_no_type.hpp|' + \
-             r'[\-\+A-Za-z_\-0-9]+(\.(h|hdl|txx|tcc|hpp|cxx|hxx))?):\d+'
+             r'[\-\+A-Za-z_\-0-9]+(\.(h|hdl|txx|tcc|hpp|cpp|cxx|hxx|pb\.h|pb\.c))?):\d+'
 t_SIGNED = 'signed|unsigned'
 #t_SCOPE = r'\:\:'
 #t_INTCONST = r'(\-)?\d+'
