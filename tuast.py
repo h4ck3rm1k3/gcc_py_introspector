@@ -7,6 +7,14 @@ class NodeBase:
         self.node_type = ntype
         self.vals=vals
 
+    def keys(self):
+        
+        if (self.vals):
+            if isinstance(self.vals, list):
+                return [x.keys() for x in self.vals if x.keys()]
+            else:
+                return self.vals.keys()
+        
     def __str__(self):
         val=""
         if (self.vals):
@@ -18,10 +26,10 @@ class NodeBase:
                 #print "CHECK VALS3 %s" % str( [str(attr) for attr in self.vals]               )
                 
                 #val="|".join(sorted([attr.type for attr in self.vals]))
-                val="|".join([str(attr.type) for attr in self.vals])
+                val="|".join(["Val:%s %s" % (str(attr.type), attr) for attr in self.vals])
             else:
                 #print "CHECK VAL TYPE %s" % str(self.vals.type)
-                val=self.vals.type
+                val="Val %s %s" % (self.vals.type, self.vals),
         return "T|%s|%s"  % (self.node_type,val)
 
 class Node(NodeBase):
@@ -61,6 +69,9 @@ class Value(object):
 
     def __init__(self, v):
         self.val = v
+
+    def keys(self):
+        pass
 
 
 class Link(Value):
@@ -108,7 +119,13 @@ class Lang(Value):
 class NodeRef(Value):
 
     def __init__(self, v):
+        #assert(v)
+        #print "create node ref %s" % v
         Value.__init__(self, v)
+
+    def keys(self):
+        return self.val
+
 
 
 class NodeRefSpec(NodeRef):
@@ -135,7 +152,6 @@ class AccVal(Value):
 
     def __init__(self, v):
         Value.__init__(self, v)
-
 
 class AccSpec(AccVal):
 
@@ -207,6 +223,14 @@ class Attr(AttrBase):
     def __init__(self, name, value):
         self.name = name
         self.value = value
+
+    def keys(self):
+        if isinstance(self.value, str):
+            #return "Str: "+ self.value
+            #return "Str: "+ self.value
+            return None
+        else:
+            return self.value.keys()
 
     @property
     def type(self):

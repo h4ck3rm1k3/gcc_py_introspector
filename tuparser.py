@@ -33,6 +33,9 @@ def attr_base(psr_val):
     return attr
 
 def std_attrs(psr_val):
+    """
+    called for each attribute
+    """
     type_str= psr_val[1]
 #    print "std_attrs 1 %s " % psr_val[1]
 #    print "std_attrs 2 %s " % psr_val[2]
@@ -799,6 +802,10 @@ def p_attr_val(psr_val):
     'attrtype : ATTR_VAL'
     psr_val[0] = attr_base(psr_val)
 
+def p_attr_idx(psr_val):
+    'attrtype : ATTR_IDX'
+    psr_val[0] = attr_base(psr_val)
+
 def p_attr_valu(psr_val):
     'attrtype : ATTR_VALU'
     psr_val[0] = attr_base(psr_val)
@@ -819,6 +826,9 @@ def p_attr_En(psr_val):
 
 
 ##########################################
+
+def operator_base(psr_val):
+    pass
 
 def p_operator_add(psr_val):
     'op_type : OPERATOR_ADD'
@@ -1005,6 +1015,10 @@ def p_node_constructor(psr_val):
     # psr_val[0] = "%s(id: %s, %s )" % (psr_val[2],psr_val[1],psr_val[3])
     psr_val[0] = tuast.NodeConstructor(psr_val[2], psr_val[1], psr_val[3])
 
+def p_node_mem_ref(psr_val):
+    'node : NODE NTYPE_MEM_REF attrs'
+    psr_val[0] = tuast.NodeConstructor(psr_val[2], psr_val[1], psr_val[3])
+
 
 def p_attrs(psr_val):
     'attrs :  attrtype attrval attrs'
@@ -1153,8 +1167,10 @@ def p_attrval_link(psr_val):
 
 def p_attrval_node(psr_val):
     'attrval : NODE'
-    # v = "NodeRef(%s)" % psr_val[1]
-    # print "CHECK5 NODEREF %s" % v
+
+    #print "CHECK5 NODEREF %s" % psr_val.__dict__['slice'][1]
+    #print "attrval_node %s" % psr_val.__dict__
+
     psr_val[0] = tuast.NodeRef(psr_val[1])
 
 
@@ -1205,10 +1221,11 @@ def p_node_addr_expr_type(psr_val):
     psr_val[0] = tuast.AddrExprTyped(psr_val[2], psr_val[1], psr_val[4], psr_val[6])
 
 def p_error(psr_val):
-    print "Check Syntax error in input! %s" % psr_val
+    # print "Check Syntax error in input! %s" % psr_val
     # print "Line Number: %s" % psr_val.lineno(2)
     # print "Line Pos: %s" % psr_val.lexpos(2)
-    print("Parser %s" % parser)
+    # print("Parser %s" % parser)
+    pass
 
 # Build the parser
 parser = yacc.yacc()

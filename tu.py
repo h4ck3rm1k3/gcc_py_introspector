@@ -38,7 +38,7 @@ tokens = [
     'MEMBER',
 #    'INTERNAL',
 #    'STRG2',
-    'OP',
+
     'NOTE',
 #    'R'
 ]
@@ -66,7 +66,7 @@ def create_rules(tstr):
         func.__doc__ = rule
         current_module = sys.modules[__name__]
         name = "p_%s" % (token.lower())
-        print "name %s(psr_val):\n    \'%s\'\n    return ntype_base(psr_val)\n" %(name, rule)
+        #print "name %s(psr_val):\n    \'%s\'\n    return ntype_base(psr_val)\n" %(name, rule)
         setattr(current_module, name , func)
 
 
@@ -74,7 +74,7 @@ def emit_parser_rule(base_name, prefix):
     # parser
     rule = "%s_type : %s" % (prefix, base_name)
     parser_name = "p_%s" % (base_name.lower())
-    print "def %s(psr_val):\n    \'%s\'\n    psr_val[0] = %s_base(psr_val)\n" %(parser_name, rule, prefix)
+    #print "def %s(psr_val):\n    \'%s\'\n    psr_val[0] = %s_base(psr_val)\n" %(parser_name, rule, prefix)
 
 def make_tokens(prefix,pattern,val_func, tstr):
     '''
@@ -105,6 +105,7 @@ def make_tokens(prefix,pattern,val_func, tstr):
 def ntype_value(tok) :
     return tok 
 
+# the following are node types
 make_tokens("NTYPE", "(%s)",ntype_value,"""
 aggr_init_expr
 alignof_expr
@@ -160,6 +161,7 @@ le_expr
 lshift_expr
 lt_expr
 member_ref
+mem_ref
 method_type
 minus_expr
 modop_expr
@@ -257,8 +259,15 @@ def t_QUAL(tok):
 
 def t_NODE(tok):
     r'\@(\d+)'
-    strval = tok.lexer.lexmatch.group(4)
-    # print ("NODEID:%s" % strval)
+    #print "Match %s" % (tok.lexer.lexmatch)
+    strval = tok.lexer.lexmatch.group(70)
+    #print ("NODEID:%s" % strval)
+    #y =0
+
+    # for x in tok.lexer.lexmatch.groups():
+    #     y = y + 1
+    #     print ("test:%d %s" % (y, x))
+
     tok.value = strval
     return tok
 
@@ -324,7 +333,9 @@ def attr_val(tok):
     tok.value = tok.value.replace(" ","")
     return tok
 
-# this next call creates tokens for the following fields.
+# this next call creates tokens for the following fields
+# each field can be used to give a new key value pair to a node
+# the field name is used to construct a function for recieving it.
 make_tokens("ATTR", "%s\s*:",attr_val, '''
 accs
 addr
@@ -359,6 +370,7 @@ fncs
 hdlr
 high
 init
+idx
 inst
 lang
 line
