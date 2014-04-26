@@ -12,7 +12,7 @@ ERE = r'\s([0-9]+)\s+:\s\@'
 vals = {}
 seen = {} 
 def report(x,l):
-    print("Results1 %s %s" % (x.keys(),l))
+    print("Results1 %s -> %s | %s" % (x.node_id, x.keys(),l))
 
 def lex(l, debug, error_file):
     """
