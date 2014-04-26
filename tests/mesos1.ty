@@ -1,0 +1,20 @@
+@841    template_decl    name: @982     type: @983     scpe: @3      srcp: logging.h:8             chain: @984    rslt: @985     inst: @986     prms: @987
+@982    identifier_node  strg: CHECK_SOME              lngt: 10 
+@709    type_decl        name: @818     type: @625     scpe: @200 srcp: iosfwd:136              chain: @819
+@818    identifier_node  strg: ostream  lngt: 7       
+@625    record_type      name: @709     unql: @710     size: @711 algn: 64       vfld: @712     base: @713 spec: virt     accs: pub      tag : struct                           flds: @712     fncs: @714     binf: @715
+@550    reference_type   size: @24      algn: 64       refd: @625    
+@983    function_type    size: @21      algn: 8        retn: @550 prms: @1164   
+@1164   tree_list        valu: @1395    chan: @108    
+@108    tree_list        valu: @67     
+
+# Block for void
+@67     void_type        name: @78      algn: 8       
+@78     type_decl        name: @95      type: @67      srcp: <built-in>:0                               note: artificial
+@1395   template_type_parm name: @1171    algn: 8       
+@1171   type_decl        name: @640     type: @1395    srcp: logging.h:8      
+@95     identifier_node  strg: void     lngt: 4       
+
+@640    identifier_node  strg: T        lngt: 1       
+@1702   function_decl    name: @982     mngl: @2069    type: @2070                            scpe: @3       srcp: logging.h:8   args: @2071    body: undefined                          link: extern  
+@2069   identifier_node  strg: _Z10CHECK_SOMEI6OptionI10CredentialEERSoT_                          lngt: 42
