@@ -11,9 +11,9 @@ class NodeBase:
         
         if (self.vals):
             if isinstance(self.vals, list):
-                return [x.keys() for x in self.vals if x.keys()]
+                return  [self.node_type, [x.keys() for x in self.vals if x.keys()]]
             else:
-                return self.vals.keys()
+                return [self.node_type, self.vals.keys()]
         
     def __str__(self):
         val=""
@@ -66,13 +66,15 @@ class NodeConstructor(NodeBase):
 
 
 class Value(object):
-
+    """
+    Base class for all field attributes
+    """
     def __init__(self, v):
+#        assert(v)
         self.val = v
 
     def keys(self):
-        pass
-
+        return self.val
 
 class Link(Value):
 
@@ -185,6 +187,9 @@ class String(Value):
     def type(self):
         return "STR"
 
+    def keys(self):
+        return self.val
+
 
 class Note(Value):
 
@@ -204,6 +209,9 @@ class AttrBase(object):
     @property
     def type(self):
         return "TODO(%s)" % self.__class__.__name__
+
+    def keys(self):
+        pass
 
 
 class MemberAttr(AttrBase):
@@ -230,7 +238,7 @@ class Attr(AttrBase):
             #return "Str: "+ self.value
             return None
         else:
-            return self.value.keys()
+            return [self.name, self.value.keys()]
 
     @property
     def type(self):

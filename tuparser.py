@@ -7,8 +7,33 @@ import ply.yacc as yacc # Get the token map from the lexer.  This is required.
 from tu import tokens
 import tuast  # import Link
 
+def matches(psr_val, debug=True):
+    c =0
+    ret = []
+
+    print("DEBUG START")
+
+    if psr_val.slice[1].value:
+        print "Token Value:" + psr_val.slice[1].value
+        print "Token Type:" + psr_val.slice[1].type
+
+    for x in psr_val.slice:
+        print("MATCHES: %s" % x)
+
+#    print("MATCHES: %s" % dir(psr_val.lexer.token) )
+#    print("MATCHES: %s" % psr_val.lexer.lexliterals )
+#    print("MATCHES: %s" % psr_val.lexer.lexdata )
+#    print("MATCHES: %s" % psr_val.lexer.lexmatch.string )
+    for group in psr_val.lexer.lexmatch.groups() :
+        c = c+1
+        if group:
+            print("DEBUG",c,group)
+            ret.append(group)
+    return ret
+
 # the first rule is important
 def p_node(psr_val):
+    # the node declaration
     'node : NODE ntype attrs'
     #print "main NODE %s" % psr_val[1]
     #print "main TYPE %s" % psr_val[2]
@@ -27,22 +52,22 @@ def ntype_base(psr_val):
     return ntype
 
 def attr_base(psr_val):
-    attr = psr_val[1]
-    #print "debug attr %s" % attr
-    #print "debug stack %s" % psr_val.stack
+    m = psr_val.slice
+    if len(m) > 1:
+        attr = m[1].value
+    else:
+        attr =  ""
+    #print "got attr %s" % attr
     return attr
 
 def std_attrs(psr_val):
     """
     called for each attribute
     """
-    type_str= psr_val[1]
-#    print "std_attrs 1 %s " % psr_val[1]
-#    print "std_attrs 2 %s " % psr_val[2]
-#    print "std_attrs 3 %s " % psr_val[3]
-#    print "std_attrs type_str %s " % type_str
-#    print "std attrs stack : %s" % psr_val.stack
+    #m=psr_val.slice
+#    print "debug1",m
 
+    type_str= psr_val[1]
     assert(type_str)
     node = tuast.Attr(type_str, psr_val[2])
     result = append_list(psr_val[3], node)
@@ -54,10 +79,12 @@ def std_attrs2(psr_val):
     #print "val2: %s " %  psr_val[2]
     #print "val3: %s " %  psr_val[3]
 
+#    m=matches(psr_val)
+#    print "debug2",m
     type_str= psr_val[1]
     #print "std attrs 2 type_str %s " % psr_val[1]
-    if not type_str :
-        type_str = "UNKNOWN_TODO"
+#    if not type_str :
+#        type_str = "UNKNOWN_TODO %s" % m
         
     node = tuast.Attr(type_str, psr_val[2])
     result = append_list(psr_val[3], node)
@@ -1023,6 +1050,7 @@ def p_node_mem_ref(psr_val):
 def p_attrs(psr_val):
     'attrs :  attrtype attrval attrs'
     # refactored to std function
+
     psr_val[0] = std_attrs2(psr_val)
 
 
@@ -1079,7 +1107,9 @@ def p_attrs_strg(psr_val):
     'attrs : STRG'
     # print "CHECKSTR %s" % psr_val[1]
     #psr_val[0]="STRG(%s)" % psr_val[1]
-    psr_val[0] = [tuast.String(psr_val[1])]
+    m=psr_val[1]
+    if m:
+        psr_val[0] = [tuast.String(m)]
 
 
 def p_attrs_member(psr_val):
@@ -1167,10 +1197,9 @@ def p_attrval_link(psr_val):
 
 def p_attrval_node(psr_val):
     'attrval : NODE'
-
+    #m = matches(psr_val)
     #print "CHECK5 NODEREF %s" % psr_val.__dict__['slice'][1]
     #print "attrval_node %s" % psr_val.__dict__
-
     psr_val[0] = tuast.NodeRef(psr_val[1])
 
 
@@ -1183,12 +1212,14 @@ def p_attrval_node_spec(psr_val):
 
 def p_attrval_file(psr_val):
     'attrval : BUILTIN_FILE'
+    #m = matches(psr_val)
     # psr_val[0]= "FILE(%s)" % psr_val[1]
     psr_val[0] = tuast.FileBuiltin()
 
 
 def p_attrval_hxx_file(psr_val):
     'attrval : HXX_FILE'
+    #m = matches(psr_val)
     # psr_val[0]= "FILE(%s)" % psr_val[1]
     psr_val[0] = tuast.FilePos(psr_val[1])
 
@@ -1234,6 +1265,7 @@ parser = yacc.yacc()
 #   result = parser.parse(s)
 
 # Error rule for syntax errors
+
 
 
 def debug(psr_val):

@@ -11,8 +11,17 @@ OPRE = r'op\s([0-9]+)\s*:\s\@'
 ERE = r'\s([0-9]+)\s+:\s\@'
 vals = {}
 seen = {} 
+
+deps = {}
+
 def report(x,l):
-    print("Results1 %s -> %s | %s" % (x.node_id, x.keys(),l))
+    #print("Results1 %s -> %s | %s" % (x.node_id, x.keys(),l))
+    k = x.keys()
+#    print l
+#    print k
+    deps[x.node_id]=k
+
+
 
 def lex(l, debug, error_file):
     """
@@ -71,7 +80,6 @@ def parse_l(l, debug, error_file):
         # print ("Find %s in %s" % (n,l))
         l = re.sub(r'op\s%s\s*:\s\@' % n, " OP%s :@" % n, l)
         x = re.search(OPRE, l)
-
 
     # now try and parse the input
     try:
@@ -146,5 +154,9 @@ except Exception as e:
     print "error %s" % e
 
 #import pprint
-#pprint.pprint(vals)
+
+
 #print "\n".join(sorted(seen.keys()))
+import pprint
+pprint.pprint(deps)
+
