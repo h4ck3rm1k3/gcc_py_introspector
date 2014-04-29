@@ -106,7 +106,7 @@ def ntype_value(tok) :
     return tok 
 
 # the following are node types
-make_tokens("NTYPE", "(%s)",ntype_value,"""
+make_tokens("NTYPE", "(?P<val>%s)",ntype_value,"""
 aggr_init_expr
 alignof_expr
 array_ref
@@ -224,10 +224,7 @@ vector_type
 void_type
 while_stmt
 """)
-#make_token("NTYPE",NTYPES)
 
-#t_NTYPE = r'%s\s?' % make_re(NTYPES)
-# print(t_NTYPE)
 
 t_PSEUDO_TMPL = 'pseudo|tmpl'
 #t_DTYPE = 'long|int'
@@ -237,9 +234,8 @@ t_CONSTRUCTOR = 'constructor'
 
 
 def t_STRG(tok):
-    r'strg:\s+(.+)\s+lngt:\s\d+'
-    strval = tok.lexer.lexmatch.group(2)
-    # print ("CHECK:%s" % strval)
+    r'strg:\s+(?P<val>.+)\s+lngt:\s\d+'
+    strval = tok.lexer.lexmatch.group("val")
     tok.value = strval
     return tok
 
@@ -258,9 +254,9 @@ def t_QUAL(tok):
 
 
 def t_NODE(tok):
-    r'\@(\d+)'
+    r'\@(?P<val>\d+)'
     #print "Match %s" % (tok.lexer.lexmatch)
-    strval = tok.lexer.lexmatch.group(70)
+    strval = tok.lexer.lexmatch.group("val")
     #print ("NODEID:%s" % strval)
     #y =0
 
@@ -278,16 +274,16 @@ def t_SPACE(tok):
 
 #t_ERROR = 'error_mark'
 
-@TOKEN(r'addr_expr\s?')
+@TOKEN(r'(?P<val>addr_expr)\s?')
 def t_ADDR_EXPR(tok) :
-    tok.value = str(tok.lexer.lexmatch.group(6))
+    tok.value = str(tok.lexer.lexmatch.group("val"))
     #print("NTYPE ADDR EXPR %s " % tok.value)
     return tok
 
 def t_OP0_ATTR(tok):
-    r'(OP0)\s*:'
+    r'(?P<val>OP0)\s*:'
     #count_non_null(tok)
-    tok.value = str(tok.lexer.lexmatch.group(28))
+    tok.value = str(tok.lexer.lexmatch.group("val"))
     #print("OP0_ATTR %s " % tok.value)
     return tok
 
@@ -300,11 +296,7 @@ def t_TYPE_ATTR(tok):
 
 def t_ATTR_En(tok):
     '''(%s|E\d+)\s*:'''
-    #print("ATTR:%s" % str(tok.lexer.lexmatch.groups()))
-    #tok.value = tok.lexer.lexmatch.group(11
     tok.value = tok.value.replace(" :","")
-    #print("ATTR:%s" % tok.value)
-    #print("ATTREN:%s" % tok.value)
     return tok
 
 def count_non_null(tok):
@@ -315,9 +307,9 @@ def count_non_null(tok):
         count = count + 1
 
 def t_ATTR_OP(tok):
-    '''(OP\d+)\s*:'''
+    '''(?P<val>OP\d+)\s*:'''
     # count_non_null(tok)
-    tok.value = tok.lexer.lexmatch.group(33)
+    tok.value = tok.lexer.lexmatch.group("val")
     #print("ATTR:%s" % tok.value)
     #print("OPATTR:%s" % tok.value)
     return tok
@@ -336,7 +328,7 @@ def attr_val(tok):
 # this next call creates tokens for the following fields
 # each field can be used to give a new key value pair to a node
 # the field name is used to construct a function for recieving it.
-make_tokens("ATTR", "%s\s*:",attr_val, '''
+make_tokens("ATTR", "(?P<val>%s)\s*:",attr_val, '''
 accs
 addr
 algn
@@ -414,12 +406,12 @@ def t_SPEC_ATTR(tok):
     '''
     spec attr
     '''
-    strval = tok.lexer.lexmatch.group(10)
+    strval = tok.lexer.lexmatch.group("val")
     tok.value = strval
     # print "SPEC_ATTR:%s(%s)" % (t.type, strval)
     return tok
 
-t_SPEC_ATTR.__doc__ = r'%s\s*:' % make_re('spec')
+t_SPEC_ATTR.__doc__ = r'(?P<val>%s)\s*:' % make_re('spec')
 
 t_BUILTIN_FILE = r'\<built\-in\>:0'
 t_HXX_FILE = r'(yes_no_type.hpp|' + \
@@ -442,12 +434,12 @@ def op_token_value(tok) :
     '''
     OP token
     '''
-    strval = tok.lexer.lexmatch.group(2)
+    strval = tok.lexer.lexmatch.group("val")
     tok.value = strval
     # print "OP%s" % strval
     return tok
 
-make_tokens("OPERATOR", r'operator\s+(%s)\s',op_token_value,"""
+make_tokens("OPERATOR", r'operator\s+(?P<val>%s)\s',op_token_value,"""
     add
     and
     andassign

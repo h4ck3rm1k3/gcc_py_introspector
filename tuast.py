@@ -11,10 +11,27 @@ class NodeBase:
         
         if (self.vals):
             if isinstance(self.vals, list):
-                return  [self.node_type, [x.keys() for x in self.vals if x.keys()]]
+                return  [
+                    self.node_type, 
+                    [
+                        x.keys() for x in self.vals if x.keys()
+                    ], 
+                    [
+                        x.values() for x in self.vals if x.values()
+                    ]
+                ]
             else:
-                return [self.node_type, self.vals.keys()]
-        
+                return [
+                    self.node_type, 
+                    self.vals.keys(), 
+                    self.vals.values()]
+        else:
+            return  [
+                self.node_type, 
+                    [], 
+                    []
+                ]
+                
     def __str__(self):
         val=""
         if (self.vals):
@@ -74,6 +91,9 @@ class Value(object):
         self.val = v
 
     def keys(self):
+        pass
+
+    def values(self):
         return self.val
 
 class Link(Value):
@@ -127,6 +147,9 @@ class NodeRef(Value):
 
     def keys(self):
         return self.val
+
+    def values(self):
+        pass
 
 
 
@@ -188,8 +211,10 @@ class String(Value):
         return "STR"
 
     def keys(self):
-        return self.val
+        pass
 
+    def values(self):
+        return ["String",self.val]
 
 class Note(Value):
 
@@ -211,6 +236,9 @@ class AttrBase(object):
         return "TODO(%s)" % self.__class__.__name__
 
     def keys(self):
+        pass
+
+    def values(self):
         pass
 
 
@@ -238,7 +266,19 @@ class Attr(AttrBase):
             #return "Str: "+ self.value
             return None
         else:
-            return [self.name, self.value.keys()]
+            if self.value.keys():
+                return [self.name, self.value.keys()]
+            else:
+                return None
+
+    def values(self):
+        if isinstance(self.value, str):
+            return self.value
+        else:
+            if self.value.values():
+                return [self.name, self.value.values()]
+            else:
+                return None
 
     @property
     def type(self):

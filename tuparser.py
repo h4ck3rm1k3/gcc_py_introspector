@@ -42,6 +42,13 @@ def p_node(psr_val):
     # psr_val[0] = "%s(id: %s, %s )" % (psr_val[2],psr_val[1],psr_val[3])
     psr_val[0] = tuast.Node(psr_val[2], psr_val[1], psr_val[3])
 
+# # empty_node
+def p_node_empty(psr_val):
+     # the node with no attrs
+     'node : NODE ntype'
+     #print "empty node %s %s " % (psr_val[2], psr_val[1])
+     psr_val[0] = tuast.Node(psr_val[2], psr_val[1], [])
+
 
 def ntype_base(psr_val):
     #print "debug 1 %s" % psr_val
@@ -1105,8 +1112,6 @@ def p_attrs_note(psr_val):
 
 def p_attrs_strg(psr_val):
     'attrs : STRG'
-    # print "CHECKSTR %s" % psr_val[1]
-    #psr_val[0]="STRG(%s)" % psr_val[1]
     m=psr_val[1]
     if m:
         psr_val[0] = [tuast.String(m)]
@@ -1252,10 +1257,10 @@ def p_node_addr_expr_type(psr_val):
     psr_val[0] = tuast.AddrExprTyped(psr_val[2], psr_val[1], psr_val[4], psr_val[6])
 
 def p_error(psr_val):
-    # print "Check Syntax error in input! %s" % psr_val
-    # print "Line Number: %s" % psr_val.lineno(2)
-    # print "Line Pos: %s" % psr_val.lexpos(2)
-    # print("Parser %s" % parser)
+    print "Check Syntax error in input! %s" % psr_val
+    print "Line Number: %s" % psr_val.lineno(2)
+    print "Line Pos: %s" % psr_val.lexpos(2)
+    print("Parser %s" % parser)
     pass
 
 # Build the parser
@@ -1310,10 +1315,3 @@ def report_stack(psr_val):
         # print (type(x))
 
 
-#WARNING: Token 'R' defined, but not used
-#WARNING: Token 'ERROR' defined, but not used
-#WARNING: Token 'INTCONST' defined, but not used
-#WARNING: Token 'SCOPE' defined, but not used
-#WARNING: Token 'STRG2' defined, but not used
-#WARNING: Token 'DTYPE' defined, but not used
-#WARNING: Token 'INTERNAL' defined, but not used

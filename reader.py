@@ -7,6 +7,8 @@ import re
 import traceback
 from tu import lex
 from tuparser import parser
+import pprint
+
 OPRE = r'op\s([0-9]+)\s*:\s\@'
 ERE = r'\s([0-9]+)\s+:\s\@'
 vals = {}
@@ -16,9 +18,12 @@ deps = {}
 
 def report(x,l):
     #print("Results1 %s -> %s | %s" % (x.node_id, x.keys(),l))
+    assert(x)
     k = x.keys()
+    assert(k)
 #    print l
-#    print k
+    #print k
+#    pprint.pprint(x.__dict__)
     deps[x.node_id]=k
 
 
@@ -84,7 +89,7 @@ def parse_l(l, debug, error_file):
     # now try and parse the input
     try:
         x = parser.parse(l, debug=debug)
-
+        
         if not x:
             error_file.write(l + "\n")
             print "Error on Line:%s" % l
@@ -153,10 +158,9 @@ try:
 except Exception as e:
     print "error %s" % e
 
-#import pprint
-
+pprint.pprint(deps)
 
 #print "\n".join(sorted(seen.keys()))
-import pprint
-pprint.pprint(deps)
+
+
 

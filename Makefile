@@ -52,3 +52,8 @@ lint :
 	~/.local/bin/pyflakes $(FILES)
 	~/.local/bin/pylint --rcfile=.pylintrc  $(FILES)
 
+test100:
+	python reader.py tests/test100.tu
+
+test102:
+	python reader.py tests/test102.tu
