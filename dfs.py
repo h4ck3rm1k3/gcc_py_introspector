@@ -109,6 +109,9 @@ def DFS2(G,v):
                                             skip =1
                                         elif typename in ('field_decl','parm_decl'):
                                             skip = 0
+                                        elif n[0].find('decl') >= 0:        
+                                            raise Exception(n[0])
+
                                     elif field == 'type':
                                         skip =1
                                     elif field == 'size':
@@ -138,8 +141,8 @@ if not os.path.exists("cache"):
 for x in k:
 
     n =  sched_dep.data[x]
-
-    if n[0] in ('function_decl', 'type_decl', 'var_decl', 'template_decl', 'namespace_decl', 'const_decl', 'using_decl', 'field_decl','parm_decl'):        
+    strings = []
+    if n[0].find('decl') >= 0:        
         data = {}
         data[x]=n
         S = DFS2(sched_dep.data,x)
@@ -148,13 +151,17 @@ for x in k:
                 if y:
                     if y in sched_dep.data:
                         n2 = sched_dep.data[y]
+                        for st in n2[2] :
+                            if st:
+                                if st[0]=="String":
+                                    strings.append(st[1])
                         data[y]=n2
 
         filename = "cache/%s.py" % x
         o =open (filename,"w")
         o.write("data=%s" % pprint.pformat(data))
         o.close()
-        print "wrote %s" % filename
+        print "wrote %s %s %s" % (filename, n[0], ",".join(strings))
     else:
         pass
 
