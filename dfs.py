@@ -81,7 +81,7 @@ def DFS2(G,v):
     discovered = {}
     S =[]
     S.append(v)
-
+    result = []
     while S:
         v = S.pop()
         if v not in discovered:
@@ -97,10 +97,12 @@ def DFS2(G,v):
                     #print es
                     if es:
                         if es[1]:
+                            newlist = []
                             for e in es[1]:
                                 if e and len(e)> 1:
                                     field = e[0]
                                     d = e[1]
+
 
                                     skip = 0
                                     # here we check if we want to skip the field
@@ -112,20 +114,17 @@ def DFS2(G,v):
                                         elif n[0].find('decl') >= 0:        
                                             raise Exception(n[0])
 
-                                    elif field == 'type':
-                                        skip =1
-                                    elif field == 'size':
-                                        skip =1
-
                                     if skip == 0:
                                         if d not in discovered:
-                                            S.append(d)
-                                    else:
-                                        discovered[d]=1
-                                else:
-                                    #print e
-                                    pass
-    return discovered.keys()
+                                            S.append(d)                                    
+
+                                    newdata = [e[0],e[1],G[d]]
+                                    newlist.append(newdata)
+
+                            newobj = [es[0],es[1],newlist,es[2]]
+                            result.append(newobj)
+
+    return result
 
 
 k = sched_dep.data.keys()
@@ -142,26 +141,27 @@ for x in k:
 
     n =  sched_dep.data[x]
     strings = []
-    if n[0].find('decl') >= 0:        
+    typename = n[0]
+    #    if n[0].find('decl') >= 0:        
+    if typename in ('function_decl', 'type_decl', 'var_decl', 'template_decl', 'namespace_decl', 'const_decl', 'using_decl' ) :
         data = {}
         data[x]=n
         S = DFS2(sched_dep.data,x)
-        if (len(S)>0):
-            for y in S:
-                if y:
-                    if y in sched_dep.data:
-                        n2 = sched_dep.data[y]
-                        for st in n2[2] :
-                            if st:
-                                if st[0]=="String":
-                                    strings.append(st[1])
-                        data[y]=n2
-
+        # if (len(S)>0):
+        #     for y in S:
+        #         if y:
+        #             if y in sched_dep.data:
+        #                 n2 = sched_dep.data[y]
+        #                 # for st in n2[2] :
+        #                 #     if st:
+        #                 #         if st[0]=="String":
+        #                 #             strings.append(st[1])
+        #                 data[y]=n2
         filename = "cache/%s.py" % x
         o =open (filename,"w")
-        o.write("data=%s" % pprint.pformat(data))
+        o.write("data=%s" % pprint.pformat(S))
         o.close()
-        print "wrote %s %s %s" % (filename, n[0], ",".join(strings))
+        print "wrote %s %s" % (filename, n[0])
     else:
         pass
 
