@@ -1,5 +1,6 @@
 import sched_dep
 import os
+import pprint
 
 class Graph:
 
@@ -77,61 +78,50 @@ class FieldTodo :
 
 #procedure DFS-iterative(G,v):
 def DFS2(G,v):
-    #let S be a stack
     discovered = {}
     S =[]
     S.append(v)
-    count = 0
+
     while S:
         v = S.pop()
-        #if v is not labeled as discovered:
         if v not in discovered:
-            #label v as discovered
             discovered[v]=1
-            #for all edges from v to w in G.adjacentEdges(v) do
-            #S.push(w)
             if v not in G :
-                #print "missing %s" % v
-                pass
+                print "missing %s" % v
+                raise Exception("Missing %s" % v)
             else:
                 es = G[v]
                 if es :
                     typename = es[0]
-                    if count == 0:
-                        if typename not in ('function_decl', 'type_decl', 'var_decl', 'template_decl', 'namespace_decl', 'const_decl', 'using_decl', 'field_decl','parm_decl'):
-                            return []
 
-                    # print typename, count
+                    #print es
                     if es:
-                        for e in es[1]:
-                            if e and len(e)> 1:
-                                field = e[0]
-                                d = e[1]
-                                skip = 0
-                                if field == 'chain':
-                                    if typename in ('function_decl', 'type_decl', 'var_decl', 'template_decl', 'namespace_decl', 'const_decl', 'using_decl' ) :
+                        if es[1]:
+                            for e in es[1]:
+                                if e and len(e)> 1:
+                                    field = e[0]
+                                    d = e[1]
+
+                                    skip = 0
+                                    # here we check if we want to skip the field
+                                    if field == 'chain':
+                                        if typename in ('function_decl', 'type_decl', 'var_decl', 'template_decl', 'namespace_decl', 'const_decl', 'using_decl' ) :
+                                            skip =1
+                                        elif typename in ('field_decl','parm_decl'):
+                                            skip = 0
+                                    elif field == 'type':
                                         skip =1
-                                    elif typename in ('field_decl','parm_decl'):
-                                        skip = 0
+                                    elif field == 'size':
+                                        skip =1
+
+                                    if skip == 0:
+                                        if d not in discovered:
+                                            S.append(d)
                                     else:
-                                        print typename
-
-                                if field == 'type':
-                                    skip =1
-
-                                if field == 'size':
-                                    skip =1
-
-                                if skip == 0:
-                                    if d not in discovered:
-                                        # print field;
-                                        S.append(d)
-                                        count = count +1
+                                        discovered[d]=1
                                 else:
-                                    discovered[d]=1
-                            else:
-                                #print e
-                                pass
+                                    #print e
+                                    pass
     return discovered.keys()
 
 
@@ -146,17 +136,25 @@ if not os.path.exists("cache"):
     os.makedirs("cache")
 
 for x in k:
-    data = {}
-    n =  sched_dep.data[x]
-    data[x]=n
-    S = DFS2(sched_dep.data,x)
-    if (len(S)>0):
-        for y in S:
-            if y:
-                if y in sched_dep.data:
-                    n2 = sched_dep.data[y]
-                    data[y]=n
 
-    o =open ("cache/%s.py" % x,"w")
-    o.write("data=%s" % data)
-    o.close()
+    n =  sched_dep.data[x]
+
+    if n[0] in ('function_decl', 'type_decl', 'var_decl', 'template_decl', 'namespace_decl', 'const_decl', 'using_decl', 'field_decl','parm_decl'):        
+        data = {}
+        data[x]=n
+        S = DFS2(sched_dep.data,x)
+        if (len(S)>0):
+            for y in S:
+                if y:
+                    if y in sched_dep.data:
+                        n2 = sched_dep.data[y]
+                        data[y]=n2
+
+        filename = "cache/%s.py" % x
+        o =open (filename,"w")
+        o.write("data=%s" % pprint.pformat(data))
+        o.close()
+        print "wrote %s" % filename
+    else:
+        pass
+

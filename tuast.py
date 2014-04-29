@@ -23,8 +23,9 @@ class NodeBase:
             else:
                 return [
                     self.node_type, 
-                    self.vals.keys(), 
-                    self.vals.values()]
+                    [self.vals.keys()], 
+                    [self.vals.values()]
+                ]
         else:
             return  [
                 self.node_type, 

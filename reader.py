@@ -158,7 +158,7 @@ try:
 except Exception as e:
     print "error %s" % e
 
-pprint.pprint(deps)
+print "data=%s" % pprint.pformat(deps)
 
 #print "\n".join(sorted(seen.keys()))
 
