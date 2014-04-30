@@ -24,7 +24,6 @@ class Nodes:
 class NodeIter:
     def __init__(self, data, pos):
         self.data = data
-        self.keys = data.keys()
         self.pos = pos
         self.l = len(data)
 
@@ -32,7 +31,7 @@ class NodeIter:
         p = self.pos
         self.pos = self.pos +1
         if p < self.l:
-            d = self.data[self.keys[p]]
+            d = self.data[p]
             if len(d) > 1 :
                 return Node(d)
         else:
@@ -50,6 +49,9 @@ class Node :
 
     def fields (self):
         return Fields(self.data[1])
+
+    def val_fields (self):
+        return Fields(self.data[3])
 
 class Fields :
     def __init__(self, data):
@@ -72,7 +74,8 @@ class FieldIter:
         self.pos = self.pos +1
         if p < self.l:
             d = self.data[p]
-            if len(d) > 1 :
+            #print d
+            if d and len(d) > 1 :
                 return Field(d)
             else:
                 return FieldTodo(d)
@@ -97,4 +100,5 @@ class FieldTodo :
         return "TODO"
 
     def value(self):
+        print "value", self.data
         return self.data[0]
