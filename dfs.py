@@ -11,6 +11,7 @@ def DFS2(G,v):
     result = []
     while S:
         v = S.pop()
+        #print "eval %s" % v
         if v not in discovered:
             discovered[v]=1
             if v not in G :
@@ -20,8 +21,6 @@ def DFS2(G,v):
                 es = G[v]
                 if es :
                     typename = es[0]
-
-                    #print es
                     if es:
                         if es[1]:
                             newlist = []
@@ -29,8 +28,6 @@ def DFS2(G,v):
                                 if e and len(e)> 1:
                                     field = e[0]
                                     d = e[1]
-
-
                                     skip = 0
                                     # here we check if we want to skip the field
                                     if field == 'chain':
@@ -41,16 +38,41 @@ def DFS2(G,v):
                                         elif n[0].find('decl') >= 0:        
                                             raise Exception(n[0])
 
+                                    elif field in ('scpe','unql'):
+                                        skip =1 # skip all the scope pointers for recursion, they create cycles
+
                                     if skip == 0:
                                         if d not in discovered:
-                                            S.append(d)                                    
+                                            S.append(d)        
 
-                                    newdata = [e[0],e[1],G[d]]
-                                    newlist.append(newdata)
+                                        # for skipped objects dont put the data pointer
+                                        newdata = [field,d,[]
+                                                   #G[d]
+                                        ]
+                                        newlist.append(newdata)
+                                    else:
+                                        #newdata = [field,d,[]]
+                                        #newlist.append(newdata)
+                                        pass
 
-                            newobj = [es[0],es[1],newlist,es[2]]
+                            newobj = [v, es[0],es[1],
+                                      #newlist
+                                      []
+                                      ,es[2]]
+                            result.append(newobj)
+                        else:
+                            newobj = [v, es[0],es[1],
+                                      #newlist
+                                      []
+                                      ,es[2]]
                             result.append(newobj)
 
+                    else:
+                        print "is empty %s" % v, es
+        else:
+            #print "already discovered %s" % v
+            pass
+            
     return result
 
 
@@ -63,31 +85,34 @@ k = sched_dep.data.keys()
 if not os.path.exists("cache"):
     os.makedirs("cache")
 
-for x in k:
+def main():
+    for x in k:
+        n =  sched_dep.data[x]
+        strings = []
+        typename = n[0]
+        #    if n[0].find('decl') >= 0:        
+        if typename in ('function_decl', 'type_decl', 'var_decl', 'template_decl', 'namespace_decl', 'const_decl', 'using_decl' ) :
+            data = {}
+            data[x]=n
+            S = DFS2(sched_dep.data,x)
+            # if (len(S)>0):
+            #     for y in S:
+            #         if y:
+            #             if y in sched_dep.data:
+            #                 n2 = sched_dep.data[y]
+            #                 # for st in n2[2] :
+            #                 #     if st:
+            #                 #         if st[0]=="String":
+            #                 #             strings.append(st[1])
+            #                 data[y]=n2
+            filename = "cache/_%0.8d.py" % int(x)
+            o =open (filename,"w")
+            o.write("data=%s" % pprint.pformat(S))
+            o.close()
+            print "wrote %s %s" % (filename, n[0])
+            return
+        else:
+            pass
 
-    n =  sched_dep.data[x]
-    strings = []
-    typename = n[0]
-    #    if n[0].find('decl') >= 0:        
-    if typename in ('function_decl', 'type_decl', 'var_decl', 'template_decl', 'namespace_decl', 'const_decl', 'using_decl' ) :
-        data = {}
-        data[x]=n
-        S = DFS2(sched_dep.data,x)
-        # if (len(S)>0):
-        #     for y in S:
-        #         if y:
-        #             if y in sched_dep.data:
-        #                 n2 = sched_dep.data[y]
-        #                 # for st in n2[2] :
-        #                 #     if st:
-        #                 #         if st[0]=="String":
-        #                 #             strings.append(st[1])
-        #                 data[y]=n2
-        filename = "cache/_%0.8d.py" % int(x)
-        o =open (filename,"w")
-        o.write("data=%s" % pprint.pformat(S))
-        o.close()
-        print "wrote %s %s" % (filename, n[0])
-    else:
-        pass
 
+main()

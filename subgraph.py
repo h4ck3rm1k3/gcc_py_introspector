@@ -1,18 +1,24 @@
+import pprint 
+
 class Graph:
 
     def __init__(self, data):
         self.data = data
 
     def node(self, i):
-        if i in self.data:
+        if i < len(self.data):
             es = self.data[i]
             if es :
-                return Node(es)
+                return Node(es, i)
         else:
-            pass
+            pprint.pprint(self.data)
+            raise Exception("not in graph %s" % i )
+
 
     def nodes(self):
+        
         return Nodes(self.data)
+
 
 class Nodes:
     def __init__(self, data):
@@ -33,7 +39,8 @@ class NodeIter:
         if p < self.l:
             d = self.data[p]
             if len(d) > 1 :
-                return Node(d)
+                #print "next", p, d
+                return Node(d,p)
         else:
             raise StopIteration
 
@@ -41,17 +48,28 @@ class Node :
     """
     Handle a node
     """
-    def __init__(self, data):
+    NODEID=0
+    TYPENAME=1
+    REFED_IDS = 2
+    REFED_OBJS = 3
+    VALUE_FIELDS = 4
+
+    def __init__(self, data, pos):
         self.data = data
+        self.pos = pos
+
+    def node_id (self):
+        return self.data[Node.NODEID]
 
     def typename (self):
-        return self.data[0]
+        return self.data[Node.TYPENAME]
 
     def fields (self):
-        return Fields(self.data[1])
+        #print(self.data)
+        return Fields(self.data[Node.REFED_IDS])
 
     def val_fields (self):
-        return Fields(self.data[3])
+        return Fields(self.data[Node.VALUE_FIELDS])
 
 class Fields :
     def __init__(self, data):
@@ -78,22 +96,27 @@ class FieldIter:
             if d and len(d) > 1 :
                 return Field(d)
             else:
-                return FieldTodo(d)
+                if (d):
+                    return FieldTodo(d)
+                else:
+                    return FieldEmpty()
         else:
             raise StopIteration
 
 class Field :
     def __init__(self, data):
         self.data = data
-
+    NAME = 0
+    VALUE = 1
     def name(self):
-        return self.data[0]
+        return self.data[Field.NAME]
 
     def value(self):
-        return self.data[1]
+        return self.data[Field.VALUE]
 
 class FieldTodo :
     def __init__(self, data):
+        assert(data)
         self.data = data
 
     def name(self):
@@ -101,4 +124,12 @@ class FieldTodo :
 
     def value(self):
         print "value", self.data
-        return self.data[0]
+        return self.data[Field.NAME]
+
+class FieldEmpty :
+    def name(self):
+        return None
+
+    def value(self):
+        return None
+
