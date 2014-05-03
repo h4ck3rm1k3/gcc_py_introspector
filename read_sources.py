@@ -10,13 +10,14 @@ class SrcP :
     def __init__(self, data):
         self.data =data
 
+idx = {}
+
 def toposort(g):
     # L = Empty list that will contain the sorted elements
     L=[]
     # S = Set of all nodes with no incoming edges
     S={}
     incoming = {}
-    idx = {}
 
     # now collect all incoming edge count
     for n in g.nodes(): # 
@@ -24,7 +25,6 @@ def toposort(g):
         idx[nid]=n.pos
 
         tn= n.typename()
-
 
         for f in n.fields():
             m = f.value()
@@ -34,7 +34,7 @@ def toposort(g):
             #print "seen ",tn, nid, fn, n.pos
             if tn in ('function_decl', 'type_decl', 'var_decl', 'template_decl', 'namespace_decl', 'const_decl', 'using_decl' ) :
                 if fn in  'chain' : 
-                    print "skip", tn, fn
+                    #print "skip", tn, fn
                     skip = 1
 
             if fn in ( 
@@ -142,16 +142,18 @@ def toposort(g):
     return L # (a topologically sorted order)
 
 
+# now print the sources in top order
 seen = {} 
 
-for n in g.nodes(): # todo sort topologically
-
+for x in toposort(g):
+    #print x
+    n = g.node(idx[x])
     for f in n.val_fields():
+        if f.name() == 'String':
+            print f.name(), f.value()
         if f.name() == 'srcp':
             v = f.value()
             if v not in seen:
                 seen[v]=1
-#                print f.name(), f.value()
+            print f.name(), f.value()
 
-for x in toposort(g):
-    print x
