@@ -4,34 +4,45 @@ class Graph:
 
     def __init__(self, data):
         self.data = data
+        self.idx = {}
+
+        # create a node index
+        for n in self.nodes(): # 
+            nid = n.node_id()
+            self.idx[nid]=n.pos
 
     def node(self, i):
+        # based on offset
         if i < len(self.data):
             es = self.data[i]
             if es :
-                return Node(es, i)
+                return Node(es, i, self)
         else:
-            pprint.pprint(self.data)
+            pprint.pprint(sorted([x[0] for x in self.data]))
             raise Exception("not in graph %s" % i )
 
+    def node_id(self, i):
+        if i  in self.idx:
+            j = self.idx[i]
+            return self.node(j)
 
     def nodes(self):
-        
-        return Nodes(self.data)
-
+        return Nodes(self.data, self)
 
 class Nodes:
-    def __init__(self, data):
+    def __init__(self, data, parent):
         self.data = data
+        self.parent = parent
 
     def __iter__(self):
-        return NodeIter(self.data, 0)
+        return NodeIter(self.data, 0, self.parent)
 
 class NodeIter:
-    def __init__(self, data, pos):
+    def __init__(self, data, pos, parent):
         self.data = data
         self.pos = pos
         self.l = len(data)
+        self.parent = parent
 
     def next(self):
         p = self.pos
@@ -40,7 +51,7 @@ class NodeIter:
             d = self.data[p]
             if len(d) > 1 :
                 #print "next", p, d
-                return Node(d,p)
+                return Node(d,p, self.parent)
         else:
             raise StopIteration
 
@@ -54,9 +65,16 @@ class Node :
     REFED_OBJS = 3
     VALUE_FIELDS = 4
 
-    def __init__(self, data, pos):
+    TypeNames = {}
+
+    def __init__(self, data, pos, parent):
         self.data = data
         self.pos = pos
+        self.parent = parent
+
+    @property
+    def id(self):
+        return self.node_id()
 
     def node_id (self):
         return self.data[Node.NODEID]
@@ -66,26 +84,45 @@ class Node :
 
     def fields (self):
         #print(self.data)
-        return Fields(self.data[Node.REFED_IDS])
+        return Fields(self.data[Node.REFED_IDS], self.parent)
 
     def val_fields (self):
-        return Fields(self.data[Node.VALUE_FIELDS])
+        return Fields(self.data[Node.VALUE_FIELDS], self.parent)
+
+    def specialize(self, visitor):
+        tn = self.typename()
+        if tn in self.TypeNames :
+            return self.TypeNames[tn](self, visitor)
+        else:
+
+            n = "".join([f.title() for f in tn.split("_")])
+                            
+            print "    class %s(Base):" % n
+            print "        CLASS='%s'\n" % tn
+            print "        def generate(self):\n            print \"%s\"\n" % tn
+
+
+            raise Exception( "missing %s " % tn)
+
 
 class Fields :
-    def __init__(self, data):
+    def __init__(self, data, parent):
         self.data = data
+        self.parent = parent
 
     def field(self, i):
-        return Field(self.data[i])
+        return Field(self.data[i], self.parent)
 
     def __iter__(self):
-        return FieldIter(self.data, 0)
+        return FieldIter(self.data, 0, self.parent)
 
 class FieldIter:
-    def __init__(self, data, pos):
+
+    def __init__(self, data, pos, parent):
         self.data = data
         self.pos = pos
         self.l = len(data)
+        self.parent = parent
 
     def next(self):
         p = self.pos
@@ -94,7 +131,7 @@ class FieldIter:
             d = self.data[p]
             #print d
             if d and len(d) > 1 :
-                return Field(d)
+                return Field(d, self.parent)
             else:
                 if (d):
                     return FieldTodo(d)
@@ -104,15 +141,20 @@ class FieldIter:
             raise StopIteration
 
 class Field :
-    def __init__(self, data):
+    def __init__(self, data, parent):
         self.data = data
+        self.parent = parent
     NAME = 0
     VALUE = 1
+
     def name(self):
         return self.data[Field.NAME]
 
     def value(self):
         return self.data[Field.VALUE]
+
+    def resolve(self):
+        return self.parent.node_id(self.value())
 
 class FieldTodo :
     def __init__(self, data):

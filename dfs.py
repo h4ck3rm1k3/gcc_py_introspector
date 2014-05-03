@@ -110,7 +110,7 @@ def main():
             o.write("data=%s" % pprint.pformat(S))
             o.close()
             print "wrote %s %s" % (filename, n[0])
-            return
+            #return
         else:
             pass
 
