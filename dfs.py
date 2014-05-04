@@ -1,5 +1,6 @@
-import sched_dep
+#import sched_dep
 import os
+import sys
 import pprint
 
 
@@ -76,7 +77,7 @@ def DFS2(G,v):
     return result
 
 
-k = sched_dep.data.keys()
+
 
 #c = DFS2(sched_dep.data,"1")
 #g = Graph(sched_dep.data)
@@ -85,26 +86,17 @@ k = sched_dep.data.keys()
 if not os.path.exists("cache"):
     os.makedirs("cache")
 
-def main():
+def main(input_data):
+    k = input_data.data.keys()
     for x in k:
-        n =  sched_dep.data[x]
+        n =  input_data.data[x]
         strings = []
         typename = n[0]
         #    if n[0].find('decl') >= 0:        
         if typename in ('function_decl', 'type_decl', 'var_decl', 'template_decl', 'namespace_decl', 'const_decl', 'using_decl' ) :
             data = {}
             data[x]=n
-            S = DFS2(sched_dep.data,x)
-            # if (len(S)>0):
-            #     for y in S:
-            #         if y:
-            #             if y in sched_dep.data:
-            #                 n2 = sched_dep.data[y]
-            #                 # for st in n2[2] :
-            #                 #     if st:
-            #                 #         if st[0]=="String":
-            #                 #             strings.append(st[1])
-            #                 data[y]=n2
+            S = DFS2(input_data.data,x)
             filename = "cache/_%0.8d.py" % int(x)
             o =open (filename,"w")
             o.write("data=%s" % pprint.pformat(S))
@@ -114,5 +106,10 @@ def main():
         else:
             pass
 
-
-main()
+import importlib
+if len(sys.argv) > 1 :
+    name = sys.argv[1]
+    module = importlib.import_module(name)
+    main(module)
+else:
+    print "need module name"

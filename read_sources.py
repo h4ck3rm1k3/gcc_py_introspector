@@ -1,16 +1,11 @@
 """
 Take a file and extract the lines that are sources
 """
-from cache._00089370 import data
 from subgraph import *
 
 class SrcP :
     def __init__(self, data):
         self.data =data
-
-
-# now print the sources in top order
-seen = {} 
 
 class Visitor :
 
@@ -145,6 +140,10 @@ class SourceGen:
         def generate(self):
             self._print("typedef basetype newnode")
             self.visit_scalars()
+
+        def emit_reference(self):
+            self._print("integer type")
+
 
     class IntegerCst (Base) :
         CLASS='integer_cst'
@@ -328,6 +327,13 @@ class SourceGen:
             self.visit_attrs()
             self.visit_chain()
 
+    class PointerType(Base):
+        CLASS='pointer_type'
+
+        def generate(self):
+            print "pointer_type"
+            self.visit_attrs()
+
     class ReferenceType(Base):
         CLASS='reference_type'
 
@@ -356,19 +362,31 @@ class SourceGen:
 
 from types import ClassType
 
-# register all the class
-for x in SourceGen.__dict__:
-    v = SourceGen.__dict__[x]
-    if isinstance(v, ClassType ):
-        #self._print "CHeck",x, type(v),v
-        if x != 'Base':
-            v.register()
-
-
+import importlib
 import pprint
-g = Graph(data)
-n = g.node(0)
-v = Visitor()
-v._print("Start Visit %s" % n.node_id())
-ns = n.specialize(v)
-ns.generate()
+import sys
+
+def main(module):
+
+    # register all the class
+    for x in SourceGen.__dict__:
+        v = SourceGen.__dict__[x]
+        if isinstance(v, ClassType ):
+            #self._print "CHeck",x, type(v),v
+            if x != 'Base':
+                v.register()
+
+    g = Graph(module.data)
+    n = g.node(0)
+    v = Visitor()
+    v._print("Start Visit %s" % n.node_id())
+    ns = n.specialize(v)
+    ns.generate()
+
+if len(sys.argv) > 1 :
+    name = sys.argv[1]
+    module = importlib.import_module(name)
+    main(module)
+else:
+    print "need module name"
+
