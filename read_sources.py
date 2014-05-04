@@ -9,142 +9,10 @@ class SrcP :
         self.data =data
 
 
-
-def toposort(g):
-    # L = Empty list that will contain the sorted elements
-    L=[]
-    # S = Set of all nodes with no incoming edges
-    S={}
-    incoming = {}
-
-    # now collect all incoming edge count
-    for n in g.nodes(): # 
-        nid = n.node_id()
-        idx[nid]=n.pos
-
-        tn= n.typename()
-
-        for f in n.fields():
-            m = f.value()
-            fn = f.name()
-
-            skip = 0 
-            #print "seen ",tn, nid, fn, n.pos
-            if tn in ('function_decl', 'type_decl', 'var_decl', 'template_decl', 'namespace_decl', 'const_decl', 'using_decl' ) :
-                if fn in  'chain' : 
-                    #print "skip", tn, fn
-                    skip = 1
-
-            if fn in ( 
-                    'type',
-                    'scpe',  # scope creates a loop
-                    'unql') : # unql also
-                skip = 1
-
-            if skip == 0 :
-                if m in incoming :
-                    if nid not in incoming[m]:
-                        incoming[m][nid] = fn
-                        #print 'incoming', fn, m, nid
-                else:
-                    incoming[m] = {}
-                    incoming[m][nid] = fn
-                    #print 'incoming', fn, m, nid
-
-    #print "Incoming:", pprint.pformat(incoming)
-    #print "Idx:", pprint.pformat(idx)
-
-    for n in g.nodes():
-        nid = n.node_id()
-        if nid not in incoming:
-            #print nid, "not in incoming"  # this should be only the entry points
-            S[nid]=1
-            # and here we remove the 
-            # for f in n.fields():
-            #     m = f.value()
-            #     fn = f.name()
-            #     #if fn == 'chan':
-            #         print 'removing', m, nid
-            #         del incoming[m][nid]
-                
-    while len(S.keys()):
-
-        #print "Keys now",S.keys()
-        #print "List now",L
-
-        keys = S.keys()
-        first = keys[0]
-        del S[first]
-        #remove a node n from S
-
-        #add n to tail of L
-        if first not in L :
-            L.append(first)
-
-            #  for each node m with an edge e from n to m do
-            #print "Process %s " % first
-            if first in idx :
-                fid = idx[first]
-                n = g.node(fid)
-
-                #print "N:%s" % n.__dict__
-                for m in n.fields():
-                    assert(m)
-                    #print "field", m.__dict__
-                    v = m.value()
-                    if v and v in idx:
-                        mid = idx[v]
-                        #print "check mid offset %s %s" % (v,mid)
-
-                        # remove edge e from the graph
-                        if v in incoming:
-                            if first in incoming[v]:
-                                #print "remove incoming",v,first
-                                del incoming[v][first]
-
-                                if len (incoming[v].keys()) == 0:
-                                    del incoming[v]
-
-                        #if m has no other incoming edges then
-                        if v not in incoming:
-                            # insert m into S
-                            S[v] = 1    
-                            #print "adding v to S", v 
-                        else:
-                            if len(incoming[v])> 0:
-                                #print "v still in in incoming", v, incoming[v]
-                                pass
-                            else:
-                                # insert m into S
-                                S[v] = 1    
-                                #print "adding v to S", v 
-                    else:
-                        #print m.__dict__
-                        #print "v %s not in idx" % v
-                        #S[v] = 1
-                        pass
-            else:
-                print "first not in idx", first
-
-    #print "Leftover",S.keys()
-    
-    #print "check for left overs"
-    if len(incoming.keys()):
-        for k in incoming.keys():
-            if k :
-                if len(incoming[k]) > 0 :
-                    #print "Check :" , k, incoming[k]
-                    raise Exception("cycle %s" % k)
-        #     return error (graph has at least one cycle)
-        
-    return L # (a topologically sorted order)
-
-
 # now print the sources in top order
 seen = {} 
 
 class Visitor :
-
 
     def _print(self, *vals):
         d = "\t" * self.indent
@@ -162,13 +30,64 @@ class Visitor :
     
     
 class SourceGen:
+
     class Base:     
         def __init__(self, node, visitor):
             self.node=node
             self.visitor = visitor
+            visitor._print("Node %s %s" % (self.node.node_id(),self.node.typename(),) )
 
         def _print(self, *vals):
             self.visitor._print( vals)
+
+        def visit_scalars(self):
+            self.visitor.enter()
+            for f in self.node.val_fields():
+                self._print ("base_val",f.name(), f.value())                   
+            self.visitor.leave()
+            
+        def visit_attrs(self):
+            self.visitor.enter()
+            for f in self.node.val_fields():
+                self._print ("base_val",f.name(), f.value())
+
+            for f in self.node.fields():
+                fn = f.name()
+
+                if fn not in ("scpe","chain"):
+                    self._print ("base_ref",f.name(), f.value())
+                    self.visitor.enter()
+                    self.resolve(f)
+                    self.visitor.leave()
+                else:
+                    self._print ("Skip",f.name(), f.value())
+                    
+            self.visitor.leave()
+
+        def visit_attrs_simple(self):
+            self.visitor.enter()
+
+            for f in self.node.fields():
+                fn = f.name()
+
+                if fn not in ("scpe","chain"):
+                    self._print ("base_ref",f.name(), f.value())                    
+                else:
+                    self._print ("Skip",f.name(), f.value())
+                    
+            self.visitor.leave()
+
+        def visit_chain(self):
+            self.visitor.enter()
+            for f in self.node.fields():
+                fn = f.name()
+                if fn in ("chain"):
+                    self._print ("chain",f.name(), f.value())
+                    self.visitor.enter()
+                    self.resolve(f)
+
+                    self.visitor.leave()
+            self.visitor.leave()
 
         @classmethod
         def register(clz):
@@ -179,10 +98,12 @@ class SourceGen:
 
         def resolve(self, f):
             v = f.resolve()                
-            ns = v.specialize(self.visitor)
-            self.visitor.enter()
-            ns.generate()
-            self.visitor.leave()
+            #TODO check if not seen already, only resolve onces
+            if (v):
+                ns = v.specialize(self.visitor)
+                self.visitor.enter()
+                ns.generate()
+                self.visitor.leave()
 
 
     class IntegerType (Base) :
@@ -190,6 +111,7 @@ class SourceGen:
 
         def generate(self):
             self._print("typedef basetype newnode")
+            self.visit_scalars()
 
     class IntegerCst (Base) :
         CLASS='integer_cst'
@@ -206,12 +128,14 @@ class SourceGen:
 
         def generate(self):
             self._print("template type param")
+            self.visit_scalars()
 
     class TemplateDecl(Base):
         CLASS='template_decl'
 
         def generate(self):
             self._print("template decl")
+            self.visit_attrs()
 
     class TreeList(Base):
         CLASS='tree_list'
@@ -229,30 +153,37 @@ class SourceGen:
 
         def generate(self):
             self._print ("void food()")
+            self.visit_attrs()
 
     class FunctionType(Base):
         CLASS='function_type'
 
         def generate(self):
             self._print ("void ()()")
+            self.visit_scalars()
 
     class BooleanType(Base):
         CLASS='boolean_type'
 
         def generate(self):
             self._print ("bool")
+            self.visit_scalars()
 
     class TypeDecl(Base):
         CLASS='type_decl'
 
         def generate(self):
             self._print ("type_decl")
-    
+            #self.visit_attrs() tailspin
+            self.visit_scalars()
+            self.visit_attrs_simple()
 
     class IdentifierNode(Base):
         CLASS='identifier_node'
 
         def generate(self):
+            self.visit_attrs()
+
             for f in self.node.val_fields():
                 if f.name() == 'String':
                     self._print( "Identifer",f.name(), f.value())
@@ -262,6 +193,8 @@ class SourceGen:
 
         def generate(self):
             self._print ("record_type")
+            self.visit_attrs()
+            self.visit_attrs_simple()
 
     class TreeVec(Base):
         CLASS='tree_vec'
@@ -283,68 +216,71 @@ class SourceGen:
 
         def generate(self):
             self._print ("bind_expr")
+            self.visit_attrs()
 
     class ReturnExpr(Base):
         CLASS='return_expr'
 
         def generate(self):
             self._print ("return_expr")
+            self.visit_attrs()
 
     class TruthNotExpr(Base):
         CLASS='truth_not_expr'
 
         def generate(self):
             self._print ("! truth_not_expr")
+            self.visit_attrs()
 
     class EqExpr(Base):
         CLASS='eq_expr'
 
         def generate(self):
             self._print ("== eq_expr")
+            self.visit_attrs()
 
     class IndirectRef(Base):
         CLASS='indirect_ref'
 
         def generate(self):
             self._print ("*indirect_ref")
-
+            #self.visit_attrs()
+            self.visit_scalars()
+            self.visit_attrs_simple()
+            
     class ParmDecl(Base):
         CLASS='parm_decl'
 
         def generate(self):
             self._print ("parm_decl")
+            self.visit_attrs()
+            self.visit_chain()
 
     class ReferenceType(Base):
         CLASS='reference_type'
 
         def generate(self):
             self._print ("reference_type")
-
+            self.visit_attrs()
 
     class VoidType(Base):
         CLASS='void_type'
 
         def generate(self):
             self._print ("void")
-
-def walk_topo(g):   
-    for x in toposort(g):
-        #self._print x
-        n = g.node(idx[x])
-
-        ns = n.specialize()
-        ns.generate()
+            self.visit_scalars()
 
 def walk(g):   
     v = Visitor()
     for n in g.nodes():
-        v._print ("Next in visit")
+        v._print("Next in visit %s" % n.node_id())
         ns = n.specialize(v)
         ns.generate()
 
 
 from types import ClassType
 
+# register all the class
 for x in SourceGen.__dict__:
     v = SourceGen.__dict__[x]
     if isinstance(v, ClassType ):
@@ -355,5 +291,8 @@ for x in SourceGen.__dict__:
 
 import pprint
 g = Graph(data)
-
-walk(g)
+n = g.node(0)
+v = Visitor()
+v._print("Start Visit %s" % n.node_id())
+ns = n.specialize(v)
+ns.generate()

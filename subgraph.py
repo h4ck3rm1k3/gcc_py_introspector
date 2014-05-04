@@ -175,3 +175,5 @@ class FieldEmpty :
     def value(self):
         return None
 
+    def resolve(self):
+        pass
