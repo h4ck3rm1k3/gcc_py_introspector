@@ -92,6 +92,7 @@ class Node :
     def specialize(self, visitor):
         tn = self.typename()
         if tn in self.TypeNames :
+            visitor._print("typename %s" % tn)
             return self.TypeNames[tn](self, visitor)
         else:
 
