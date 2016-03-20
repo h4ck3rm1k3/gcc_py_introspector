@@ -307,6 +307,16 @@ class SpecAttr2(SpecAttrBase):
     def type(self):
         return self.name
 
+class SpecAttr3(SpecAttrBase):
+
+    def __init__(self, value):
+        self.name = 'spec'
+        self.value = value
+
+    @property
+    def type(self):
+        return self.name
+
 
 class SpecAttr(SpecAttrBase):
 

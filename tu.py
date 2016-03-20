@@ -10,6 +10,7 @@ tokens = [
     'ATTR_OP',
     'ATTR_En',
     'OP0_ATTR',
+    'OP1_ATTR',
     'TYPE_ATTR',
     'ADDR_EXPR',
     'SPEC_ATTR',
@@ -128,6 +129,7 @@ cast_expr
 complex_type
 component_ref
 compound_expr
+convert_expr
 cond_expr
 const_cast_expr
 const_decl
@@ -148,6 +150,7 @@ for_stmt
 function_decl
 function_type
 ge_expr
+goto_expr
 gt_expr
 handler
 identifier_node
@@ -160,11 +163,13 @@ lang_type
 le_expr
 lshift_expr
 lt_expr
+label_expr
 member_ref
 mem_ref
 method_type
 minus_expr
 modop_expr
+modify_expr
 mult_expr
 namespace_decl
 ne_expr
@@ -176,6 +181,7 @@ overload
 parm_decl
 plus_expr
 pointer_type
+pointer_plus_expr
 postdecrement_expr
 postincrement_expr
 predecrement_expr
@@ -183,6 +189,7 @@ preincrement_expr
 ptrmem_cst
 real_cst
 real_type
+result_decl
 record_type
 reference_type
 reinterpret_cast_expr
@@ -194,6 +201,7 @@ statement_list
 static_cast_expr
 string_cst
 switch_stmt
+switch_expr
 tag_defn
 target_expr
 template_decl
@@ -208,6 +216,7 @@ tree_list
 tree_vec
 trunc_div_expr
 trunc_mod_expr
+truth_and_expr
 truth_andif_expr
 truth_not_expr
 truth_orif_expr
@@ -285,6 +294,11 @@ def t_OP0_ATTR(tok):
     #count_non_null(tok)
     tok.value = str(tok.lexer.lexmatch.group("val"))
     #print("OP0_ATTR %s " % tok.value)
+    return tok
+
+def t_OP1_ATTR(tok):
+    r'(?P<val>OP1)\s*:'
+    tok.value = str(tok.lexer.lexmatch.group("val"))
     return tok
 
 def t_TYPE_ATTR(tok):
@@ -365,6 +379,7 @@ init
 idx
 inst
 lang
+labl
 line
 link
 lngt
@@ -398,6 +413,7 @@ then
 unql
 used
 val
+vars
 valu
 vfld
 ''')
@@ -415,7 +431,7 @@ t_SPEC_ATTR.__doc__ = r'(?P<val>%s)\s*:' % make_re('spec')
 
 t_BUILTIN_FILE = r'\<built\-in\>:0'
 t_HXX_FILE = r'(yes_no_type.hpp|' + \
-             r'[\-\+A-Za-z_\-0-9]+(\.(h|hdl|txx|tcc|hpp|cpp|cxx|hxx|pb\.h|pb\.c))?):\d+'
+             r'[\-\+A-Za-z_\-0-9]+(\.(h|hdl|c|txx|tcc|hpp|cpp|cxx|hxx|pb\.h|pb\.c))?):\d+'
 t_SIGNED = 'signed|unsigned'
 #t_SCOPE = r'\:\:'
 #t_INTCONST = r'(\-)?\d+'

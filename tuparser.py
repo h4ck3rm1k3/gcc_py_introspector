@@ -100,9 +100,28 @@ def std_attrs2(psr_val):
 
 #create_rules()
 
+def p_ntype_goto_expr(psr_val):
+    'ntype : NTYPE_GOTO_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_label_expr(psr_val):
+    'ntype : NTYPE_LABEL_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_switch_expr(psr_val):
+    'ntype : NTYPE_SWITCH_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_truth_and_expr(psr_val):
+    'ntype : NTYPE_TRUTH_AND_EXPR'
+    psr_val[0] = ntype_base(psr_val)
 
 def p_ntype_aggr_init_expr(psr_val):
     'ntype : NTYPE_AGGR_INIT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_modify_expr(psr_val):
+    'ntype : NTYPE_MODIFY_EXPR'
     psr_val[0] = ntype_base(psr_val)
 
 def p_ntype_alignof_expr(psr_val):
@@ -561,10 +580,30 @@ def p_ntype_while_stmt(psr_val):
     'ntype : NTYPE_WHILE_STMT'
     psr_val[0] = ntype_base(psr_val)
 
+def p_ntype_pointer_plus_extr(psr_val):
+    'ntype : NTYPE_POINTER_PLUS_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_result_decl(psr_val):
+    'ntype : NTYPE_RESULT_DECL'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_convert_expr(psr_val):
+    'ntype : NTYPE_CONVERT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
 
 ##
 def p_attr_accs(psr_val):
     'attrtype : ATTR_ACCS'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_labl(psr_val):
+    'attrtype : ATTR_LABL'
+    psr_val[0] = attr_base(psr_val)
+
+def p_attr_vars(psr_val):
+    'attrtype : ATTR_VARS'
     psr_val[0] = attr_base(psr_val)
 
 def p_attr_addr(psr_val):
@@ -1082,7 +1121,11 @@ def p_attrs_op0(psr_val):
     #           1     2     3
     'attrs :  OP0_ATTR attrval attrs'
     psr_val[0] = std_attrs(psr_val)
-    
+
+def p_attrs_op1(psr_val):
+    'attrs :  OP1_ATTR attrval attrs'
+    psr_val[0] = std_attrs(psr_val)
+
 def p_attrs_done(psr_val):
     'attrs : '
     # print "final attrs %s" % p
@@ -1102,6 +1145,13 @@ def p_attrs_spec1(psr_val):
     'attrs :  SPEC_ATTR SPEC_VALU attrs'
     node = tuast.SpecAttr2(psr_val[1], psr_val[2])
     psr_val[0] = append_list(psr_val[3], node)
+    return psr_val[0]
+
+def p_attrs_spec2(psr_val):
+    #          1        2
+    'attrs :  SPEC_VALU attrs'
+    node = tuast.SpecAttr3(psr_val[1])
+    psr_val[0] = append_list(psr_val[2], node)
     return psr_val[0]
 
 def p_attrs_note(psr_val):
@@ -1258,8 +1308,8 @@ def p_node_addr_expr_type(psr_val):
 
 def p_error(psr_val):
     print "Check Syntax error in input! %s" % psr_val
-    print "Line Number: %s" % psr_val.lineno(2)
-    print "Line Pos: %s" % psr_val.lexpos(2)
+    print "Line Number: %s" % psr_val.lineno
+    print "Line Pos: %s" % psr_val.lexpos
     print("Parser %s" % parser)
     pass
 

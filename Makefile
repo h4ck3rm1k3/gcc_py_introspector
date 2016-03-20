@@ -1,3 +1,6 @@
+testbash:
+	python reader.py /home/jamesmikedupont/bash/build/eval.c.001t.tu
+
 qual:
 	python reader.py tests/test_one_qual.tu x
 
