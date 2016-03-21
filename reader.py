@@ -4,10 +4,36 @@ reader module
 
 import sys
 import re
+import tuast
 import traceback
 from tu import lex
 from tuparser import parser
 import pprint
+import rdflib
+
+
+#import SPARQLWrapper # https://github.com/RDFLib/sparqlwrapper.git
+#from SPARQLWrapper import   POST
+url = "http://localhost:8890/sparql"
+#sparql = SPARQLWrapper.SPARQLWrapper()
+#sparql.setQuery(query)
+#sparql.method='POST';
+#sparql.requestMethod="URLENCODED";
+#sparql.query()
+import rdflib.plugins.stores.sparqlstore
+
+store = rdflib.plugins.stores.sparqlstore.SPARQLUpdateStore(
+    url,
+    context_aware=False
+)
+g=rdflib.Graph(store)  
+# from rdflib.store import Store
+# from rdflib.plugin import get as plugin
+
+# import secrets
+
+# Virtuoso = plugin("Virtuoso", Store)
+# store = Virtuoso("DSN=VOS;UID=dba;PWD="+secrets.passw+";WideAsUTF16=Y")
 
 OPRE = r'op\s([0-9]+)\s*:\s\@'
 ERE = r'\s([0-9]+)\s+:\s\@'
@@ -15,16 +41,87 @@ vals = {}
 seen = {} 
 
 deps = {}
+filename = sys.argv[1].replace('/home/jamesmikedupont','projects')
+domain = 'introspector.xyz'
 
+nodetypes = {}
+
+#rdflib.RDFS.label
+def mnt(nt):
+    if nt not in nodetypes:
+        ntu = rdflib.URIRef('http://' + domain + '/' + filename + '/node_type/'+ '#' + nt  )
+        nodetypes[nt] =ntu
+    return nodetypes[nt]
+
+attrs = {}
+def attr(nt):
+    if nt not in attrs:
+        ntu = rdflib.URIRef('http://' + domain + '/gcc/field_type/'+ '#' + nt  )
+        attrs[nt] =ntu
+    return attrs[nt]
+
+    
 def report(x,l):
     #print("Results1 %s -> %s | %s" % (x.node_id, x.keys(),l))
     assert(x)
     k = x.keys()
     assert(k)
-#    print l
+    #print l
     #print k
-#    pprint.pprint(x.__dict__)
-    deps[x.node_id]=k
+
+    nt = x.node_type
+    ni = x.node_id
+
+    u = rdflib.URIRef('http://' + domain + '/' + filename + '#' + ni  )
+    # Literal('foo')
+    g.add([u, rdflib.RDF.type, mnt(nt)])
+
+
+    # now add the vals
+    if (x.vals):
+        if isinstance(x.vals, list):
+            for v in x.vals:
+
+                if isinstance(v, tuast.Attr):
+                    p = attr(v.name)
+                    v2 =v.value
+                    
+                    if isinstance(v2, tuast.NodeRef):
+                        o = rdflib.URIRef('http://' + domain + '/' + filename + '#' + v.value.val)                        
+                        g.add([u, p, o])
+                    elif isinstance(v2, tuast.Signed):
+                        pass
+                    elif isinstance(v2, tuast.Float):
+                        pass
+                    elif isinstance(v2, tuast.Struct):
+                        pass
+                    elif isinstance(v2, tuast.FileBuiltin):
+                        pass
+                    elif isinstance(v2, tuast.Qual):
+                        pass
+                    elif isinstance(v2, tuast.Artificial):
+                        pass
+
+                    elif isinstance(v2, tuast.FilePos):
+                        pass
+                    elif isinstance(v2, tuast.Link):
+                        pass
+
+                    else:
+                        pprint.pprint( v2 )
+                    #else : tuast.Float
+                                        #else : tuast.Signed
+                
+    
+
+    #    {'node_id': '1',
+ # 'node_type': 'type_decl',
+ # 'vals': [<tuast.Attr object at 0x7ff3d553a850>,
+ #          <tuast.Attr object at 0x7ff3d553a950>,
+ #          <tuast.Attr object at 0x7ff3d553a9d0>]}
+
+    #pprint.pprint(x.__dict__)
+    #deps[x.node_id]=k
 
 
 
@@ -158,9 +255,10 @@ try:
 except Exception as e:
     print "error %s" % e
 
-print "data=%s" % pprint.pformat(deps)
+#print "data=%s" % pprint.pformat(deps)
 
 #print "\n".join(sorted(seen.keys()))
 
 
 
+print g.serialize()
