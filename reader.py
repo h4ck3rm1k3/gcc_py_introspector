@@ -27,16 +27,22 @@ from tuparser import parser
 
 import rdflib
 
-#url = "http://localhost:8890/sparql"
-url = "http://localhost:8890/sparql-graph-crud"
+use_sparql=False
 
-import rdflib.plugins.stores.sparqlstore
+g=None
 
-store = rdflib.plugins.stores.sparqlstore.SPARQLUpdateStore(
-    url,
-    context_aware=False
-)
-g=rdflib.Graph(store)  
+if use_sparql :
+    url = "http://localhost:8890/sparql-graph-crud"
+    import rdflib.plugins.stores.sparqlstore
+    store = rdflib.plugins.stores.sparqlstore.SPARQLUpdateStore(
+        url,
+        context_aware=False
+    )
+    g=rdflib.Graph(store)
+else:
+    g=rdflib.Graph()
+    #g.open("testgraph",create=True)
+    
 # from rdflib.store import Store
 # from rdflib.plugin import get as plugin
 
@@ -272,5 +278,4 @@ except Exception as e:
 #print "\n".join(sorted(seen.keys()))
 
 
-
-print g.serialize()
+print g.serialize("output.xml")
