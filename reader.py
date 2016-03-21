@@ -1,25 +1,35 @@
 '''
 reader module
 '''
-
 import sys
+import os
+import pprint
+home = os.environ['HOME']
+user = os.environ['USER']
+
+sys.path.append(home + '/rdflib/')
+sys.path.append(home + '/sparqlwrapper/')
+
+import urllib2
+handler=urllib2.HTTPHandler(debuglevel=1)
+opener = urllib2.build_opener(handler)
+urllib2.install_opener(opener)
+#>>> resp=urllib2.urlopen('http://w
+
+
+
+pprint.pprint(sys.path)
 import re
 import tuast
 import traceback
 from tu import lex
 from tuparser import parser
-import pprint
+
 import rdflib
 
+#url = "http://localhost:8890/sparql"
+url = "http://localhost:8890/sparql-graph-crud"
 
-#import SPARQLWrapper # https://github.com/RDFLib/sparqlwrapper.git
-#from SPARQLWrapper import   POST
-url = "http://localhost:8890/sparql"
-#sparql = SPARQLWrapper.SPARQLWrapper()
-#sparql.setQuery(query)
-#sparql.method='POST';
-#sparql.requestMethod="URLENCODED";
-#sparql.query()
 import rdflib.plugins.stores.sparqlstore
 
 store = rdflib.plugins.stores.sparqlstore.SPARQLUpdateStore(
@@ -41,7 +51,7 @@ vals = {}
 seen = {} 
 
 deps = {}
-filename = sys.argv[1].replace('/home/jamesmikedupont','projects')
+filename = sys.argv[1].replace(home,'projects')
 domain = 'introspector.xyz'
 
 nodetypes = {}
@@ -208,7 +218,8 @@ def parse_l(l, debug, error_file):
         if debug :
             print "Stack:%s" % stack
             print "parser %s" % parser
-
+    #except QueryBadFormed as e:
+    #    raise e
     except Exception as exp:
         print "parse error : "+ l + "\n"
         error_file.write(l + "\n")
@@ -216,6 +227,7 @@ def parse_l(l, debug, error_file):
         print exp
         print "EXP Line:%s" % l
         print "EXP Stack:%s" % stack
+        raise exp
     
     #print "Stack:%s" % stack
 
