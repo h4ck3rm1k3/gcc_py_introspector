@@ -55,12 +55,26 @@ OPRE = r'op\s([0-9]+)\s*:\s\@'
 ERE = r'\s([0-9]+)\s+:\s\@'
 vals = {}
 seen = {} 
-
 deps = {}
 filename = sys.argv[1].replace(home,'projects')
 domain = 'introspector.xyz'
-
 nodetypes = {}
+
+replace = {
+    0x07 : "&#x2407;", #escape BEL
+    0x1a : "&#xfffd;" # EOF
+}
+
+def clean(x):
+    new = []
+    for c in list(x):
+        o= ord(c)
+        if o in replace:
+            r = replace[o]
+            new.append(r)
+        else:
+            new.append(c)
+    return "".join(new)
 
 #rdflib.RDFS.label
 def mnt(nt):
@@ -124,9 +138,9 @@ def report(x,l):
                         o = rdflib.URIRef('http://' + domain + '/' + filename + '#' + v.value.val)                        
                         g.add([u, p, o])                        
                     elif isinstance(v2, tuast.Signed):
-                        g.add([u, p, rdflib.Literal(v.value)])
+                        g.add([u, p, rdflib.Literal(v2.val)])
                     elif isinstance(v2, tuast.Float):
-                        g.add([u, p, rdflib.Literal(v.value)])
+                        g.add([u, p, rdflib.Literal(v2.val)])
                     elif isinstance(v2, tuast.Struct):
                         g.add([u, p, structure("structure",v2.val)])
                     elif isinstance(v2, tuast.FileBuiltin):
@@ -149,7 +163,9 @@ def report(x,l):
                     
                 elif isinstance(v, tuast.String):
                     p = attr("string")
-                    g.add([u, p, rdflib.Literal(v.val)])
+                    g.add([u, p, rdflib.Literal(
+                        clean(v.val) #https://github.com/RDFLib/rdflib/issues/614
+                    )])
                 else:
                     pprint.pprint( ["OTHER", v ] )
     
