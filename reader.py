@@ -99,10 +99,17 @@ def report(x,l):
     nt = x.node_type
     ni = x.node_id
 
+
+                        
     u = rdflib.URIRef('http://' + domain + '/' + filename + '#' + ni  )
     # Literal('foo')
     g.add([u, rdflib.RDF.type, mnt(nt)])
 
+    ## add in one link per filename for easy deletion
+    fop = attr("source_file")
+    fo = rdflib.URIRef('http://' + domain + '/' + filename )                        
+    g.add([u, fop, fo])
+    
     #pprint.pprint([ l ])
     # now add the vals
     if (x.vals):
