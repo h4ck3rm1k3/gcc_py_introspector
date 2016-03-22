@@ -243,9 +243,11 @@ t_CONSTRUCTOR = 'constructor'
 
 
 def t_STRG(tok):
-    r'strg:\s+(?P<val>.+)\s+lngt:\s\d+'
+    r'strg:\s+(?P<val>.+)\s+lngt:\s(?P<len>\d+)'
     strval = tok.lexer.lexmatch.group("val")
-    tok.value = strval
+    strlen = int(tok.lexer.lexmatch.group("len"))
+    #print "String:" + strval + ";Length:" + str(strlen)
+    tok.value = strval[0:strlen] # only take the first n chars given by the len 
     return tok
 
 #t_STRG2 = r'.+\s+lngt:\s\d+?'

@@ -65,14 +65,25 @@ nodetypes = {}
 #rdflib.RDFS.label
 def mnt(nt):
     if nt not in nodetypes:
-        ntu = rdflib.URIRef('http://' + domain + '/' + filename + '/node_type/'+ '#' + nt  )
+        ntu = rdflib.URIRef('http://' + domain + '/gcc/node_types.owl#' + nt  )
         nodetypes[nt] =ntu
     return nodetypes[nt]
+
+structures={}
+def structure(name, nt):
+    if name not in structures:
+        structures[name]={}
+
+    if nt not in structures[name]:
+        ntu = rdflib.URIRef('http://' + domain + '/gcc/' + name + '.owl#' + nt  )
+        structures[name][nt] =ntu
+        
+    return structures[name][nt]
 
 attrs = {}
 def attr(nt):
     if nt not in attrs:
-        ntu = rdflib.URIRef('http://' + domain + '/gcc/field_type/'+ '#' + nt  )
+        ntu = rdflib.URIRef('http://' + domain + '/gcc/field_types.owl#' + nt  )
         attrs[nt] =ntu
     return attrs[nt]
 
@@ -92,7 +103,7 @@ def report(x,l):
     # Literal('foo')
     g.add([u, rdflib.RDF.type, mnt(nt)])
 
-
+    #pprint.pprint([ l ])
     # now add the vals
     if (x.vals):
         if isinstance(x.vals, list):
@@ -101,33 +112,39 @@ def report(x,l):
                 if isinstance(v, tuast.Attr):
                     p = attr(v.name)
                     v2 =v.value
-                    
+                    #pprint.pprint([v.name, v2, v2.__dict__ ])
                     if isinstance(v2, tuast.NodeRef):
                         o = rdflib.URIRef('http://' + domain + '/' + filename + '#' + v.value.val)                        
-                        g.add([u, p, o])
+                        g.add([u, p, o])                        
                     elif isinstance(v2, tuast.Signed):
-                        pass
+                        g.add([u, p, rdflib.Literal(v.value)])
                     elif isinstance(v2, tuast.Float):
-                        pass
+                        g.add([u, p, rdflib.Literal(v.value)])
                     elif isinstance(v2, tuast.Struct):
-                        pass
+                        g.add([u, p, structure("structure",v2.val)])
                     elif isinstance(v2, tuast.FileBuiltin):
-                        pass
+                        g.add([u, p, rdflib.Literal("true")])
                     elif isinstance(v2, tuast.Qual):
-                        pass
+                        g.add([u, p, structure("qual",v2.val)])                        
                     elif isinstance(v2, tuast.Artificial):
-                        pass
-
+                        g.add([u, p, structure("artificial",v2.val)])
                     elif isinstance(v2, tuast.FilePos):
-                        pass
+                        g.add([u, p, rdflib.Literal(v.value)])
                     elif isinstance(v2, tuast.Link):
-                        pass
-
+                        g.add([u, p, structure("link",v2.val)])
                     else:
                         pprint.pprint( v2 )
-                    #else : tuast.Float
-                                        #else : tuast.Signed
-                
+
+                elif isinstance(v, tuast.SpecAttr3):
+                    vn = attr(v.value)
+                    p = attr(v.name)
+                    g.add([u, p, vn])
+                    
+                elif isinstance(v, tuast.String):
+                    p = attr("string")
+                    g.add([u, p, rdflib.Literal(v.val)])
+                else:
+                    pprint.pprint( ["OTHER", v ] )
     
 
     #    {'node_id': '1',
@@ -137,7 +154,7 @@ def report(x,l):
  #          <tuast.Attr object at 0x7ff3d553a9d0>]}
 
     #pprint.pprint(x.__dict__)
-    #deps[x.node_id]=k
+    #deps[x.node_id]=x.__dict__
 
 
 
@@ -273,7 +290,9 @@ try:
 except Exception as e:
     print "error %s" % e
 
-#print "data=%s" % pprint.pformat(deps)
+debug_file = open("output.debug", "w")
+debug_file.write("data=%s" % pprint.pformat(deps))
+debug_file.close()
 
 #print "\n".join(sorted(seen.keys()))
 
