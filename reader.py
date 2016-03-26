@@ -150,7 +150,7 @@ def report(x,l):
                     elif isinstance(v2, tuast.Artificial):
                         g.add([u, p, structure("artificial",v2.val)])
                     elif isinstance(v2, tuast.FilePos):
-                        g.add([u, p, rdflib.Literal(v.value)])
+                        g.add([u, p, rdflib.Literal(v2.value)])
                     elif isinstance(v2, tuast.Link):
                         g.add([u, p, structure("link",v2.val)])
                     else:
