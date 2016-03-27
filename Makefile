@@ -1,6 +1,6 @@
 query :
-	python queryviz.py > example.dot
-	dot example.dot -Tpng -o /var/www/html/sparql/introspector/graphs/example.png
+	python queryviz.py > /var/www/html/sparql/introspector/graphs/example.dot
+	dot /var/www/html/sparql/introspector/graphs/example.dot -Tpng -o /var/www/html/sparql/introspector/graphs/example.png
 
 testbash1:
 	python reader.py /home/jamesmikedupont/bash/build/test1.tu
