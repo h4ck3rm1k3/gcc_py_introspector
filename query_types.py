@@ -42,6 +42,15 @@ WHERE {
     ?o rdf:type ?ot.                                                                                                                                            } group by  ?st ?p ?ot
 
 """)
+    print "\t".join(
+        [
+            'count',
+            'firsto',
+            'firsts',
+            'st',
+            'p',
+            'ot'])
+                
     for x in results['results']['bindings']:
         print "\t".join(
             [
