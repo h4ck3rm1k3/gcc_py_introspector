@@ -18,7 +18,7 @@ urllib2.install_opener(opener)
 
 
 
-pprint.pprint(sys.path)
+#pprint.pprint(sys.path)
 import re
 import tuast
 import traceback
@@ -101,7 +101,12 @@ def attr(nt):
         attrs[nt] =ntu
     return attrs[nt]
 
-    
+def add_field(g, ni, fname, oid):
+    u = rdflib.URIRef('http://' + domain + '/' + filename + '#' + ni  )
+    p = attr(fname)
+    o = rdflib.URIRef('http://' + domain + '/' + filename + '#' + oid)                        
+    g.add([u, p, o])                        
+
 def report(x,l):
     #print("Results1 %s -> %s | %s" % (x.node_id, x.keys(),l))
     assert(x)
@@ -109,12 +114,8 @@ def report(x,l):
     assert(k)
     #print l
     #print k
-
     nt = x.node_type
-    ni = x.node_id
-
-
-                        
+    ni = x.node_id                        
     u = rdflib.URIRef('http://' + domain + '/' + filename + '#' + ni  )
     # Literal('foo')
     g.add([u, rdflib.RDF.type, mnt(nt)])
@@ -125,8 +126,10 @@ def report(x,l):
     g.add([u, fop, fo])
     
     #pprint.pprint([ l ])
+    #pprint.pprint([ x ])
     # now add the vals
     if (x.vals):
+        #pprint.pprint([ "Vals", x.vals ])
         if isinstance(x.vals, list):
             for v in x.vals:
 
@@ -168,19 +171,40 @@ def report(x,l):
                     )])
                 else:
                     pprint.pprint( ["OTHER", v ] )
-    
+        else:
+            if isinstance(x.vals, tuast.Attr):
+                if isinstance(x.vals.value, tuast.NodeRef):
+                    # a tree_list item with a "valu" field
+                    p = attr(x.vals.name)
+                    add_field(g, x.node_id, p , x.vals.value.val)
+                    
+                else:
+                    pprint.pprint( ["not a node ref", x.vals.value ] )
+                    raise Exception("TODO")
 
-    #    {'node_id': '1',
- # 'node_type': 'type_decl',
- # 'vals': [<tuast.Attr object at 0x7ff3d553a850>,
- #          <tuast.Attr object at 0x7ff3d553a950>,
- #          <tuast.Attr object at 0x7ff3d553a9d0>]}
+            else:
+                pprint.pprint( ["no vals", x ] )
+                raise Exception("TODO")
+    else:
 
-    #pprint.pprint(x.__dict__)
-    #deps[x.node_id]=x.__dict__
+        if isinstance(x, tuast.AddrExprTyped):
+            #print "NodeId:" +
+            #print "node type:" +x.node_type
+            #print "Vals:" + str(x.vals)
+            #pprint.pprint( ["op_0", x.op_0 ] )
+            #pprint.pprint( ["expr_type", x.expr_type ] )
 
-
-
+            add_field(g, x.node_id, "OP0", x.op_0)
+            add_field(g, x.node_id, "type", x.expr_type)
+                
+            #g.add([u, p, structure("link",v2.val)])
+        elif isinstance(x, tuast.Node):
+            print "TODO some node" + str(x)
+            pprint.pprint( ["TODO", x.__dict__ ] )
+        else:
+            pprint.pprint( ["no vals", x ] )
+            raise Exception("TODO")
+        
 def lex(l, debug, error_file):
     """
     try and lex the input
