@@ -1,492 +1,492 @@
-bit_and_expr	OP1	var_decl
-bit_and_expr	OP0	plus_expr
-bit_and_expr	OP0	nop_expr
-component_ref	OP0	indirect_ref
-call_expr	E0	var_decl
-call_expr	fn	addr_expr
-call_expr	E1	nop_expr
-call_expr	type	void_type
-case_label_expr	type	void_type
-case_label_expr	name	label_decl
-call_expr	E0	parm_decl
-call_expr	E1	integer_cst
-component_ref	type	pointer_type
-component_ref	OP1	field_decl
-call_expr	E3	integer_cst
-call_expr	E0	integer_cst
-case_label_expr	low	integer_cst
-call_expr	E2	integer_cst
-component_ref	type	array_type
-bit_and_expr	type	integer_type
-call_expr	type	integer_type
-bit_and_expr	OP1	integer_cst
-call_expr	E1	parm_decl
-call_expr	E2	parm_decl
-call_expr	E3	parm_decl
-call_expr	type	pointer_type
-call_expr	E0	nop_expr
-call_expr	E1	var_decl
-call_expr	E2	var_decl
-bit_and_expr	OP0	array_ref
-bit_and_expr	OP1	bit_not_expr
-const_decl	scpe	translation_unit_decl
-const_decl	type	enumeral_type
-const_decl	cnst	integer_cst
-const_decl	name	identifier_node
-const_decl	chain	const_decl
-const_decl	chain	type_decl
-cond_expr	OP1	call_expr
-cond_expr	type	void_type
-cond_expr	OP0	ne_expr
-cond_expr	OP2	nop_expr
-cond_expr	type	integer_type
-component_ref	type	integer_type
-cond_expr	OP0	eq_expr
-cond_expr	OP1	goto_expr
-cond_expr	OP2	goto_expr
-cond_expr	OP0	truth_andif_expr
-cond_expr	OP1	statement_list
-cond_expr	OP1	cond_expr
-cond_expr	OP2	cond_expr
-addr_expr	type	function_decl
-addr_expr	OP0	pointer_type
-addr_expr	type	var_decl
-addr_expr	type	string_cst
-bit_and_expr	OP0	convert_expr
-component_ref	OP0	var_decl
-cond_expr	OP1	modify_expr
-cond_expr	OP0	gt_expr
-component_ref	type	enumeral_type
-call_expr	type	real_type
-bit_and_expr	OP0	parm_decl
-call_expr	fn	parm_decl
-call_expr	E0	ge_expr
-cond_expr	OP0	truth_orif_expr
-cond_expr	OP1	bind_expr
-cond_expr	type	pointer_type
-cond_expr	OP1	convert_expr
-function_decl	name	identifier_node
-function_decl	mngl	identifier_node
-function_decl	type	function_type
-function_decl	chain	function_decl
-function_decl	scpe	translation_unit_decl
-bind_expr	vars	var_decl
-bind_expr	body	statement_list
-bind_expr	type	void_type
-bind_expr	body	return_expr
-array_type	size	integer_cst
-array_type	elts	integer_type
-array_type	domn	integer_type
-array_type	name	type_decl
-array_type	elts	record_type
-array_type	unql	array_type
-cond_expr	OP1	nop_expr
-cond_expr	OP2	call_expr
-cond_expr	OP2	integer_cst
-bit_and_expr	OP0	component_ref
-array_type	elts	pointer_type
-function_decl	chain	var_decl
-cond_expr	OP0	lt_expr
-cond_expr	OP2	return_expr
-cond_expr	OP2	parm_decl
-cond_expr	OP0	le_expr
-function_decl	body	bind_expr
-function_decl	args	parm_decl
-decl_expr	type	void_type
-convert_expr	type	void_type
-convert_expr	OP0	parm_decl
-convert_expr	type	pointer_type
-convert_expr	type	integer_type
-convert_expr	OP0	addr_expr
-convert_expr	OP0	call_expr
-convert_expr	OP0	rshift_expr
-field_decl	scpe	union_type
-field_decl	name	identifier_node
-field_decl	chain	field_decl
-field_decl	bpos	integer_cst
-field_decl	size	integer_cst
-field_decl	type	record_type
-field_decl	scpe	record_type
-eq_expr	OP0	nop_expr
-eq_expr	OP1	nop_expr
-field_decl	type	pointer_type
-field_decl	type	integer_type
-eq_expr	type	integer_type
-enumeral_type	size	integer_cst
-enumeral_type	min	integer_cst
-enumeral_type	max	integer_cst
-enumeral_type	csts	tree_list
-enumeral_type	name	identifier_node
-enumeral_type	unql	enumeral_type
-enumeral_type	name	type_decl
-eq_expr	OP0	var_decl
-eq_expr	OP1	integer_cst
-eq_expr	OP0	call_expr
-eq_expr	OP1	parm_decl
-eq_expr	OP0	parm_decl
-function_decl	chain	type_decl
-function_type	retn	real_type
-function_type	size	integer_cst
-function_type	retn	void_type
-function_type	prms	tree_list
-function_type	retn	integer_type
-function_type	unql	function_type
-function_type	name	type_decl
-function_type	retn	pointer_type
-function_type	retn	boolean_type
-function_type	retn	vector_type
-field_decl	type	array_type
-field_decl	type	union_type
-field_decl	type	enumeral_type
-function_type	retn	complex_type
-function_type	retn	record_type
-field_decl	orig	field_decl
-goto_expr	labl	label_decl
-goto_expr	type	void_type
-field_decl	type	real_type
-label_decl	scpe	function_decl
-label_expr	name	label_decl
-label_expr	type	void_type
-label_decl	type	void_type
-label_decl	name	identifier_node
-integer_type	unql	integer_type
-integer_type	size	integer_cst
-integer_type	min	integer_cst
-integer_type	max	integer_cst
-integer_type	name	type_decl
-ne_expr	OP0	bit_and_expr
-ne_expr	OP0	var_decl
-ne_expr	OP0	nop_expr
-ne_expr	OP1	parm_decl
-ne_expr	OP1	integer_cst
-ne_expr	type	integer_type
-mult_expr	type	integer_type
-mult_expr	OP1	integer_cst
-mult_expr	OP0	nop_expr
-ne_expr	OP0	call_expr
-lshift_expr	OP0	integer_cst
-lshift_expr	OP1	bit_and_expr
-modify_expr	OP1	var_decl
-modify_expr	OP0	var_decl
-modify_expr	OP1	call_expr
-modify_expr	OP0	result_decl
-modify_expr	OP1	integer_cst
-modify_expr	OP1	bit_ior_expr
-modify_expr	type	pointer_type
-modify_expr	type	integer_type
-modify_expr	OP0	indirect_ref
-modify_expr	OP1	convert_expr
-le_expr	type	integer_type
-lshift_expr	type	integer_type
-le_expr	OP0	parm_decl
-le_expr	OP1	integer_cst
-modify_expr	OP1	modify_expr
-modify_expr	OP1	ne_expr
-modify_expr	OP1	cond_expr
-pointer_type	ptd	real_type
-pointer_type	unql	pointer_type
-pointer_type	ptd	record_type
-pointer_type	ptd	vector_type
-pointer_plus_expr	OP0	parm_decl
-pointer_plus_expr	OP1	nop_expr
-pointer_type	ptd	function_type
-pointer_type	size	integer_cst
-pointer_type	ptd	integer_type
-pointer_plus_expr	type	pointer_type
-pointer_type	ptd	void_type
-pointer_type	ptd	pointer_type
-pointer_type	name	type_decl
-parm_decl	size	integer_cst
-parm_decl	name	identifier_node
-parm_decl	scpe	function_decl
-parm_decl	argt	integer_type
-parm_decl	type	integer_type
-parm_decl	argt	pointer_type
-parm_decl	chain	parm_decl
-pointer_plus_expr	OP1	integer_cst
-parm_decl	type	pointer_type
-pointer_plus_expr	OP0	indirect_ref
-pointer_type	ptd	union_type
-nop_expr	OP0	var_decl
-nop_expr	OP0	parm_decl
-nop_expr	OP0	indirect_ref
-nop_expr	type	pointer_type
-nop_expr	type	integer_type
-nop_expr	OP0	convert_expr
-nop_expr	OP0	postincrement_expr
-nop_expr	OP0	call_expr
-nop_expr	OP0	array_ref
-nop_expr	OP0	addr_expr
-nop_expr	OP0	nop_expr
-modify_expr	OP1	compound_expr
-modify_expr	OP0	array_ref
-modify_expr	OP1	bit_and_expr
-modify_expr	OP1	preincrement_expr
-ne_expr	OP0	modify_expr
-ne_expr	OP0	component_ref
-modify_expr	type	real_type
-modify_expr	OP0	parm_decl
-modify_expr	OP1	indirect_ref
-modify_expr	OP1	postincrement_expr
-modify_expr	OP1	parm_decl
-mult_expr	OP1	parm_decl
-mult_expr	OP0	var_decl
-modify_expr	OP1	trunc_div_expr
-modify_expr	OP1	pointer_plus_expr
-modify_expr	OP1	plus_expr
-modify_expr	OP1	nop_expr
-lshift_expr	OP1	integer_cst
-lshift_expr	OP0	bit_and_expr
-le_expr	OP0	plus_expr
-le_expr	OP0	nop_expr
-record_type	flds	field_decl
-record_type	size	integer_cst
-real_type	size	integer_cst
-record_type	name	type_decl
-real_type	name	type_decl
-record_type	unql	record_type
-preincrement_expr	OP0	var_decl
-preincrement_expr	OP1	integer_cst
-postincrement_expr	OP0	var_decl
-postincrement_expr	type	pointer_type
-preincrement_expr	type	integer_type
-postincrement_expr	OP1	integer_cst
-record_type	name	identifier_node
-postincrement_expr	OP0	component_ref
-real_type	unql	real_type
-preincrement_expr	OP0	parm_decl
-postincrement_expr	OP0	parm_decl
-preincrement_expr	type	pointer_type
-nop_expr	OP0	plus_expr
-nop_expr	OP0	component_ref
-ne_expr	OP0	parm_decl
-integer_cst	type	integer_type
-indirect_ref	type	record_type
-indirect_ref	OP0	var_decl
-indirect_ref	OP0	pointer_plus_expr
-indirect_ref	type	pointer_type
-indirect_ref	OP0	parm_decl
-indirect_ref	type	integer_type
-indirect_ref	OP0	postincrement_expr
-pointer_type	ptd	array_type
-postincrement_expr	type	integer_type
-postincrement_expr	OP0	indirect_ref
-integer_cst	type	pointer_type
-tree_list	chan	tree_list
-tree_list	valu	vector_type
-tree_list	valu	pointer_type
-tree_list	valu	integer_type
-tree_list	valu	complex_type
-tree_list	valu	real_type
-nop_expr	OP0	modify_expr
-tree_list	valu	void_type
-tree_list	valu	union_type
-statement_list	E2	return_expr
-statement_list	E1	goto_expr
-statement_list	E0	decl_expr
-statement_list	E1	cond_expr
-statement_list	E0	modify_expr
-statement_list	E2	label_expr
-statement_list	E3	cond_expr
-statement_list	E4	label_expr
-statement_list	E5	cond_expr
-statement_list	E6	label_expr
-statement_list	E1	label_expr
-statement_list	E2	cond_expr
-statement_list	E4	preincrement_expr
-statement_list	E5	goto_expr
-statement_list	E7	modify_expr
-statement_list	E1	decl_expr
-statement_list	E4	decl_expr
-statement_list	E15	label_expr
-statement_list	E5	call_expr
-statement_list	E2	decl_expr
-statement_list	E3	decl_expr
-statement_list	E5	modify_expr
-statement_list	E6	modify_expr
-statement_list	E7	goto_expr
-statement_list	E8	label_expr
-statement_list	E9	modify_expr
-statement_list	E10	modify_expr
-statement_list	E11	modify_expr
-statement_list	E12	cond_expr
-statement_list	E13	label_expr
-statement_list	E14	cond_expr
-statement_list	E16	return_expr
-statement_list	E2	modify_expr
-statement_list	E3	modify_expr
-statement_list	E4	cond_expr
-statement_list	E6	call_expr
-statement_list	E0	call_expr
-statement_list	E1	call_expr
-statement_list	E2	call_expr
-statement_list	E3	call_expr
-statement_list	E4	return_expr
-tree_list	valu	integer_cst
-nop_expr	OP0	bit_ior_expr
-nop_expr	OP0	mult_expr
-indirect_ref	OP0	nop_expr
-indirect_ref	OP0	call_expr
-tree_list	purp	identifier_node
-tree_list	valu	enumeral_type
-tree_list	valu	pointer_type
-tree_list	valu	reference_type
-tree_list	valu	reference_type
-tree_list	valu	record_type
-tree_list	valu	boolean_type
-tree_list	valu	integer_type
-result_decl	type	real_type
-result_decl	scpe	function_decl
-result_decl	type	pointer_type
-result_decl	size	integer_cst
-result_decl	type	integer_type
-statement_list	E8	return_expr
-return_expr	expr	modify_expr
-statement_list	E1	modify_expr
-return_expr	type	void_type
-statement_list	E1	case_label_expr
-statement_list	E9	cond_expr
-statement_list	E7	cond_expr
-statement_list	E6	cond_expr
-statement_list	E8	cond_expr
-statement_list	E1	switch_expr
-statement_list	E0	case_label_expr
-statement_list	E2	case_label_expr
-statement_list	E6	goto_expr
-statement_list	E7	case_label_expr
-statement_list	E10	cond_expr
-statement_list	E11	call_expr
-statement_list	E12	goto_expr
-statement_list	E13	case_label_expr
-statement_list	E14	call_expr
-statement_list	E1	postincrement_expr
-statement_list	E4	call_expr
-statement_list	E5	label_expr
-statement_list	E2	goto_expr
-statement_list	E3	preincrement_expr
-statement_list	E6	return_expr
-statement_list	E7	return_expr
-statement_list	E0	goto_expr
-statement_list	E2	preincrement_expr
-statement_list	E3	label_expr
-statement_list	E7	label_expr
-statement_list	E8	modify_expr
-statement_list	E11	return_expr
-statement_list	E11	cond_expr
-statement_list	E12	modify_expr
-statement_list	E13	modify_expr
-statement_list	E2	convert_expr
-statement_list	E4	modify_expr
-statement_list	E7	bind_expr
-statement_list	E10	label_expr
-statement_list	E11	postdecrement_expr
-statement_list	E12	return_expr
-statement_list	E15	return_expr
-return_expr	type	void_type
-union_type	flds	field_decl
-type_decl	scpe	translation_unit_decl
-union_type	size	integer_cst
-type_decl	type	integer_type
-type_decl	chain	type_decl
-type_decl	name	identifier_node
-type_decl	type	record_type
-type_decl	type	function_type
-union_type	name	identifier_node
-type_decl	type	union_type
-type_decl	chain	const_decl
-type_decl	type	enumeral_type
-type_decl	type	boolean_type
-type_decl	chain	function_decl
-type_decl	type	pointer_type
-type_decl	type	real_type
-truth_andif_expr	OP1	ne_expr
-truth_andif_expr	OP0	ne_expr
-truth_andif_expr	OP0	truth_andif_expr
-truth_andif_expr	type	integer_type
-truth_andif_expr	OP1	truth_and_expr
-truth_andif_expr	OP1	eq_expr
-truth_andif_expr	OP0	eq_expr
-integer_type	name	identifier_node
-type_decl	type	array_type
-type_decl	type	complex_type
-type_decl	type	void_type
-truth_andif_expr	OP1	le_expr
-var_decl	name	identifier_node
-var_decl	chain	var_decl
-var_decl	scpe	function_decl
-var_decl	init	lshift_expr
-var_decl	scpe	translation_unit_decl
-var_decl	size	integer_cst
-var_decl	type	integer_type
-var_decl	chain	function_decl
-var_decl	init	trunc_div_expr
-var_decl	type	array_type
-var_decl	type	record_type
-var_decl	type	pointer_type
-union_type	unql	union_type
-union_type	name	type_decl
-var_decl	init	integer_cst
-vector_type	size	integer_cst
-var_decl	init	var_decl
-var_decl	chain	label_decl
-var_decl	init	indirect_ref
-plus_expr	type	integer_type
-plus_expr	OP1	integer_cst
-plus_expr	OP0	parm_decl
-void_type	name	type_decl
-bit_ior_expr	OP1	var_decl
-array_ref	OP1	var_decl
-array_ref	OP0	component_ref
-complex_type	size	integer_cst
-compound_expr	OP1	integer_cst
-bit_ior_expr	type	integer_type
-truth_orif_expr	type	integer_type
-compound_expr	type	integer_type
-trunc_div_expr	type	integer_type
-array_ref	type	integer_type
-trunc_div_expr	OP0	nop_expr
-trunc_div_expr	OP1	integer_cst
-compound_expr	OP0	modify_expr
-bit_ior_expr	OP0	array_ref
-complex_type	name	type_decl
-truth_orif_expr	OP0	truth_orif_expr
-truth_orif_expr	OP1	eq_expr
-bit_ior_expr	OP0	bit_and_expr
-bit_ior_expr	OP1	bit_and_expr
-switch_expr	cond	var_decl
-truth_orif_expr	OP0	eq_expr
-gt_expr	OP1	integer_cst
-postdecrement_expr	OP1	integer_cst
-postdecrement_expr	type	integer_type
-truth_and_expr	type	integer_type
-switch_expr	type	integer_type
-gt_expr	type	integer_type
-postdecrement_expr	OP0	var_decl
-vector_type	unql	vector_type
-gt_expr	OP0	var_decl
-switch_expr	body	statement_list
-string_cst	type	array_type
-bit_ior_expr	OP0	bit_ior_expr
-bit_ior_expr	OP1	lshift_expr
-void_type	unql	void_type
-rshift_expr	OP0	parm_decl
-ge_expr	type	integer_type
-reference_type	size	integer_cst
-ge_expr	OP0	component_ref
-ge_expr	OP1	component_ref
-lt_expr	OP1	integer_cst
-rshift_expr	OP1	integer_cst
-lt_expr	type	integer_type
-rshift_expr	type	integer_type
-reference_type	refd	pointer_type
-bit_ior_expr	OP0	nop_expr
-lt_expr	OP0	var_decl
-plus_expr	OP0	var_decl
-lt_expr	OP1	var_decl
-plus_expr	OP1	var_decl
-trunc_div_expr	OP0	plus_expr
-boolean_type	size	integer_cst
-bit_not_expr	type	integer_type
-bit_not_expr	OP0	var_decl
-plus_expr	OP0	nop_expr
-boolean_type	name	type_decl
+488	10008	10009	const_decl	name	identifier_node
+462	10009	10009	const_decl	chain	const_decl
+14	12717	12667	cond_expr	OP0	truth_andif_expr
+17	12718	12667	cond_expr	OP1	statement_list
+50	129	12646	cond_expr	type	void_type
+12	12683	12646	cond_expr	OP1	goto_expr
+12	12684	12646	cond_expr	OP2	goto_expr
+4	13614	13556	cond_expr	OP0	truth_orif_expr
+20	144	12963	component_ref	type	pointer_type
+488	155	10009	const_decl	scpe	translation_unit_decl
+26	2073	11352	component_ref	OP1	field_decl
+488	2212	10009	const_decl	type	enumeral_type
+25	11374	11352	component_ref	OP0	indirect_ref
+488	2239	10009	const_decl	cnst	integer_cst
+26	10039	10024	const_decl	chain	type_decl
+78	10061	12716	addr_expr	type	function_decl
+90	11587	12675	addr_expr	OP0	pointer_type
+9	12970	12912	addr_expr	type	string_cst
+3	12371	12675	addr_expr	type	var_decl
+12	11876	11375	array_type	unql	array_type
+49	11858	11375	array_type	size	integer_cst
+14	13314	132	array_type	elts	record_type
+49	11877	11375	array_type	domn	integer_type
+8	130	132	array_type	name	type_decl
+36	11353	11375	array_type	elts	integer_type
+54	129	11129	bind_expr	type	void_type
+21	11161	11129	bind_expr	vars	var_decl
+7	144	11856	array_type	elts	pointer_type
+24	11162	11129	bind_expr	body	statement_list
+30	13128	13094	bind_expr	body	return_expr
+28	12720	12670	cond_expr	OP0	ne_expr
+2	14019	13960	cond_expr	OP1	bind_expr
+3	144	13799	cond_expr	type	pointer_type
+12	12682	12646	cond_expr	OP0	eq_expr
+9	12784	12734	cond_expr	OP1	modify_expr
+2	12750	12811	call_expr	E1	var_decl
+18	129	12666	call_expr	type	void_type
+5	129	12917	case_label_expr	type	void_type
+12	144	12774	call_expr	type	pointer_type
+46	16	12719	call_expr	type	integer_type
+10	2269	12703	call_expr	E0	integer_cst
+4	2269	12917	case_label_expr	low	integer_cst
+15	26	11226	bit_and_expr	type	integer_type
+7	12636	12755	call_expr	E0	var_decl
+13	14213	11226	bit_and_expr	OP1	integer_cst
+76	12716	12666	call_expr	fn	addr_expr
+2	12680	12931	call_expr	E2	var_decl
+23	12824	12771	call_expr	E0	nop_expr
+13	12828	12774	call_expr	E1	nop_expr
+3	11256	11226	bit_and_expr	OP0	plus_expr
+1	11350	11351	bit_and_expr	OP0	array_ref
+2	13863	13799	cond_expr	OP1	convert_expr
+5	14155	14115	cond_expr	OP1	nop_expr
+4	14156	14115	cond_expr	OP2	call_expr
+2	9615	13799	cond_expr	OP2	integer_cst
+16	12721	12670	cond_expr	OP1	call_expr
+6	2145	2133	cond_expr	OP2	nop_expr
+3	11375	11352	component_ref	type	array_type
+11	1632	2133	cond_expr	type	integer_type
+2	3	4768	component_ref	type	integer_type
+1	12781	12733	cond_expr	OP1	cond_expr
+3	12782	12733	cond_expr	OP2	cond_expr
+1	11161	11284	bit_and_expr	OP1	var_decl
+3	11309	11284	bit_and_expr	OP0	nop_expr
+5	12974	12917	case_label_expr	name	label_decl
+18	13093	13208	call_expr	E0	parm_decl
+12	13238	12771	call_expr	E1	integer_cst
+5	2239	12931	call_expr	E3	integer_cst
+8	12988	12928	call_expr	E2	integer_cst
+8	3125	3218	call_expr	E1	parm_decl
+6	3157	3218	call_expr	E2	parm_decl
+2	4008	4034	call_expr	E3	parm_decl
+4	14212	14172	bit_and_expr	OP0	convert_expr
+1	14883	14862	call_expr	fn	parm_decl
+6	2177	2158	call_expr	E0	ge_expr
+1	10455	12864	component_ref	OP0	var_decl
+2	12965	12908	cond_expr	OP0	gt_expr
+1	9320	12864	component_ref	type	enumeral_type
+2	4768	4723	bit_and_expr	OP0	component_ref
+1	11373	11351	bit_and_expr	OP1	bit_not_expr
+1	100	14219	call_expr	type	real_type
+2	14091	14328	bit_and_expr	OP0	parm_decl
+2	14863	14836	cond_expr	OP0	lt_expr
+1	14892	14865	cond_expr	OP2	return_expr
+2	4233	4335	cond_expr	OP2	parm_decl
+2	4372	4335	cond_expr	OP0	le_expr
+3082	10012	1000	function_decl	type	function_type
+3082	10001	1000	function_decl	name	identifier_node
+3059	1000	1000	function_decl	chain	function_decl
+2767	155	1000	function_decl	scpe	translation_unit_decl
+528	1002	1000	function_decl	mngl	identifier_node
+45	11128	11103	function_decl	args	parm_decl
+51	11129	11103	function_decl	body	bind_expr
+19	10434	10414	function_decl	chain	var_decl
+34	129	11194	decl_expr	type	void_type
+1	129	12639	convert_expr	type	void_type
+9	13544	13863	convert_expr	OP0	parm_decl
+2	144	13863	convert_expr	type	pointer_type
+11	26	13182	convert_expr	type	integer_type
+1	12675	12639	convert_expr	OP0	addr_expr
+1	13209	13182	convert_expr	OP0	call_expr
+3	14254	14212	convert_expr	OP0	rshift_expr
+562	10122	10082	field_decl	bpos	integer_cst
+169	10172	10147	field_decl	type	pointer_type
+459	10083	10101	field_decl	scpe	record_type
+545	10099	10082	field_decl	name	identifier_node
+427	10100	10082	field_decl	chain	field_decl
+562	10122	10082	field_decl	size	integer_cst
+290	10120	10082	field_decl	type	integer_type
+31	5	10052	enumeral_type	size	integer_cst
+31	28	10052	enumeral_type	min	integer_cst
+31	29	10052	enumeral_type	max	integer_cst
+31	10007	10052	enumeral_type	csts	tree_list
+9	2700	2673	enumeral_type	name	identifier_node
+5	3518	10052	enumeral_type	unql	enumeral_type
+5	10039	10052	enumeral_type	name	type_decl
+103	10066	10082	field_decl	scpe	union_type
+29	10083	10100	field_decl	type	record_type
+16	13619	13561	eq_expr	OP0	nop_expr
+7	13906	13847	eq_expr	OP1	nop_expr
+25	3	12682	eq_expr	type	integer_type
+6	12264	12682	eq_expr	OP0	var_decl
+12	13520	12682	eq_expr	OP1	integer_cst
+2	12836	12780	eq_expr	OP0	call_expr
+6	13451	13561	eq_expr	OP1	parm_decl
+66	100	1019	function_type	retn	real_type
+1114	12	10012	function_type	size	integer_cst
+310	10244	10012	function_type	retn	pointer_type
+154	129	10060	function_type	retn	void_type
+1102	10025	10012	function_type	prms	tree_list
+487	16	10108	function_type	retn	integer_type
+13	119	1316	function_type	retn	complex_type
+58	12272	12259	function_type	retn	vector_type
+42	1702	1694	field_decl	type	array_type
+4	2916	4321	field_decl	type	enumeral_type
+4	10198	14850	function_type	retn	record_type
+26	1675	1682	field_decl	type	union_type
+1	13655	13843	eq_expr	OP0	parm_decl
+51	2165	2224	function_type	unql	function_type
+45	2291	2322	function_type	name	type_decl
+22	7578	10309	function_type	retn	boolean_type
+3	11894	11873	function_decl	chain	type_decl
+2	10147	10175	field_decl	orig	field_decl
+2	100	6530	field_decl	type	real_type
+46	12674	12642	goto_expr	labl	label_decl
+46	129	12642	goto_expr	type	void_type
+49	12235	12640	modify_expr	OP0	var_decl
+42	129	12643	label_expr	type	void_type
+18	12719	12669	modify_expr	OP1	call_expr
+42	12674	12643	label_expr	name	label_decl
+76	16	11227	modify_expr	type	integer_type
+34	12676	12640	modify_expr	OP1	integer_cst
+18	12280	12686	modify_expr	OP1	var_decl
+36	12673	12640	modify_expr	type	pointer_type
+50	11257	11227	modify_expr	OP0	result_decl
+11	13337	13472	ne_expr	OP1	parm_decl
+48	12749	11258	ne_expr	OP1	integer_cst
+25	12803	12754	ne_expr	OP0	nop_expr
+2	13655	13786	modify_expr	OP1	parm_decl
+3	2473	14249	lshift_expr	OP1	integer_cst
+6	26	11193	lshift_expr	type	integer_type
+4	3	4372	le_expr	type	integer_type
+59	3	11258	ne_expr	type	integer_type
+11	13853	13786	modify_expr	OP0	indirect_ref
+3	14283	14249	lshift_expr	OP0	bit_and_expr
+9	14233	14191	ne_expr	OP0	call_expr
+2	4418	4372	le_expr	OP0	plus_expr
+4	4419	4372	le_expr	OP1	integer_cst
+1	8532	8502	le_expr	OP0	nop_expr
+18	12305	12720	ne_expr	OP0	var_decl
+1	13655	13844	modify_expr	OP0	parm_decl
+14	13799	13731	modify_expr	OP1	cond_expr
+1	13904	13844	modify_expr	OP1	indirect_ref
+1	13967	13908	modify_expr	OP1	postincrement_expr
+3	11284	11258	ne_expr	OP0	bit_and_expr
+3	1632	14909	mult_expr	type	integer_type
+2	4586	4546	mult_expr	OP1	integer_cst
+2	4585	4546	mult_expr	OP0	nop_expr
+2	12934	12884	ne_expr	OP0	modify_expr
+1	12963	12906	ne_expr	OP0	component_ref
+3	11225	11193	lshift_expr	OP0	integer_cst
+3	11226	11193	lshift_expr	OP1	bit_and_expr
+4	11331	11308	modify_expr	OP1	bit_ior_expr
+4	13182	13156	modify_expr	OP1	convert_expr
+1	8396	8529	le_expr	OP0	parm_decl
+1	9649	9618	modify_expr	OP1	modify_expr
+3	11258	11227	modify_expr	OP1	ne_expr
+1	100	14176	modify_expr	type	real_type
+38	11128	11374	indirect_ref	OP0	parm_decl
+15	12659	13015	indirect_ref	OP0	var_decl
+7	14070	14023	indirect_ref	OP0	postincrement_expr
+11	144	13853	indirect_ref	type	pointer_type
+25	11189	11374	indirect_ref	type	record_type
+47	2947	13573	indirect_ref	type	integer_type
+18	13627	13573	indirect_ref	OP0	pointer_plus_expr
+6	100	12287	pointer_type	ptd	real_type
+62	10870	11747	pointer_type	unql	pointer_type
+129	11189	10244	pointer_type	ptd	record_type
+3	12324	12313	pointer_type	ptd	vector_type
+17	13303	13627	pointer_plus_expr	OP0	parm_decl
+18	13686	13627	pointer_plus_expr	OP1	nop_expr
+77	10075	11479	pointer_type	ptd	function_type
+291	22	10172	pointer_type	size	integer_cst
+40	16	10870	pointer_type	ptd	integer_type
+19	144	13627	pointer_plus_expr	type	pointer_type
+9	129	1612	pointer_type	ptd	void_type
+18	12673	12724	pointer_type	ptd	pointer_type
+17	133	139	pointer_type	name	type_decl
+93	11103	11128	parm_decl	scpe	function_decl
+93	11158	11128	parm_decl	name	identifier_node
+48	11160	11128	parm_decl	chain	parm_decl
+93	12	11128	parm_decl	size	integer_cst
+3	3851	3816	indirect_ref	OP0	nop_expr
+2	4545	4509	indirect_ref	OP0	call_expr
+455	10120	10122	integer_cst	type	integer_type
+49	1632	11160	parm_decl	argt	integer_type
+49	1632	11160	parm_decl	type	integer_type
+44	11159	11128	parm_decl	argt	pointer_type
+1	160	14118	pointer_plus_expr	OP1	integer_cst
+44	11159	11128	parm_decl	type	pointer_type
+12	11587	12676	integer_cst	type	pointer_type
+1	14853	14909	mult_expr	OP1	parm_decl
+1	14855	14909	mult_expr	OP0	var_decl
+1	14858	14833	modify_expr	OP1	trunc_div_expr
+1	14860	14834	modify_expr	OP1	pointer_plus_expr
+1	14910	14891	modify_expr	OP1	plus_expr
+6	14923	14911	modify_expr	OP1	nop_expr
+40	13573	13519	nop_expr	OP0	indirect_ref
+34	11747	12824	nop_expr	type	pointer_type
+103	151	11254	nop_expr	type	integer_type
+31	12698	12803	nop_expr	OP0	var_decl
+1	11332	11309	nop_expr	OP0	array_ref
+13	12871	12824	nop_expr	OP0	addr_expr
+2	11282	11253	modify_expr	OP1	compound_expr
+2	11330	11308	modify_expr	OP0	array_ref
+1	11351	11329	modify_expr	OP1	bit_and_expr
+1	12677	12641	modify_expr	OP1	preincrement_expr
+2	4509	4467	pointer_plus_expr	OP0	indirect_ref
+24	13714	13906	nop_expr	OP0	parm_decl
+3	2181	2162	nop_expr	OP0	convert_expr
+3	3889	3851	nop_expr	OP0	postincrement_expr
+7	14193	14155	nop_expr	OP0	call_expr
+3	11283	11254	nop_expr	OP0	plus_expr
+3	2163	2145	nop_expr	OP0	nop_expr
+2	12864	12815	nop_expr	OP0	component_ref
+1	8589	8642	ne_expr	OP0	parm_decl
+7	13022	12915	pointer_type	ptd	array_type
+2	10066	10172	pointer_type	ptd	union_type
+1203	10244	10025	tree_list	valu	pointer_type
+2714	10010	10007	tree_list	chan	tree_list
+808	16	10010	tree_list	valu	integer_type
+15	2916	10416	tree_list	valu	enumeral_type
+6	11915	10611	tree_list	valu	union_type
+9	7578	10676	tree_list	valu	boolean_type
+3	2572	10616	tree_list	valu	record_type
+89	100	1021	tree_list	valu	real_type
+177	10101	10083	record_type	flds	field_decl
+9	101	100	real_type	name	type_decl
+9	12235	12677	preincrement_expr	OP0	var_decl
+12	13423	12677	preincrement_expr	OP1	integer_cst
+177	127	10083	record_type	size	integer_cst
+3	12317	12937	postincrement_expr	OP0	var_decl
+11	144	13967	postincrement_expr	type	pointer_type
+7	1632	12677	preincrement_expr	type	integer_type
+79	10176	10198	record_type	unql	record_type
+69	10177	10198	record_type	name	type_decl
+9	19	100	real_type	size	integer_cst
+12	1958	12937	postincrement_expr	OP1	integer_cst
+89	1711	11810	record_type	name	identifier_node
+188	10139	10120	integer_type	min	integer_cst
+144	16	10293	integer_type	unql	integer_type
+157	1	10293	integer_type	name	type_decl
+188	12	10120	integer_type	size	integer_cst
+188	10140	10120	integer_type	max	integer_cst
+2	159	11	integer_type	name	identifier_node
+3	14909	14888	nop_expr	OP0	mult_expr
+488	2239	10007	tree_list	valu	integer_cst
+488	10008	10007	tree_list	purp	identifier_node
+24	1612	2046	tree_list	valu	pointer_type
+2	100	12299	real_type	unql	real_type
+3	13544	13662	preincrement_expr	OP0	parm_decl
+1	3	12937	postincrement_expr	type	integer_type
+5	144	13662	preincrement_expr	type	pointer_type
+6	2265	2235	postincrement_expr	OP0	component_ref
+4	129	166	tree_list	valu	void_type
+3	16	12418	tree_list	valu	integer_type
+2	13655	13967	postincrement_expr	OP0	parm_decl
+1	14116	14070	postincrement_expr	OP0	indirect_ref
+3	2182	2163	nop_expr	OP0	modify_expr
+1	14306	14281	nop_expr	OP0	bit_ior_expr
+12	119	1300	tree_list	valu	complex_type
+47	12602	12674	label_decl	scpe	function_decl
+47	129	12674	label_decl	type	void_type
+105	12272	12257	tree_list	valu	vector_type
+449	155	10039	type_decl	scpe	translation_unit_decl
+161	10293	1	type_decl	type	integer_type
+318	10051	1	type_decl	name	identifier_node
+460	10	1	type_decl	chain	type_decl
+167	10083	10067	type_decl	type	record_type
+31	10052	10039	type_decl	type	enumeral_type
+26	2213	2186	type_decl	chain	const_decl
+48	10066	10053	type_decl	type	union_type
+17	139	133	type_decl	type	pointer_type
+8	132	130	type_decl	type	array_type
+1	12723	12674	label_decl	name	identifier_node
+1	100	14218	result_decl	type	real_type
+49	11103	11257	result_decl	scpe	function_decl
+7	144	13798	result_decl	type	pointer_type
+49	22	11257	result_decl	size	integer_cst
+41	16	11257	result_decl	type	integer_type
+2	12707	12660	statement_list	E8	modify_expr
+2	12713	12660	statement_list	E14	cond_expr
+50	11227	11196	return_expr	expr	modify_expr
+50	129	11196	return_expr	type	void_type
+21	11194	11162	statement_list	E0	decl_expr
+12	13376	13339	statement_list	E1	goto_expr
+8	12831	12776	statement_list	E2	label_expr
+6	13378	13339	statement_list	E3	preincrement_expr
+7	13379	13339	statement_list	E4	label_expr
+7	13380	13339	statement_list	E5	cond_expr
+4	12665	12634	statement_list	E2	modify_expr
+4	12646	12623	statement_list	E9	cond_expr
+14	12765	12718	statement_list	E0	modify_expr
+1	12937	12885	statement_list	E1	postincrement_expr
+4	12640	12623	statement_list	E3	modify_expr
+2	12703	12660	statement_list	E4	call_expr
+4	12941	12885	statement_list	E5	label_expr
+3	12732	12681	statement_list	E6	cond_expr
+3	12670	12634	statement_list	E7	cond_expr
+3	12734	12681	statement_list	E8	cond_expr
+4	12811	12760	statement_list	E1	call_expr
+4	12727	12681	statement_list	E1	modify_expr
+2	13028	12983	statement_list	E2	goto_expr
+4	12810	12760	statement_list	E0	call_expr
+10	12643	12623	statement_list	E6	label_expr
+6	13382	13339	statement_list	E7	return_expr
+2	13666	13601	statement_list	E6	return_expr
+2	13660	13601	statement_list	E0	goto_expr
+4	13661	13601	statement_list	E1	label_expr
+2	13662	13601	statement_list	E2	preincrement_expr
+3	13663	13601	statement_list	E3	label_expr
+6	12667	12634	statement_list	E4	cond_expr
+7	12766	12718	statement_list	E1	cond_expr
+3	13780	13716	statement_list	E4	preincrement_expr
+1	13783	13716	statement_list	E7	label_expr
+2	13786	13716	statement_list	E10	modify_expr
+1	13787	13716	statement_list	E11	return_expr
+8	11195	11162	statement_list	E1	decl_expr
+6	11196	11162	statement_list	E2	return_expr
+2	12701	12660	statement_list	E2	decl_expr
+2	12702	12660	statement_list	E3	decl_expr
+5	12668	12634	statement_list	E5	modify_expr
+3	12669	12634	statement_list	E6	modify_expr
+3	12706	12660	statement_list	E7	modify_expr
+2	12709	12660	statement_list	E10	cond_expr
+1	12710	12660	statement_list	E11	cond_expr
+1	12711	12660	statement_list	E12	modify_expr
+1	12712	12660	statement_list	E13	modify_expr
+1	12714	12660	statement_list	E15	return_expr
+3	12767	12718	statement_list	E2	cond_expr
+4	12729	12681	statement_list	E3	cond_expr
+3	12642	12623	statement_list	E5	goto_expr
+45	2322	2291	type_decl	type	function_type
+1	15793	15789	tree_list	valu	reference_type
+2	15793	15794	tree_list	valu	reference_type
+5	11935	11912	type_decl	chain	function_decl
+1	14828	14810	statement_list	E4	decl_expr
+1	14839	14810	statement_list	E15	label_expr
+1	9592	9569	statement_list	E5	call_expr
+1	14831	14810	statement_list	E7	goto_expr
+2	12645	12623	statement_list	E8	label_expr
+1	14833	14810	statement_list	E9	modify_expr
+1	14835	14810	statement_list	E11	modify_expr
+1	14836	14810	statement_list	E12	cond_expr
+1	14837	14810	statement_list	E13	label_expr
+1	14840	14810	statement_list	E16	return_expr
+1	9593	9569	statement_list	E6	call_expr
+2	12728	12681	statement_list	E2	call_expr
+2	12666	12634	statement_list	E3	call_expr
+1	9614	9584	statement_list	E4	return_expr
+1	7578	7597	type_decl	type	boolean_type
+1	12671	12634	statement_list	E8	return_expr
+1	12918	12875	statement_list	E1	case_label_expr
+1	12639	12623	statement_list	E2	convert_expr
+1	12641	12623	statement_list	E4	modify_expr
+1	12644	12623	statement_list	E7	bind_expr
+1	12647	12623	statement_list	E10	label_expr
+1	12648	12623	statement_list	E11	postdecrement_expr
+1	12649	12623	statement_list	E12	return_expr
+1	12830	12776	statement_list	E1	switch_expr
+1	12917	12875	statement_list	E0	case_label_expr
+1	12919	12875	statement_list	E2	case_label_expr
+1	12923	12875	statement_list	E6	goto_expr
+1	12924	12875	statement_list	E7	case_label_expr
+1	12928	12875	statement_list	E11	call_expr
+1	12929	12875	statement_list	E12	goto_expr
+1	12930	12875	statement_list	E13	case_label_expr
+1	12931	12875	statement_list	E14	call_expr
+50	10082	10066	union_type	flds	field_decl
+50	127	10066	union_type	size	integer_cst
+5	10081	10066	union_type	name	identifier_node
+2	129	126	type_decl	type	void_type
+15	12764	12717	truth_andif_expr	OP1	ne_expr
+13	12763	12717	truth_andif_expr	OP0	ne_expr
+6	13516	13466	truth_andif_expr	OP0	truth_andif_expr
+20	3	12717	truth_andif_expr	type	integer_type
+1	12809	12759	truth_andif_expr	OP1	truth_and_expr
+2	12826	12773	truth_andif_expr	OP1	eq_expr
+1	12879	12837	truth_andif_expr	OP0	eq_expr
+8	100	101	type_decl	type	real_type
+146	10454	10434	var_decl	name	identifier_node
+106	10455	10434	var_decl	chain	var_decl
+34	11103	11161	var_decl	scpe	function_decl
+3	11193	11161	var_decl	init	lshift_expr
+112	155	10434	var_decl	scpe	translation_unit_decl
+134	11858	10434	var_decl	size	integer_cst
+95	1632	10434	var_decl	type	integer_type
+18	10476	10455	var_decl	chain	function_decl
+3	11224	11192	var_decl	init	trunc_div_expr
+7	2290	10455	var_decl	type	record_type
+30	12673	10869	var_decl	type	pointer_type
+14	10174	10149	union_type	unql	union_type
+14	11856	11837	var_decl	type	array_type
+13	10125	10149	union_type	name	type_decl
+6	13374	13338	var_decl	init	integer_cst
+12	19	12272	vector_type	size	integer_cst
+1	12674	12636	var_decl	chain	label_decl
+1	129	9614	return_expr	type	void_type
+2	13897	14066	var_decl	init	var_decl
+1	11187	11331	bit_ior_expr	OP1	var_decl
+1	12680	12830	switch_expr	cond	var_decl
+5	127	115	complex_type	size	integer_cst
+2	2239	12965	gt_expr	OP1	integer_cst
+1	2269	12648	postdecrement_expr	OP1	integer_cst
+1	3	12648	postdecrement_expr	type	integer_type
+1	3	12809	truth_and_expr	type	integer_type
+1	3	12830	switch_expr	type	integer_type
+2	3	12965	gt_expr	type	integer_type
+6	3	13614	truth_orif_expr	type	integer_type
+6	26	11331	bit_ior_expr	type	integer_type
+3	11353	11330	array_ref	type	integer_type
+3	11192	11330	array_ref	OP1	var_decl
+3	11352	11330	array_ref	OP0	component_ref
+4	116	115	complex_type	name	type_decl
+1	12235	12648	postdecrement_expr	OP0	var_decl
+1	12339	12324	vector_type	unql	vector_type
+2	12698	12965	gt_expr	OP0	var_decl
+1	12875	12830	switch_expr	body	statement_list
+9	13022	12970	string_cst	type	array_type
+4	13675	13614	truth_orif_expr	OP0	eq_expr
+6	13676	13614	truth_orif_expr	OP1	eq_expr
+3	13900	13840	var_decl	init	indirect_ref
+4	129	1619	void_type	unql	void_type
+9	13423	11256	plus_expr	OP1	integer_cst
+3	14001	14254	rshift_expr	OP0	parm_decl
+6	16	2177	ge_expr	type	integer_type
+4	1632	11224	trunc_div_expr	type	integer_type
+10	1632	11256	plus_expr	type	integer_type
+1	22	15793	reference_type	size	integer_cst
+6	2203	2177	ge_expr	OP0	component_ref
+6	2204	2177	ge_expr	OP1	component_ref
+1	2239	14863	lt_expr	OP1	integer_cst
+3	2473	14254	rshift_expr	OP1	integer_cst
+2	3	14863	lt_expr	type	integer_type
+3	51	14254	rshift_expr	type	integer_type
+5	126	129	void_type	name	type_decl
+1	139	15793	reference_type	refd	pointer_type
+3	14172	14135	bit_ior_expr	OP0	bit_and_expr
+2	14173	14135	bit_ior_expr	OP1	bit_and_expr
+2	13733	13670	truth_orif_expr	OP0	truth_orif_expr
+1	14248	14209	bit_ior_expr	OP0	bit_ior_expr
+3	14249	14209	bit_ior_expr	OP1	lshift_expr
+1	14281	14248	bit_ior_expr	OP0	nop_expr
+2	14809	14863	lt_expr	OP0	var_decl
+2	14809	14885	plus_expr	OP0	var_decl
+1	14823	14866	lt_expr	OP1	var_decl
+1	14823	14885	plus_expr	OP1	var_decl
+1	14885	14858	trunc_div_expr	OP0	plus_expr
+4	11255	11224	trunc_div_expr	OP1	integer_cst
+5	115	113	type_decl	type	complex_type
+2	2239	11282	compound_expr	OP1	integer_cst
+2	3	11282	compound_expr	type	integer_type
+6	11160	11256	plus_expr	OP0	parm_decl
+3	11254	11224	trunc_div_expr	OP0	nop_expr
+2	11308	11282	compound_expr	OP0	modify_expr
+1	11330	11331	bit_ior_expr	OP0	array_ref
+2	8502	8472	truth_andif_expr	OP1	le_expr
+1	12	7578	boolean_type	size	integer_cst
+1	31	11373	bit_not_expr	type	integer_type
+1	11216	11373	bit_not_expr	OP0	var_decl
+2	4465	4418	plus_expr	OP0	nop_expr
+1	7597	7578	boolean_type	name	type_decl

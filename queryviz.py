@@ -43,7 +43,7 @@ fields = [
     'body',
     #u'bpos',
     #'chain', # dangerous... used too many times. need to qualify name
-    'chan',
+    #'chan',
     #'cnst',
     'cond',
     #'csts',
