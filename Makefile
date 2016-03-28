@@ -1,3 +1,6 @@
+types:
+	python query_types.py
+
 query :
 	python queryviz.py > /var/www/html/sparql/introspector/graphs/example.dot
 	dot /var/www/html/sparql/introspector/graphs/example.dot -Tpng -o /var/www/html/sparql/introspector/graphs/example.png
@@ -7,6 +10,11 @@ testbash1:
 
 testbash:
 	python reader.py /home/jamesmikedupont/bash/build/eval.c.001t.tu
+	cp output.xml b99f78e7d415e80d1590/
+	cp output.xml /tmp/
+	sudo /etc/init.d/tomcat8 stop
+	rm /var/lib/tomcat8/data/*
+	sudo /etc/init.d/tomcat8 start
 
 qual:
 	python reader.py tests/test_one_qual.tu x

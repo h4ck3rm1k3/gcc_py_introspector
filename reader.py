@@ -175,8 +175,7 @@ def report(x,l):
             if isinstance(x.vals, tuast.Attr):
                 if isinstance(x.vals.value, tuast.NodeRef):
                     # a tree_list item with a "valu" field
-                    p = attr(x.vals.name)
-                    add_field(g, x.node_id, p , x.vals.value.val)
+                    add_field(g, x.node_id, x.vals.name , x.vals.value.val)
                     
                 else:
                     pprint.pprint( ["not a node ref", x.vals.value ] )
