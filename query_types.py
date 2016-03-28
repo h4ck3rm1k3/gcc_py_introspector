@@ -1,39 +1,14 @@
 from graphviz import Digraph
-from SPARQLWrapper import SPARQLWrapper, XML, N3, JSONLD, JSON, POST, GET, SELECT, CONSTRUCT, ASK, DESCRIBE
-from SPARQLWrapper.Wrapper import _SPARQL_DEFAULT, _SPARQL_XML, _SPARQL_JSON, _SPARQL_POSSIBLE, _RDF_XML, _RDF_N3, _RDF_JSONLD, _RDF_POSSIBLE
-from SPARQLWrapper.SPARQLExceptions import QueryBadFormed
 
-tg = 'http://introspector.xyz/projects/bash/build/eval.c.001t.tu#'
-fld = 'http://introspector.xyz/gcc/field_types.owl#'
-types='http://introspector.xyz/gcc/structure.owl#'
-nt   ='http://introspector.xyz/gcc/node_types.owl#'
-qual = 'http://introspector.xyz/gcc/qual.owl#'
-
-prefixes = """
-    PREFIX nt: <http://introspector.xyz/gcc/node_types.owl#>
-    PREFIX tg: <http://introspector.xyz/projects/bash/build/eval.c.001t.tu#>
-    PREFIX fld: <http://introspector.xyz/gcc/field_types.owl#>
-    PREFIX node: <http://introspector.xyz/gcc/node_types.owl#>
-    PREFIX link: <http://introspector.xyz/gcc/link.owl#>
-"""
-
+import prefix
 
 import json
 import pprint
 
-def q(q):
-    sparql = SPARQLWrapper("http://localhost:8080/sparql")
-    sparql.setQuery(prefixes + q)
-    sparql.setReturnFormat(JSON)
-    sparql.setMethod(GET)
-    result = sparql.query()
-    results = result.convert();
-    return results
-
 # print out what field types occur
 def ftypes():
     t = {}
-    results = q( """  
+    results = prefix.q( """  
 
     SELECT ?st ?p ?ot (count(?o) as ?count) (min(?o) as ?firsto) (min(?s) as ?firsts)
 WHERE {
@@ -50,19 +25,73 @@ WHERE {
             'st',
             'p',
             'ot'])
-                
+    d1 = {}
+    d2 = {}
     for x in results['results']['bindings']:
+        s=prefix.clean(x['st']['value'])
+        o=prefix.clean(x['ot']['value'])
+        p=prefix.clean(x['p']['value'])
         print "\t".join(
             [
                 x['count']['value'],
-                x['firsto']['value'].replace(tg,''),
-                x['firsts']['value'].replace(tg,''),
-                x['st']['value'].replace(nt,''),
-                x['p']['value'].replace(fld,''),
-                x['ot']['value'].replace(nt,'')
-            ]
-        )
+                prefix.clean(x['firsto']['value']),
+                prefix.clean(x['firsts']['value']),
+                prefix.clean(x['st']['value']),
+                prefix.clean(x['p']['value']),
+                prefix.clean(x['ot']['value'])
+            ])
+            
 
-        #pprint.pprint( t.keys())
+        atype =False
+        if o.endswith('type'):
+            atype=True
+        if s.endswith('type'):
+            atype=True
+        if p in ('type','domn','elts',
+                     'size','unql',
+                     'chain',
+                     'scpe',
+                     'min',
+                     'max',
+                     'csts',
+                     'bpos',
+                     'retn',
+                     'argt',
+                     'ptd',
+                     'flds',
+                     'refd'
+             ):
+            atype=True
+
+
+        if not atype:
+            d = d1
+            if s not in d:
+                d[s] = {}
+            if p not in d[s]:
+                d[s][p] = {}
+
+            if o not in d[s][p]:
+                d[s][p][o]  =x['count']['value']
+            else:
+                d[s][p][o]= d[s][p][o] + x['count']['value']            
+        else:
+            d = d2
+            if s not in d:
+                d[s] = {}
+            if p not in d[s]:
+                d[s][p] = {}
+
+            if o not in d[s][p]:
+                d[s][p][o]  =x['count']['value']
+            else:
+                d[s][p][o]= d[s][p][o] + x['count']['value']            
+
+
+    pprint.pprint( { 'exprs' :d1 ,
+                     'types' :d2
+                 })
     
 ftypes()
+
+

@@ -1,0 +1,24 @@
+# -*- sparql -*-
+PREFIX nt: <http://introspector.xyz/gcc/node_types.owl#>
+PREFIX tg: <http://introspector.xyz/projects/bash/build/eval.c.001t.tu#>
+PREFIX fld: <http://introspector.xyz/gcc/field_types.owl#>
+PREFIX node: <http://introspector.xyz/gcc/node_types.owl#>
+PREFIX link: <http://introspector.xyz/gcc/link.owl#>
+
+SELECT ?o4 ?p2 ?p4 WHERE {
+  ?a fld:srcp 'eval.c:216'.
+    ?a fld:name  [ fld:string 'parse_command'].
+      ?a rdf:type nt:function_decl.
+        ?a fld:body[
+	   rdf:type ?t;
+	       fld:body[
+			  rdf:type ?t2;
+			  	     ?p3 ?o4;
+				         ];
+					   ].
+					     ?o4 ?p2 ?p4.
+
+#FILTER regex(?p3, ".*","i")
+FILTER(REGEX(str(?p3), "E[0-9]", "i")).
+
+}

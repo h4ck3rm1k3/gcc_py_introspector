@@ -1,3 +1,6 @@
+recurse:
+	python query_function_example.py
+
 types:
 	python query_types.py
 
