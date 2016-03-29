@@ -529,14 +529,17 @@ SELECT ?a ?p ?o  WHERE {
             d[k]=[d[k],v]
 
     #pprint.pprint(d)
+    
     for k in d:
         t = d['rdf:type']
         if t in tree['exprs']:
             if k in tree['exprs'][t]:
                 v = d[k]
                 u=prefix.tg +v
-                print "recurse from type {st} with field {f} to value {v}".format(st=t,f=k ,v=u)
-                recurse(u)
+                r = recurse(u)
+                d[k]=r
+                #print "recurse from type {st} with field {f} to value {v} deep={v2}".format(st=t,f=k ,v=u, v2=pprint.pformat(r))
+
     return (d)
 
 # print out what field types occur
@@ -551,6 +554,7 @@ SELECT ?a  WHERE {
 """)               
     for x in results['results']['bindings']:
         print x['a']['value']
-        recurse(x['a']['value'])
+        r= recurse(x['a']['value'])
+        print "recurse root deep={v2}".format(v2=pprint.pformat(r))
     
 start()

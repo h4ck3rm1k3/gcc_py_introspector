@@ -1,0 +1,518 @@
+body:
+  body:
+    E0: {'rdf:type': decl_expr, type: '129'}
+    E1: {'rdf:type': decl_expr, type: '129'}
+    E2:
+      OP0:
+        algn: '32'
+        chain: '12317'
+        name: {'rdf:type': identifier_node, string: need_here_doc}
+        rdf:type: var_decl
+        scpe: '155'
+        size: '5'
+        srcp: eval.c:53
+        type: '3'
+        used: '1'
+      OP1: {low: '0', 'rdf:type': integer_cst, type: '3'}
+      rdf:type: modify_expr
+      type: '3'
+    E3:
+      fn:
+        OP0: '7822'
+        rdf:type: addr_expr
+        type:
+          body: {}
+          chain: '12814'
+          link: link:extern
+          name: {'rdf:type': identifier_node, string: run_pending_traps}
+          rdf:type: function_decl
+          scpe: '155'
+          srcp: trap.h:66
+          type: '5191'
+      rdf:type: call_expr
+      type: '129'
+    E4:
+      OP0:
+        OP0:
+          OP0:
+            algn: '32'
+            chain: '12856'
+            name: {'rdf:type': identifier_node, string: interactive}
+            rdf:type: var_decl
+            scpe: '155'
+            size: '5'
+            srcp: shell.h:94
+            type: '3'
+            used: '1'
+          OP1: {low: '0', 'rdf:type': integer_cst, type: '3'}
+          rdf:type: ne_expr
+          type: '3'
+        OP1:
+          OP0:
+            OP0:
+              OP0:
+                algn: '64'
+                chain: '10476'
+                name: {'rdf:type': identifier_node, string: bash_input}
+                rdf:type: var_decl
+                scpe: '155'
+                size: '2139'
+                srcp: input.h:89
+                type: '9528'
+                used: '1'
+              OP1:
+                algn: '32'
+                bpos: '20'
+                chain: '9546'
+                name: {'rdf:type': identifier_node, string: type}
+                rdf:type: field_decl
+                scpe: '9509'
+                size: '5'
+                srcp: input.h:82
+                type: '9320'
+              rdf:type: component_ref
+              type: '9320'
+            rdf:type: nop_expr
+            type: '26'
+          OP1: {low: '3', 'rdf:type': integer_cst, type: '26'}
+          rdf:type: ne_expr
+          type: '3'
+        rdf:type: truth_andif_expr
+        type: '3'
+      OP1:
+        E0:
+          OP0:
+            algn: '64'
+            name: {'rdf:type': identifier_node, string: command_to_execute}
+            rdf:type: var_decl
+            scpe: '12612'
+            size: '22'
+            srcp: eval.c:219
+            type: '144'
+            used: '1'
+          OP1:
+            E0:
+              OP0:
+                OP0: '12969'
+                rdf:type: addr_expr
+                type: {'rdf:type': string_cst, string: PROMPT_COMMAND, type: '13022'}
+              rdf:type: nop_expr
+              type: '901'
+            fn:
+              OP0: '9671'
+              rdf:type: addr_expr
+              type:
+                body: {}
+                chain: '8908'
+                link: link:extern
+                name: {'rdf:type': identifier_node, string: get_string_value}
+                rdf:type: function_decl
+                scpe: '155'
+                srcp: variables.h:280
+                type: '5268'
+            rdf:type: call_expr
+            type: '144'
+          rdf:type: modify_expr
+          type: '144'
+        E1:
+          OP0:
+            OP0:
+              algn: '64'
+              name: {'rdf:type': identifier_node, string: command_to_execute}
+              rdf:type: var_decl
+              scpe: '12612'
+              size: '22'
+              srcp: eval.c:219
+              type: '144'
+              used: '1'
+            OP1: {low: '0', 'rdf:type': integer_cst, type: '144'}
+            rdf:type: ne_expr
+            type: '3'
+          OP1:
+            E0:
+              algn: '64'
+              name: {'rdf:type': identifier_node, string: command_to_execute}
+              rdf:type: var_decl
+              scpe: '12612'
+              size: '22'
+              srcp: eval.c:219
+              type: '144'
+              used: '1'
+            E1:
+              OP0:
+                OP0: '12969'
+                rdf:type: addr_expr
+                type: {'rdf:type': string_cst, string: PROMPT_COMMAND, type: '13022'}
+              rdf:type: nop_expr
+              type: '144'
+            fn:
+              OP0: '12913'
+              rdf:type: addr_expr
+              type:
+                body: {}
+                chain: '10722'
+                link: link:extern
+                name: {'rdf:type': identifier_node, string: execute_variable_command}
+                rdf:type: function_decl
+                scpe: '155'
+                srcp: input.h:105
+                type: '10721'
+            rdf:type: call_expr
+            type: '129'
+          rdf:type: cond_expr
+          type: '129'
+        E2:
+          OP0:
+            OP0:
+              algn: '32'
+              chain: '12280'
+              name: {'rdf:type': identifier_node, string: running_under_emacs}
+              rdf:type: var_decl
+              scpe: '155'
+              size: '5'
+              srcp: eval.c:51
+              type: '3'
+              used: '1'
+            OP1: {low: '2', 'rdf:type': integer_cst, type: '3'}
+            rdf:type: eq_expr
+            type: '3'
+          OP1:
+            fn:
+              OP0: '7822'
+              rdf:type: addr_expr
+              type:
+                body:
+                  body:
+                    E0: {'rdf:type': decl_expr, type: '129'}
+                    E1: {'rdf:type': decl_expr, type: '129'}
+                    E2:
+                      OP0:
+                        algn: '64'
+                        name: {'rdf:type': identifier_node, string: f}
+                        rdf:type: var_decl
+                        scpe: '9529'
+                        size: '22'
+                        srcp: eval.c:201
+                        type: '144'
+                        used: '1'
+                      OP1: {low: '0', 'rdf:type': integer_cst, type: '144'}
+                      rdf:type: modify_expr
+                      type: '144'
+                    E3:
+                      OP0:
+                        algn: '64'
+                        chain: '9586'
+                        name: {'rdf:type': identifier_node, string: pwd}
+                        rdf:type: var_decl
+                        scpe: '9529'
+                        size: '22'
+                        srcp: eval.c:201
+                        type: '144'
+                        used: '1'
+                      OP1:
+                        E0:
+                          OP0:
+                            OP0: '9697'
+                            rdf:type: addr_expr
+                            type: {'rdf:type': string_cst, string: PWD, type: '1702'}
+                          rdf:type: nop_expr
+                          type: '901'
+                        fn:
+                          OP0: '9671'
+                          rdf:type: addr_expr
+                          type:
+                            body: {}
+                            chain: '8908'
+                            link: link:extern
+                            name: {'rdf:type': identifier_node, string: get_string_value}
+                            rdf:type: function_decl
+                            scpe: '155'
+                            srcp: variables.h:280
+                            type: '5268'
+                        rdf:type: call_expr
+                        type: '144'
+                      rdf:type: modify_expr
+                      type: '144'
+                    E4:
+                      OP0:
+                        OP0:
+                          algn: '64'
+                          chain: '9586'
+                          name: {'rdf:type': identifier_node, string: pwd}
+                          rdf:type: var_decl
+                          scpe: '9529'
+                          size: '22'
+                          srcp: eval.c:201
+                          type: '144'
+                          used: '1'
+                        OP1: {low: '0', 'rdf:type': integer_cst, type: '144'}
+                        rdf:type: eq_expr
+                        type: '3'
+                      OP1:
+                        OP0:
+                          algn: '64'
+                          name: {'rdf:type': identifier_node, string: f}
+                          rdf:type: var_decl
+                          scpe: '9529'
+                          size: '22'
+                          srcp: eval.c:201
+                          type: '144'
+                          used: '1'
+                        OP1:
+                          OP0:
+                            algn: '64'
+                            chain: '9586'
+                            name: {'rdf:type': identifier_node, string: pwd}
+                            rdf:type: var_decl
+                            scpe: '9529'
+                            size: '22'
+                            srcp: eval.c:201
+                            type: '144'
+                            used: '1'
+                          OP1:
+                            E0:
+                              OP0:
+                                OP0: '9674'
+                                rdf:type: addr_expr
+                                type: {'rdf:type': string_cst, string: eterm, type: '9701'}
+                              rdf:type: nop_expr
+                              type: '144'
+                            fn:
+                              OP0: '9720'
+                              rdf:type: addr_expr
+                              type:
+                                body: {}
+                                chain: '9742'
+                                link: link:extern
+                                name: {'rdf:type': identifier_node, string: get_working_directory}
+                                rdf:type: function_decl
+                                scpe: '155'
+                                srcp: common.h:102
+                                type: '2882'
+                            rdf:type: call_expr
+                            type: '144'
+                          rdf:type: modify_expr
+                          type: '144'
+                        rdf:type: modify_expr
+                        type: '144'
+                      rdf:type: cond_expr
+                      type: '129'
+                    E5:
+                      E0:
+                        OP0:
+                          algn: '64'
+                          chain: '2716'
+                          name: {'rdf:type': identifier_node, string: stderr}
+                          rdf:type: var_decl
+                          scpe: '155'
+                          size: '22'
+                          srcp: stdio.h:170
+                          type: '2334'
+                          used: '1'
+                        rdf:type: nop_expr
+                        type: '2054'
+                      E1:
+                        OP0:
+                          OP0: '9674'
+                          rdf:type: addr_expr
+                          type: {'rdf:type': string_cst, string: '&#xfffd;/%s', type: '9701'}
+                        rdf:type: nop_expr
+                        type: '2062'
+                      E2:
+                        algn: '64'
+                        chain: '9586'
+                        name: {'rdf:type': identifier_node, string: pwd}
+                        rdf:type: var_decl
+                        scpe: '9529'
+                        size: '22'
+                        srcp: eval.c:201
+                        type: '144'
+                        used: '1'
+                      fn:
+                        OP0: '9650'
+                        rdf:type: addr_expr
+                        type:
+                          body: {}
+                          chain: '2042'
+                          link: link:extern
+                          name: {'rdf:type': identifier_node, string: fprintf}
+                          rdf:type: function_decl
+                          scpe: '155'
+                          srcp: stdio.h:356
+                          type: '2041'
+                      rdf:type: call_expr
+                      type: '3'
+                    E6:
+                      E0:
+                        OP0:
+                          algn: '64'
+                          name: {'rdf:type': identifier_node, string: f}
+                          rdf:type: var_decl
+                          scpe: '9529'
+                          size: '22'
+                          srcp: eval.c:201
+                          type: '144'
+                          used: '1'
+                        rdf:type: nop_expr
+                        type: '164'
+                      E1:
+                        OP0:
+                          OP0: '9676'
+                          rdf:type: addr_expr
+                          type: {'rdf:type': string_cst, string: ../eval.c, type: '9702'}
+                        rdf:type: nop_expr
+                        type: '901'
+                      E2: {low: '208', 'rdf:type': integer_cst, type: '3'}
+                      fn:
+                        OP0: '9652'
+                        rdf:type: addr_expr
+                        type:
+                          body: {}
+                          chain: '5838'
+                          link: link:extern
+                          name: {'rdf:type': identifier_node, string: sh_xfree}
+                          rdf:type: function_decl
+                          scpe: '155'
+                          srcp: xmalloc.h:46
+                          type: '5837'
+                      rdf:type: call_expr
+                      type: '129'
+                    rdf:type: statement_list
+                  rdf:type: bind_expr
+                  type: '129'
+                  vars:
+                    algn: '64'
+                    chain: '9586'
+                    name: {'rdf:type': identifier_node, string: pwd}
+                    rdf:type: var_decl
+                    scpe: '9529'
+                    size: '22'
+                    srcp: eval.c:201
+                    type: '144'
+                    used: '1'
+                chain: '9548'
+                link: link:static
+                name: {'rdf:type': identifier_node, string: send_pwd_to_eterm}
+                rdf:type: function_decl
+                scpe: '155'
+                srcp: eval.c:199
+                type: '5191'
+            rdf:type: call_expr
+            type: '129'
+          rdf:type: cond_expr
+          type: '129'
+        rdf:type: statement_list
+      rdf:type: cond_expr
+      type: '129'
+    E5:
+      OP0:
+        algn: '32'
+        chain: '12343'
+        name: {'rdf:type': identifier_node, string: current_command_line_count}
+        rdf:type: var_decl
+        scpe: '155'
+        size: '5'
+        srcp: eval.c:54
+        type: '3'
+        used: '1'
+      OP1: {low: '0', 'rdf:type': integer_cst, type: '3'}
+      rdf:type: modify_expr
+      type: '3'
+    E6:
+      OP0:
+        algn: '32'
+        chain: '12662'
+        name: {'rdf:type': identifier_node, string: r}
+        rdf:type: var_decl
+        scpe: '12612'
+        size: '5'
+        srcp: eval.c:218
+        type: '3'
+        used: '1'
+      OP1:
+        fn:
+          OP0: '12822'
+          rdf:type: addr_expr
+          type:
+            body: {}
+            chain: '12696'
+            link: link:extern
+            name: {'rdf:type': identifier_node, string: yyparse}
+            rdf:type: function_decl
+            scpe: '155'
+            srcp: externs.h:104
+            type: '2560'
+        rdf:type: call_expr
+        type: '3'
+      rdf:type: modify_expr
+      type: '3'
+    E7:
+      OP0:
+        OP0:
+          algn: '32'
+          chain: '12317'
+          name: {'rdf:type': identifier_node, string: need_here_doc}
+          rdf:type: var_decl
+          scpe: '155'
+          size: '5'
+          srcp: eval.c:53
+          type: '3'
+          used: '1'
+        OP1: {low: '0', 'rdf:type': integer_cst, type: '3'}
+        rdf:type: ne_expr
+        type: '3'
+      OP1:
+        fn:
+          OP0: '7822'
+          rdf:type: addr_expr
+          type:
+            body: {}
+            chain: '10701'
+            link: link:extern
+            name: {'rdf:type': identifier_node, string: gather_here_documents}
+            rdf:type: function_decl
+            scpe: '155'
+            srcp: input.h:104
+            type: '5191'
+        rdf:type: call_expr
+        type: '129'
+      rdf:type: cond_expr
+      type: '129'
+    E8:
+      expr:
+        OP0: {algn: '32', note: artificial, 'rdf:type': result_decl, scpe: '12612',
+          size: '5', srcp: 'eval.c:216', type: '3'}
+        OP1:
+          algn: '32'
+          chain: '12662'
+          name: {'rdf:type': identifier_node, string: r}
+          rdf:type: var_decl
+          scpe: '12612'
+          size: '5'
+          srcp: eval.c:218
+          type: '3'
+          used: '1'
+        rdf:type: modify_expr
+        type: '3'
+      rdf:type: return_expr
+      type: '129'
+    rdf:type: statement_list
+  rdf:type: bind_expr
+  type: '129'
+  vars:
+    algn: '32'
+    chain: '12662'
+    name: {'rdf:type': identifier_node, string: r}
+    rdf:type: var_decl
+    scpe: '12612'
+    size: '5'
+    srcp: eval.c:218
+    type: '3'
+    used: '1'
+chain: '12620'
+link: link:extern
+name: {'rdf:type': identifier_node, string: parse_command}
+rdf:type: function_decl
+scpe: '155'
+srcp: eval.c:216
+type: '2560'
