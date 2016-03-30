@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#import pprint
+import pprint
 
 def result_decl(**kwargs):
     return "return"
@@ -43,7 +43,7 @@ import yaml
 
 def modify_expr(**kwargs):
 #    pprint.pprint({"Modify":kwargs})
-    return {"Modify":kwargs}
+    return [ kwargs['OP0'], "=", kwargs['OP1'] ]
 
 def truth_andif_expr(**kwargs):
 #    pprint.pprint({"truth_andif_expr" : kwargs})
@@ -64,7 +64,7 @@ def return_expr(**kwargs):
 
 def eq_expr(**kwargs):
 #    pprint.pprint({"eq_expr" : kwargs})
-    return {"eq" : kwargs}
+    return [ kwargs['OP0'], "==", kwargs['OP1'] ]
 
             
 def pointer_type(**kwargs):
@@ -114,7 +114,7 @@ def string(**kwargs):
 
 def string_cst(**kwargs):
     #pprint.pprint({"string_cst" : kwargs})
-    return {"string_cst" : kwargs}
+    return "\"" + kwargs['string'] + "\""
     
 def srcp(**kwargs):
     return kwargs
@@ -138,7 +138,7 @@ def algn(**kwargs):
 
 def field_decl(**kwargs):
     #pprint.pprint({"field_decl" : kwargs})
-    return {"fld" : kwargs}
+    return "[" + kwargs['name'] + "]"
 
 def statement_list(**kwargs):
     #pprint.pprint({"statement_list" : kwargs})
@@ -174,6 +174,9 @@ def Unknown():
     return "Unknown"
 
 def function_decl(**kwargs):
-    print yaml.dump({"function": kwargs})
-    #pprint.pprint({"function_decl" : kwargs})
-    return "Func(" + kwargs['name'] + ")"
+    if kwargs['body'] == 'Unknown':
+        pass
+    else:
+        print yaml.dump({"function": kwargs})
+        #pprint.pprint({"function_decl" : kwargs})
+        return "Func(" + kwargs['name'] + ")"
