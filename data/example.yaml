@@ -20,7 +20,6 @@ function:
   link: static
   name: send_pwd_to_eterm
   srcp: eval.c:199
-
 function:
   body:
     bind:
@@ -65,4 +64,3 @@ function:
   link: extern
   name: parse_command
   srcp: eval.c:216
-

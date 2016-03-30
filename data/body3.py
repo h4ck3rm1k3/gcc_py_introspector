@@ -172,11 +172,22 @@ def E3(**kwargs):
 
 def Unknown():
     return "Unknown"
-
+import json
 def function_decl(**kwargs):
     if kwargs['body'] == 'Unknown':
         pass
     else:
-        print yaml.dump({"function": kwargs})
+        y=open('example.yaml','a')
+        j=open('example.json','a')
+
+        y.write( yaml.dump({"function": kwargs}))
+        j.write(json.dumps({"function": kwargs}, 
+                         sort_keys=True,
+                         indent=4,
+                         separators=(',', ': '))
+        )
+        y.close()
+        j.close()
         #pprint.pprint({"function_decl" : kwargs})
         return "Func(" + kwargs['name'] + ")"
+
