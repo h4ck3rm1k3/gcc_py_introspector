@@ -13,20 +13,24 @@ f = {}
 def rec(x,i=0):
     t = "Unknown"
     indent = i * "  "
-    if 'rdf:type' in x:
-        t = x['rdf:type']
-        t = t.replace('node:','')
-        del x['rdf:type']
-        if t not in f:
-            f[t]='type'
 
-    
-    t.replace('node:','')
+    if 'rdf:type' in x:
+        if  x['rdf:type']:
+            t = x['rdf:type']
+            t = t.replace('node:','')
+            if t not in f: # seen
+                f[t]='ntype'
+        else:
+            #pprint.pprint(x)
+            pass
+        del x['rdf:type'] # get rid of this
+        
     body = t + "("
     attrs = []
     subobj = []   
     for l in x:
-        n= l.replace('fld:','')
+        n = l.replace('fld:type','ftype')
+        n = n.replace('fld:','')
         v = x[l]
         if type(v) is types.DictType:
             #pass
@@ -35,7 +39,7 @@ def rec(x,i=0):
             f[n]='fld'
                         
         elif type(v) in types.StringTypes:
-            if n in ('type','scpe','chain'):
+            if n in ('ntype','type','scpe','chain'):
                 pass
             elif v =='':
                 pass
@@ -59,7 +63,7 @@ def rec(x,i=0):
 
 o = open("body4.py","w")
 o.write('#!/usr/bin/python' + "\n")
-o.write("from body2 import *" + "\n")
+o.write("from body3 import *" + "\n")
 o.write(rec(body2.deep))
 o.close()
 

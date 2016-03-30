@@ -1,31 +1,17 @@
-function:
-  body:
-    bind:
-      body:
-      - [f, '=', '0']
-      - - pwd
-        - '='
-        - call: {E0: '"PWD"', fn: null}
-      - cond_expr:
-          OP0: [pwd, ==, '0']
-          OP1:
-          - f
-          - '='
-          - - pwd
-            - '='
-            - call: {E0: '"eterm"', fn: null}
-      - call: {E0: stderr, E1: '"&#xfffd;/%s"', E2: pwd, fn: null}
-      - call: {E0: f, E1: '"../eval.c"', E2: '208', fn: null}
-      vars: pwd
-  link: static
-  name: send_pwd_to_eterm
-  srcp: eval.c:199
+function: {body: undefined, ftype: '10721', link: extern, name: '10720', srcp: 'input.h:105'}
+function: {body: undefined, ftype: '2560', link: extern, name: '12695', srcp: 'externs.h:104'}
+function: {body: undefined, ftype: '5191', link: extern, name: '10700', srcp: 'input.h:104'}
 function:
   body:
     bind:
       body:
       - [need_here_doc, '=', '0']
-      - call: {fn: null}
+      - call:
+          fn:
+            addr_expr:
+              OP0:
+                ptr: {algn: '64'}
+          ftype: void
       - cond_expr:
           OP0:
             truth_andif_expr:
@@ -39,27 +25,73 @@ function:
           OP1:
           - - command_to_execute
             - '='
-            - call: {E0: '"PROMPT_COMMAND"', fn: null}
+            - call:
+                E0:
+                  addr_expr:
+                    OP0:
+                      ptr: {algn: '64'}
+                    ftype: '"PROMPT_COMMAND"'
+                fn:
+                  addr_expr:
+                    OP0:
+                      ptr: {algn: '64'}
+                ftype:
+                  ptr: {algn: '64', ptd: '9', size: '22'}
           - cond_expr:
               OP0:
-                ne_expr: {OP0: command_to_execute, OP1: '0'}
+                ne_expr: {OP0: command_to_execute, OP1: '0', ftype: int}
               OP1:
-                call: {E0: command_to_execute, E1: '"PROMPT_COMMAND"', fn: null}
+                call:
+                  E0: command_to_execute
+                  E1:
+                    addr_expr:
+                      OP0:
+                        ptr: {algn: '64'}
+                      ftype: '"PROMPT_COMMAND"'
+                  fn:
+                    addr_expr:
+                      OP0:
+                        ptr: {algn: '64'}
+                      ftype: Func(10720)
+                  ftype: void
+              ftype: void
           - cond_expr:
               OP0: [running_under_emacs, ==, '2']
               OP1:
-                call: {fn: Func(send_pwd_to_eterm)}
+                call:
+                  fn:
+                    addr_expr:
+                      OP0:
+                        ptr: {algn: '64'}
+                  ftype: void
+              ftype: void
+          ftype: void
       - [current_command_line_count, '=', '0']
       - - r
         - '='
-        - call: {fn: null}
+        - call:
+            fn:
+              addr_expr:
+                OP0:
+                  ptr: {algn: '64'}
+                ftype: Func(12695)
+            ftype: int
       - cond_expr:
           OP0:
             ne_expr: {OP0: need_here_doc, OP1: '0'}
           OP1:
-            call: {fn: null}
+            call:
+              fn:
+                addr_expr:
+                  OP0:
+                    ptr: {algn: '64'}
+                  ftype: Func(10700)
+              ftype: void
+          ftype: void
       - ret:
           expr: [return, '=', r]
+          ftype: void
+      ftype: void
       vars: r
   link: extern
   name: parse_command

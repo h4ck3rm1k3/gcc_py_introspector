@@ -3,6 +3,6 @@ body:
 	./body.py
 t:
 	chmod +x ./body4.py
-	rm example.yaml
-	rm example.json
+	-rm example.yaml
+	-rm example.json
 	./body4.py 

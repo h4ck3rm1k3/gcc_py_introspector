@@ -4,22 +4,34 @@ from SPARQLWrapper.Wrapper import _SPARQL_DEFAULT, _SPARQL_XML, _SPARQL_JSON, _S
 from SPARQLWrapper.SPARQLExceptions import QueryBadFormed
 
 import prefix
-
+import types
 import json
 import pprint
+
+# special tree, name only
+stree = {'exprs':
+        {
+            u'node:addr_expr': {
+                u'fld:type': {
+                    u'node:function_decl': u'78', #this could contain an entire function
+                }
+            }
+        }
+}
+
 
 tree = {'exprs':
 
         {
             u'node:addr_expr': {
                 u'fld:OP0': {
-                u'node:pointer_type': u'90'
-            },
-            u'fld:type': {
-                u'node:function_decl': u'78',
-                u'node:string_cst': u'9',
-                u'node:var_decl': u'3'
-            }
+                    u'node:pointer_type': u'90'
+                },
+                u'fld:type': {
+                    #u'node:function_decl': u'78', this could contain an entire function
+                    u'node:string_cst': u'9',
+                    u'node:var_decl': u'3'
+                }
             },
         u'node:array_ref': {u'fld:OP0': {u'node:component_ref': u'3'},
                                u'fld:OP1': {u'node:var_decl': u'3'}},
@@ -346,8 +358,27 @@ tree = {'exprs':
                               #u'fld:scpe': {u'node:function_decl': u'34',
                               #              u'node:translation_unit_decl': u'112'},
                               #u'fld:size': {u'node:integer_cst': u'134'}
-        }
-            },
+           },
+
+            u'node:enumeral_type': {
+            #{u'fld:csts': {u'node:tree_list': u'31'},
+                                   u'fld:max': {u'node:integer_cst': u'31'},
+                                   u'fld:min': {u'node:integer_cst': u'31'},
+                                   u'fld:name': {u'node:identifier_node': u'9',
+                                                 u'node:type_decl': u'5'},
+                                   u'fld:size': {u'node:integer_cst': u'31'},
+                                   #u'fld:unql': {u'node:enumeral_type': u'5'}
+                               },
+
+    u'node:integer_type': {u'fld:max': {u'node:integer_cst': u'188'},
+                           u'fld:min': {u'node:integer_cst': u'188'},
+                           u'fld:name': {u'node:identifier_node': u'2',
+                                         u'node:type_decl': u'157'},
+                           u'fld:size': {u'node:integer_cst': u'188'},
+                           #u'fld:unql': {u'node:integer_type': u'144'}
+                       },
+
+        },
 
         
  'types': {
@@ -386,11 +417,11 @@ tree = {'exprs':
                                                 u'node:void_type': u'1'}},
            u'node:decl_expr': {u'fld:type': {u'node:void_type': u'34'}},
            u'node:enumeral_type': {u'fld:csts': {u'node:tree_list': u'31'},
-                                   u'fld:max': {u'node:integer_cst': u'31'},
-                                   u'fld:min': {u'node:integer_cst': u'31'},
-                                   u'fld:name': {u'node:identifier_node': u'9',
-                                                 u'node:type_decl': u'5'},
-                                   u'fld:size': {u'node:integer_cst': u'31'},
+                                   #u'fld:max': {u'node:integer_cst': u'31'},
+                                   #u'fld:min': {u'node:integer_cst': u'31'},
+                                   #u'fld:name': {u'node:identifier_node': u'9',
+                                   #              u'node:type_decl': u'5'},
+                                   #u'fld:size': {u'node:integer_cst': u'31'},
                                    u'fld:unql': {u'node:enumeral_type': u'5'}},
            u'node:eq_expr': {u'fld:type': {u'node:integer_type': u'25'}},
            u'node:field_decl': {
@@ -523,34 +554,122 @@ tree = {'exprs':
                                u'fld:unql': {u'node:void_type': u'4'}}}}
 
 f = {}
-
-# recurse
-def recurse(s):
+skip= {
+    'fld:source_file' :1 # dont need this in the document
+}
+def query(s):
     results = prefix.q( """  
-SELECT ?a ?p ?o  WHERE {
+SELECT ?a ?p ?o ?t  WHERE {
     <%s> ?p ?o.
+    optional {
+       ?o rdf:type ?t.
+    }
 }
     """ % s)
     d={}
+    dt={}
     for x in results['results']['bindings']:
         v = prefix.clean(x['o']['value'])
-        k=prefix.clean(x['p']['value'])
-        if k not in d:
-            d[k]=v
+        t = None
+        if 't' in x:
+            t = prefix.clean(x['t']['value'])
         else:
-            d[k]=[d[k],v]
+            #pprint.pprint(x)
+            pass # have no node type
 
-    #pprint.pprint(d)
+        k = x['p']['value']
+        k = prefix.clean(k)
+        if k not in d:
+            if k not in skip:
+                d[k]=v  # the value of the field
+                dt[k]=t # the domain type of the field object
+        else:
+            #d[k]=[d[k],v]
+            raise Exception("duplicate")
+    
+    return d, dt
+
+# recurse
+def recurse(s, deep=True):
+    #print "RECURSE for %s\n" % s
+    d,dt = query(s)
+    #pprint.pprint({"Got from db":d})
+    if 'rdf:type' not in d:
+        return d
+    if not deep:
+        return d
+    st = d['rdf:type']
+    #print "st" + str(st)
+    #pprint.pprint(dt)
+    found = False
     
     for k in d:
-        t = d['rdf:type']
-        if t in tree['exprs']:
-            if k in tree['exprs'][t]:
-                v = d[k]
-                u=prefix.tg +v
-                r = recurse(u)
-                d[k]=r
-                #print "recurse from type {st} with field {f} to value {v} deep={v2}".format(st=t,f=k ,v=u, v2=pprint.pformat(r))
+        r = None # result of the field
+        ot = dt[k]
+        v = d[k]
+        u = prefix.tg +v
+
+        if type(st) is types.DictType:
+            pprint.pprint({
+                'k' :k,
+                'ot' :ot,
+                'st' : st
+            })
+            #pprint.pprint(dt)
+            pass # no type
+        elif not ot : # no type, a literal
+            if k.startswith('fld:'):
+                r =  prefix.clean(v) # just a literal
+                found = True
+            else:
+                r = v # we need to store the type field
+                found = True
+                # pprint.pprint({
+                #     "not field": True,
+                #     'k' :k,
+                #     'ot' :ot,
+                #     'st' : st
+                # })
+                
+        elif st in tree['exprs']:
+            if k in tree['exprs'][st]:
+                if ot in tree['exprs'][st][k]:
+                    r = recurse(u)
+                    found = True
+                else:
+                    pass # skip
+        
+        if not found:
+            if st in stree['exprs']:
+                if k in stree['exprs'][st]:
+                    if ot in stree['exprs'][st][k]:
+                        r = recurse(u, False)
+                        #pprint.pprint(r)
+                        found = True
+                    else:
+                        pass
+
+        if not found:
+            r = recurse(u, False) # just get one level of info for types and such
+            pprint.pprint({
+                "missing" : True,
+                'k' :k,
+                'ot' :ot,
+                'st' : st,
+                'u' :u,
+                'r' :r
+            })
+
+
+
+            #pass
+            # print "skip recurse from type {st} with field {f} and type {ot})".format(
+            #             st=st,
+            #             ot=ot,
+            #             f=k
+            #             )
+
+        d[k]=r
 
     return (d)
 

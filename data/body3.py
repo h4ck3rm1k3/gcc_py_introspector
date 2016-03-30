@@ -1,6 +1,9 @@
 #!/usr/bin/python
 import pprint
 
+def array_type(**kwargs):
+    return "array"
+
 def result_decl(**kwargs):
     return "return"
 
@@ -35,7 +38,10 @@ def ne_expr(**kwargs):
 
 def addr_expr(**kwargs):
     #pprint.pprint({"addr_expr" : kwargs})
-    return kwargs['type']
+    if 'type' in kwargs:
+        return kwargs['type']
+    else:
+        return {"addr_expr" : kwargs}
 
 import yaml
 
@@ -66,7 +72,9 @@ def eq_expr(**kwargs):
 #    pprint.pprint({"eq_expr" : kwargs})
     return [ kwargs['OP0'], "==", kwargs['OP1'] ]
 
-            
+def void_type(**kwargs):
+    return "void"
+
 def pointer_type(**kwargs):
 #    pprint.pprint({"pointer_type" : kwargs})
     return {"ptr" : kwargs}
@@ -87,6 +95,9 @@ def vars(**kwargs):
 
 def type(**kwargs):
     return {'type':kwargs}
+
+def integer_type(**kwargs):
+    return "int"
 
 def integer_cst(**kwargs):
     return kwargs['low']
