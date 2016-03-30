@@ -8,10 +8,20 @@ import prefix
 import json
 import pprint
 
-tree = {'exprs': {u'node:addr_expr': {u'fld:type': {u'node:function_decl': u'78',
-                                             u'node:string_cst': u'9',
-                                             u'node:var_decl': u'3'}},
-           u'node:array_ref': {u'fld:OP0': {u'node:component_ref': u'3'},
+tree = {'exprs':
+
+        {
+            u'node:addr_expr': {
+                u'fld:OP0': {
+                u'node:pointer_type': u'90'
+            },
+            u'fld:type': {
+                u'node:function_decl': u'78',
+                u'node:string_cst': u'9',
+                u'node:var_decl': u'3'
+            }
+            },
+        u'node:array_ref': {u'fld:OP0': {u'node:component_ref': u'3'},
                                u'fld:OP1': {u'node:var_decl': u'3'}},
            u'node:bind_expr': {u'fld:body': {u'node:return_expr': u'30',
                                              u'node:statement_list': u'24'},
@@ -340,7 +350,7 @@ tree = {'exprs': {u'node:addr_expr': {u'fld:type': {u'node:function_decl': u'78'
             },
 
         
- 'types': {u'node:addr_expr': {u'fld:OP0': {u'node:pointer_type': u'90'}},
+ 'types': {
            u'node:array_ref': {u'fld:type': {u'node:integer_type': u'3'}},
            u'node:array_type': {u'fld:domn': {u'node:integer_type': u'49'},
                                 u'fld:elts': {u'node:integer_type': u'36',
@@ -512,6 +522,8 @@ tree = {'exprs': {u'node:addr_expr': {u'fld:type': {u'node:function_decl': u'78'
            u'node:void_type': {u'fld:name': {u'node:type_decl': u'5'},
                                u'fld:unql': {u'node:void_type': u'4'}}}}
 
+f = {}
+
 # recurse
 def recurse(s):
     results = prefix.q( """  
@@ -555,6 +567,8 @@ SELECT ?a  WHERE {
     for x in results['results']['bindings']:
         print x['a']['value']
         r= recurse(x['a']['value'])
-        print "recurse root deep={v2}".format(v2=pprint.pformat(r))
+        o = open("data/body2.py","w")
+        o.write("deep={v2}".format(v2=pprint.pformat(r)))
+        o.close()
     
 start()

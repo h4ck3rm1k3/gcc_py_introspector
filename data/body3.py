@@ -1,159 +1,119 @@
-function_decl(link='extern',srcp='eval.c:216',
-  body=bind_expr(
-    body=statement_list(
-      E0=decl_expr(),
-      E1=decl_expr(),
-      E2=modify_expr(
-        OP0=var_decl(algn='32',size='5',srcp='eval.c:53',used='1',
-          name=identifier_node(string='need_here_doc')),
-        OP1=integer_cst(low='0')),
-      E3=call_expr(
-        fn=addr_expr(OP0='7822',
-          type=function_decl(link='extern',srcp='trap.h:66',
-            body=Unknown(),
-            name=identifier_node(string='run_pending_traps')))),
-      E4=cond_expr(
-        OP0=truth_andif_expr(
-          OP0=ne_expr(
-            OP0=var_decl(algn='32',size='5',srcp='shell.h:94',used='1',
-              name=identifier_node(string='interactive')),
-            OP1=integer_cst(low='0')),
-          OP1=ne_expr(
-            OP0=nop_expr(
-              OP0=component_ref(
-                OP0=var_decl(algn='64',size='2139',srcp='input.h:89',used='1',
-                  name=identifier_node(string='bash_input')),
-                OP1=field_decl(algn='32',bpos='20',size='5',srcp='input.h:82',
-                  name=identifier_node(string='type')))),
-            OP1=integer_cst(low='3'))),
-        OP1=statement_list(
-          E0=modify_expr(
-            OP0=var_decl(algn='64',size='22',srcp='eval.c:219',used='1',
-              name=identifier_node(string='command_to_execute')),
-            OP1=call_expr(
-              E0=nop_expr(
-                OP0=addr_expr(OP0='12969',
-                  type=string_cst(string='PROMPT_COMMAND'))),
-              fn=addr_expr(OP0='9671',
-                type=function_decl(link='extern',srcp='variables.h:280',
-                  body=Unknown(),
-                  name=identifier_node(string='get_string_value'))))),
-          E1=cond_expr(
-            OP0=ne_expr(
-              OP0=var_decl(algn='64',size='22',srcp='eval.c:219',used='1',
-                name=identifier_node(string='command_to_execute')),
-              OP1=integer_cst(low='0')),
-            OP1=call_expr(
-              E0=var_decl(algn='64',size='22',srcp='eval.c:219',used='1',
-                name=identifier_node(string='command_to_execute')),
-              E1=nop_expr(
-                OP0=addr_expr(OP0='12969',
-                  type=string_cst(string='PROMPT_COMMAND'))),
-              fn=addr_expr(OP0='12913',
-                type=function_decl(link='extern',srcp='input.h:105',
-                  body=Unknown(),
-                  name=identifier_node(string='execute_variable_command'))))),
-          E2=cond_expr(
-            OP0=eq_expr(
-              OP0=var_decl(algn='32',size='5',srcp='eval.c:51',used='1',
-                name=identifier_node(string='running_under_emacs')),
-              OP1=integer_cst(low='2')),
-            OP1=call_expr(
-              fn=addr_expr(OP0='7822',
-                type=function_decl(link='static',srcp='eval.c:199',
-                  body=bind_expr(
-                    body=statement_list(
-                      E0=decl_expr(),
-                      E1=decl_expr(),
-                      E2=modify_expr(
-                        OP0=var_decl(algn='64',size='22',srcp='eval.c:201',used='1',
-                          name=identifier_node(string='f')),
-                        OP1=integer_cst(low='0')),
-                      E3=modify_expr(
-                        OP0=var_decl(algn='64',size='22',srcp='eval.c:201',used='1',
-                          name=identifier_node(string='pwd')),
-                        OP1=call_expr(
-                          E0=nop_expr(
-                            OP0=addr_expr(OP0='9697',
-                              type=string_cst(string='PWD'))),
-                          fn=addr_expr(OP0='9671',
-                            type=function_decl(link='extern',srcp='variables.h:280',
-                              body=Unknown(),
-                              name=identifier_node(string='get_string_value'))))),
-                      E4=cond_expr(
-                        OP0=eq_expr(
-                          OP0=var_decl(algn='64',size='22',srcp='eval.c:201',used='1',
-                            name=identifier_node(string='pwd')),
-                          OP1=integer_cst(low='0')),
-                        OP1=modify_expr(
-                          OP0=var_decl(algn='64',size='22',srcp='eval.c:201',used='1',
-                            name=identifier_node(string='f')),
-                          OP1=modify_expr(
-                            OP0=var_decl(algn='64',size='22',srcp='eval.c:201',used='1',
-                              name=identifier_node(string='pwd')),
-                            OP1=call_expr(
-                              E0=nop_expr(
-                                OP0=addr_expr(OP0='9674',
-                                  type=string_cst(string='eterm'))),
-                              fn=addr_expr(OP0='9720',
-                                type=function_decl(link='extern',srcp='common.h:102',
-                                  body=Unknown(),
-                                  name=identifier_node(string='get_working_directory'))))))),
-                      E5=call_expr(
-                        E0=nop_expr(
-                          OP0=var_decl(algn='64',size='22',srcp='stdio.h:170',used='1',
-                            name=identifier_node(string='stderr'))),
-                        E1=nop_expr(
-                          OP0=addr_expr(OP0='9674',
-                            type=string_cst(string='&#xfffd;/%s'))),
-                        E2=var_decl(algn='64',size='22',srcp='eval.c:201',used='1',
-                          name=identifier_node(string='pwd')),
-                        fn=addr_expr(OP0='9650',
-                          type=function_decl(link='extern',srcp='stdio.h:356',
-                            body=Unknown(),
-                            name=identifier_node(string='fprintf')))),
-                      E6=call_expr(
-                        E0=nop_expr(
-                          OP0=var_decl(algn='64',size='22',srcp='eval.c:201',used='1',
-                            name=identifier_node(string='f'))),
-                        E1=nop_expr(
-                          OP0=addr_expr(OP0='9676',
-                            type=string_cst(string='../eval.c'))),
-                        E2=integer_cst(low='208'),
-                        fn=addr_expr(OP0='9652',
-                          type=function_decl(link='extern',srcp='xmalloc.h:46',
-                            body=Unknown(),
-                            name=identifier_node(string='sh_xfree'))))),
-                    vars=var_decl(algn='64',size='22',srcp='eval.c:201',used='1',
-                      name=identifier_node(string='pwd'))),
-                  name=identifier_node(string='send_pwd_to_eterm'))))))),
-      E5=modify_expr(
-        OP0=var_decl(algn='32',size='5',srcp='eval.c:54',used='1',
-          name=identifier_node(string='current_command_line_count')),
-        OP1=integer_cst(low='0')),
-      E6=modify_expr(
-        OP0=var_decl(algn='32',size='5',srcp='eval.c:218',used='1',
-          name=identifier_node(string='r')),
-        OP1=call_expr(
-          fn=addr_expr(OP0='12822',
-            type=function_decl(link='extern',srcp='externs.h:104',
-              body=Unknown(),
-              name=identifier_node(string='yyparse'))))),
-      E7=cond_expr(
-        OP0=ne_expr(
-          OP0=var_decl(algn='32',size='5',srcp='eval.c:53',used='1',
-            name=identifier_node(string='need_here_doc')),
-          OP1=integer_cst(low='0')),
-        OP1=call_expr(
-          fn=addr_expr(OP0='7822',
-            type=function_decl(link='extern',srcp='input.h:104',
-              body=Unknown(),
-              name=identifier_node(string='gather_here_documents'))))),
-      E8=return_expr(
-        expr=modify_expr(
-          OP0=result_decl(algn='32',note='art:artificial',size='5',srcp='eval.c:216'),
-          OP1=var_decl(algn='32',size='5',srcp='eval.c:218',used='1',
-            name=identifier_node(string='r'))))),
-    vars=var_decl(algn='32',size='5',srcp='eval.c:218',used='1',
-      name=identifier_node(string='r'))),
-  name=identifier_node(string='parse_command'))
+#!/usr/bin/python
+import pprint
+
+def result_decl(**kwargs):
+    return "return"
+
+def var_decl(**kwargs):
+    #pprint.pprint(kwargs)
+    return kwargs['name']
+
+def identifier_node(**kwargs):
+        return kwargs['string']
+
+def call_expr(**kwargs):
+    #pprint.pprint({"call" : kwargs})
+    return kwargs
+
+def addr_expr(**kwargs):
+    #pprint.pprint({"addr_expr" : kwargs})
+    return kwargs['type']
+
+def function_decl(**kwargs):
+    #pprint.pprint({"function_decl" : kwargs})
+    return "Func(" + kwargs['name'] + ")"
+
+def modify_expr(**kwargs):
+    pprint.pprint({"Modify":kwargs})
+    return kwargs
+
+def pointer_type(**kwargs):
+                pass
+
+def component_ref(**kwargs):
+                pass
+def OP0(**kwargs):
+                pass
+def OP1(**kwargs):
+                pass
+def vars(**kwargs):
+                pass
+
+def truth_andif_expr(**kwargs):
+                pass
+def type(**kwargs):
+                pass
+def integer_cst(**kwargs):
+         return kwargs['low']
+def size(**kwargs):
+                pass
+def note(**kwargs):
+                pass
+       
+
+def low(**kwargs):
+                pass
+def body(**kwargs):
+                pass
+def used(**kwargs):
+                pass
+def string(**kwargs):
+                pass
+def return_expr(**kwargs):
+                pass
+def string_cst(**kwargs):
+                pass
+    
+def nop_expr(**kwargs):
+                pass
+def srcp(**kwargs):
+                pass
+def eq_expr(**kwargs):
+                pass
+def link(**kwargs):
+                pass
+def bind_expr(**kwargs):
+                pass
+def fn(**kwargs):
+                pass
+def name(**kwargs):
+                pass
+def decl_expr(**kwargs):
+                pass
+def expr(**kwargs):
+                pass
+def cond_expr(**kwargs):
+                pass
+def ne_expr(**kwargs):
+                pass
+    
+def bpos(**kwargs):
+                pass
+def algn(**kwargs):
+                pass
+def field_decl(**kwargs):
+                pass
+def statement_list(**kwargs):
+                pass
+def E2(**kwargs):
+                pass
+def E8(**kwargs):
+                pass
+def E5(**kwargs):
+                pass
+def E4(**kwargs):
+                pass
+def E7(**kwargs):
+                pass
+def E6(**kwargs):
+                pass
+def E1(**kwargs):
+                pass
+def E0(**kwargs):
+                pass
+def E3(**kwargs):
+                pass
+
+def Unknown():
+    pass
+
