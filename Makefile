@@ -1,4 +1,13 @@
+quine:
+	python quine.py
+
 recurse:
+	python query_function_example_python.py
+
+recurse3:
+	python query_function_example_direct.py
+
+recurse2:
 	python query_function_example.py
 
 types:
