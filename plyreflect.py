@@ -35,7 +35,7 @@ class Lexer(Module):
         #for x in self.linfo.stateinfo:
 
         for state in self.linfo.funcsym:
-            pprint.pprint({ "state":state })
+            #pprint.pprint({ "state":state })
             for fname, f in self.linfo.funcsym[state]:
                 line = f.__code__.co_firstlineno
                 _file = f.__code__.co_filename

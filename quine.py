@@ -2,25 +2,36 @@
 """
 a quine
 
-import sys,inspect;sys.stdout.write(inspect.getsource(inspect.currentframe()))
+The idea is that we have a self describing program that can emit itself.
+The difference to normal quines is that we treat the emitting of the code as just a mode of the program itself.
+We want to be able to :
+
+query and fitler parts of the program relative to the current execution or any part.
+
+* emit the full or partial source code
+* emit the full or partial parse tree
+* emit the full or partial ast graph
+* emit the full or partial call stack
+* emit the full or partial program memory
+* emit the full or partial assembly code
+
 """
 
 #~/py/python/Lib/ast.py
 #~/py/python/Lib/test/test_ast.py
-
-#import ast
-
-
-
 import ast
 
 import sys
 import os
 home=os.environ['HOME']
 
+# the unparser is embedded here.
 #~/py/python/Tools/parser/unparse.py
 #sys.path.append(home + "/py/python/Tools/parser")
 import unparse
+
+#tree = compile(source, filename, "exec", ast.PyCF_ONLY_AST)
+
 
 # git@github.com:ActiveState/appdirs.git
 sys.path.append(home + "/py/appdirs")
@@ -69,7 +80,7 @@ import types
 #sys.path.append(home + "/py/pyflakes")
 
 #git@github.com:PyCQA/astroid.git
-sys.path.append(home + "/py/astroid") # needs to be installed, python3 code 
+sys.path.append(home + "/py/astroid") # needs to be installed, python3 code
 import astroid.node_classes
 #astroid/node_classes.py
 
@@ -82,14 +93,70 @@ sys.path.append(home + "/py/iast")
 
 # consult
 # ~/py/python/Parser/Python.asdl
+import StringIO
+class PyAst:
+    @classmethod
+    def pyast(cls) :
+        pass
 
-
-class IntegerConstant:
-
+    @classmethod
+    def ast_flip(cls) :
+        a = cls.pyast()
+        if a :
+            n = a("foo")
+            if n:
+                return cls.dounparse(n)
+                
     @staticmethod
-    def pyast() :
-        return ast.Num
+    def dounparse(tree):
+        output = StringIO.StringIO()       
+        unparse.Unparser(tree, output)
+        v = output.getvalue()
+        output.close()
+        return v
+   
+    @classmethod
+    def verify(cls):
+        print cls.pyast()
     
+class TuNode:
+
+    @classmethod
+    def tu_parser(cls):
+        return None # not defined
+    
+    @classmethod
+    def verify(cls):
+        print cls.token()
+
+    @classmethod
+    def token(cls):
+        p = cls.tu_parser()
+        if p:
+            r = plyreflect.reflect(p)
+            node_token = r['token_meta'][0]['token'].node
+            return node_token
+        else:
+            return None
+
+class NodeType(TuNode, PyAst):
+    @classmethod
+    def verify(cls):
+        pprint.pprint ({
+            "Token" : cls.token(),
+            "ast" : cls.ast_flip()
+        })
+
+class Constant(NodeType):
+    pass
+    
+    
+class IntegerConstant(Constant):
+
+    @classmethod
+    def pyast(cls) :
+        return ast.Num
+
     #def pypy():
     #    return pyast()
 
@@ -98,44 +165,70 @@ class IntegerConstant:
 
     def asteroid ():
         return astroid.node_classes.Const # shared
-    
+
     def cython():
         return Cython.Compiler.ExprNodes.IntNode
 
-    @staticmethod
-    def tu_parser():
+    @classmethod
+    def tu_parser(cls):
         return tuparser.p_ntype_integer_cst
-        
+
     def PythonToken():
         return pgen2.token.NUMBER
         # ~/py/python/Include/token.h same as in
-        
+
     def redbaron():
         return redbaron.nodes.IntNode
 
-# class NumericTypeInteger:    
+#  https://github.com/inducer/pycparserext
+
+#https://github.com/eliben/pycparser
+sys.path.append(home + "/py/pycparser")
+import pycparser
+
+#~/py/pycparser/pycparser/c_lexer.py
+
+class IntegerConstantDecimal(IntegerConstant):
+    def py_cparser():
+        return pycparser.c_lexer.t_INT_CONST_DEC
+    #INT_CONST_DEC
+
+class IntegerConstantOctal(IntegerConstant):
+    def py_cparser():
+        return pycparser.c_lexer.t_INT_CONST_OCT
+
+class IntegerConstantHex(IntegerConstant):
+    def py_cparser():
+        return pycparser.c_lexer.t_INT_CONST_HEX
+
+class IntegerConstantBin(IntegerConstant):
+    def py_cparser():
+        return pycparser.c_lexer.t_INT_CONST_BIN
+
+# class NumericTypeInteger:
 #     def types():
 #         return types.IntType
 #     def python_type():
 #         return int
 
-# class NumericTypeLong:    
+# class NumericTypeLong:
 #     def types():
 #         return types.LongType
 #     def python_type():
 #         return long
-    
-# class NumericTypeFloat:    
+
+# class NumericTypeFloat:
 #     def types():
 #         return types.FloatType
 #     def python_type():
 #         return float
 
 
-class StringConstant:
-    def pyast() :
+class StringConstant(Constant):
+    @classmethod
+    def pyast(cls) :
         return ast.Str
-    
+
     #def pypy():
     #    return pyast()
 
@@ -145,31 +238,32 @@ class StringConstant:
 
     def asteroid ():
         return astroid.node_classes.Const # shared
-    
+
     def cython():
         return Cython.Compiler.ExprNodes.StringNode
 
-    @staticmethod
-    def tu_parser():
+    @classmethod
+    def tu_parser(cls):
         return tuparser.p_ntype_string_cst
-        
+
     def PythonToken():
         return pgen2.token.STRING
         # ~/py/python/Include/token.h same as in
-        
+
     def redbaron():
         return redbaron.nodes.StringNode
 
 # ~/py/python/Lib/lib2to3/
 #~/py/redbaron/redbaron/nodes.py
 
-# conversions we want to support : 
+# conversions we want to support :
 # convert to/from python ast
 # convert to/from xpath expression
 # convert to/from xlst ...
 # convert to/from python text
 # convert to/from tree.tu
 # convert to/from c
+#   see https://github.com/eliben/pycparser/blob/master/pycparser/c_generator.py
 # convert to/from rdf
 # convert to/from some yaml format
 # convert to/from some json format
@@ -181,25 +275,27 @@ import plyreflect
 
 def main(args):
 
+    # let do a simple walk over the classes and verify them
     g = globals()
     for x in g:
         v = g[x]
         if inspect.isclass(v) :
             print "Class:"+ x
-            n = v()
+            #n = v()
+            v.verify()
+            # test getting the gcc translation unit codes
 
-            p = v.tu_parser()
-            r = plyreflect.reflect(p)
-            node_token = r['token_meta'][0]['token'].node})
+            # test creating a 
+            #dounparse
             
             # for k in p.__dict__:
             #     print k
             #     print p.__dict__[k]
             # for f in inspect.getmembers(p):
             #     pprint.pprint( f)
-                            
+
             # for f in inspect.getmembers(v):
-                
+
             #     if inspect.ismethod(f[1]):
             #         print "Calling"+ x + "." +f[0]
             #         #print f[1]
@@ -207,7 +303,7 @@ def main(args):
             #     else:
             #         #print "What?" + str(f)
             #         pass
-                
+
             # for f in dir(v):
             #     m = v.__dict__[f]
             #     print f, m
