@@ -7,14 +7,20 @@ import sys,inspect;sys.stdout.write(inspect.getsource(inspect.currentframe()))
 
 #~/py/python/Lib/ast.py
 #~/py/python/Lib/test/test_ast.py
-#~/py/python/Tools/parser/unparse.py
+
 #import ast
+
+
 
 import ast
 
 import sys
 import os
 home=os.environ['HOME']
+
+#~/py/python/Tools/parser/unparse.py
+#sys.path.append(home + "/py/python/Tools/parser")
+import unparse
 
 # git@github.com:ActiveState/appdirs.git
 sys.path.append(home + "/py/appdirs")
@@ -66,12 +72,17 @@ sys.path.append(home + "/py/pylint")
 #git clone git@github.com:brandjon/iast.git
 sys.path.append(home + "/py/iast")
 
+# consult
+# ~/py/python/Parser/Python.asdl
+
+
 class IntegerConstant:
+    
     def pyast() :
         return ast.Num
     
-    def pypy():
-        return pyast()
+    #def pypy():
+    #    return pyast()
 
     def pypy_tokens():
         return pypy.interpreter.pyparser.pygram.tokens.NUMBER
@@ -111,6 +122,33 @@ class NumericTypeFloat:
         return float
 
 
+class StringConstant:
+    def pyast() :
+        return ast.Str
+    
+    #def pypy():
+    #    return pyast()
+
+    def pypy_tokens():
+        #pypy/interpreter/pyparser/pytoken.py
+        return pypy.interpreter.pyparser.pygram.tokens.STRING
+
+    def asteroid ():
+        return astroid.node_classes.Const # shared
+    
+    def cython():
+        return Cython.Compiler.ExprNodes.StringNode
+    
+    def tu_parser():
+        return tuparser.p_ntype_string_cst
+        
+    def PythonToken():
+        return pgen2.token.STRING
+        # ~/py/python/Include/token.h same as in
+        
+    def redbaron():
+        return redbaron.nodes.StringNode
+
 # ~/py/python/Lib/lib2to3/
 #~/py/redbaron/redbaron/nodes.py
 
@@ -126,3 +164,30 @@ class NumericTypeFloat:
 # convert to/from some json format
 # convert to/from assembler.....
 # convert to/from network package
+import inspect
+
+
+def main(args):
+    g = globals()
+    for x in g:
+        v = g[x]
+        if inspect.isclass(v) :
+            print "Class:"+ x
+            n = v()
+            
+            for f in inspect.getmembers(v):
+                
+                if inspect.ismethod(f[1]):
+                    print "Calling"+ x + "." +f[0]
+                    #print f[1]
+                    r =  v.__dict__[f[0]]()
+                else:
+                    #print "What?" + str(f)
+                    pass
+                
+            # for f in dir(v):
+            #     m = v.__dict__[f]
+            #     print f, m
+
+if __name__=='__main__':
+    main(sys.argv[1:])
