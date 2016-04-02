@@ -77,7 +77,8 @@ sys.path.append(home + "/py/iast")
 
 
 class IntegerConstant:
-    
+
+    @staticmethod
     def pyast() :
         return ast.Num
     
@@ -92,7 +93,8 @@ class IntegerConstant:
     
     def cython():
         return Cython.Compiler.ExprNodes.IntNode
-    
+
+    @staticmethod
     def tu_parser():
         return tuparser.p_ntype_integer_cst
         
@@ -103,23 +105,23 @@ class IntegerConstant:
     def redbaron():
         return redbaron.nodes.IntNode
 
-class NumericTypeInteger:    
-    def types():
-        return types.IntType
-    def python_type():
-        return int
+# class NumericTypeInteger:    
+#     def types():
+#         return types.IntType
+#     def python_type():
+#         return int
 
-class NumericTypeLong:    
-    def types():
-        return types.LongType
-    def python_type():
-        return long
+# class NumericTypeLong:    
+#     def types():
+#         return types.LongType
+#     def python_type():
+#         return long
     
-class NumericTypeFloat:    
-    def types():
-        return types.FloatType
-    def python_type():
-        return float
+# class NumericTypeFloat:    
+#     def types():
+#         return types.FloatType
+#     def python_type():
+#         return float
 
 
 class StringConstant:
@@ -138,7 +140,8 @@ class StringConstant:
     
     def cython():
         return Cython.Compiler.ExprNodes.StringNode
-    
+
+    @staticmethod
     def tu_parser():
         return tuparser.p_ntype_string_cst
         
@@ -165,16 +168,28 @@ class StringConstant:
 # convert to/from assembler.....
 # convert to/from network package
 import inspect
-
+import pprint
+import plyreflect
 
 def main(args):
+
     g = globals()
     for x in g:
         v = g[x]
         if inspect.isclass(v) :
             print "Class:"+ x
             n = v()
+
+            p = v.tu_parser()
+            r = plyreflect.reflect(p)
+            pprint.pprint({"ply reflection": r})
             
+            for k in p.__dict__:
+                print k
+                print p.__dict__[k]
+            for f in inspect.getmembers(p):
+                pprint.pprint( f)
+                            
             for f in inspect.getmembers(v):
                 
                 if inspect.ismethod(f[1]):
