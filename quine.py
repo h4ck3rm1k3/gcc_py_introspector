@@ -44,9 +44,17 @@ import redbaron.nodes
 import pgen2.token
 import tuparser
 
+# Read: http://greentreesnakes.readthedocs.org/en/latest/nodes.html#literals
+
+#TODO
+# https://github.com/eliben/pycparser
+
+
 #hg clone https://bitbucket.org/pypy/pypy
 # pypy uses the internet ast.Num
 sys.path.append(home + "/py/pypy")
+#https://github.com/sota/pypy/blob/master/pypy/interpreter/pyparser/pytoken.py
+#tokens from here
 
 #git clone git@github.com:cython/cython.git
 sys.path.append(home + "/py/cython")
@@ -182,23 +190,23 @@ def main(args):
 
             p = v.tu_parser()
             r = plyreflect.reflect(p)
-            pprint.pprint({"ply reflection": r})
+            node_token = r['token_meta'][0]['token'].node})
             
-            for k in p.__dict__:
-                print k
-                print p.__dict__[k]
-            for f in inspect.getmembers(p):
-                pprint.pprint( f)
+            # for k in p.__dict__:
+            #     print k
+            #     print p.__dict__[k]
+            # for f in inspect.getmembers(p):
+            #     pprint.pprint( f)
                             
-            for f in inspect.getmembers(v):
+            # for f in inspect.getmembers(v):
                 
-                if inspect.ismethod(f[1]):
-                    print "Calling"+ x + "." +f[0]
-                    #print f[1]
-                    r =  v.__dict__[f[0]]()
-                else:
-                    #print "What?" + str(f)
-                    pass
+            #     if inspect.ismethod(f[1]):
+            #         print "Calling"+ x + "." +f[0]
+            #         #print f[1]
+            #         r =  v.__dict__[f[0]]()
+            #     else:
+            #         #print "What?" + str(f)
+            #         pass
                 
             # for f in dir(v):
             #     m = v.__dict__[f]

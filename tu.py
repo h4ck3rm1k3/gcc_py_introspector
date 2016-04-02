@@ -76,7 +76,7 @@ def emit_parser_rule(base_name, prefix):
     rule = "%s_type : %s" % (prefix, base_name)
     parser_name = "p_%s" % (base_name.lower())
     #print "def %s(psr_val):\n    \'%s\'\n    psr_val[0] = %s_base(psr_val)\n" %(parser_name, rule, prefix)
-
+import pprint
 def make_tokens(prefix,pattern,val_func, tstr):
     '''
     create tokens
@@ -90,7 +90,13 @@ def make_tokens(prefix,pattern,val_func, tstr):
         item = x.strip().rstrip()
         regex = pattern % item
         func = lambda x : val_func(x)
-        func.__doc__ = regex
+        func.regex = regex
+        func.node = x
+        func.prefix = prefix
+        func.pattern = pattern
+        func.val_func = val_func
+                
+        func.__doc__ = "check %s" % x
         current_module = sys.modules[__name__]
         base_name = "%s_%s" % (prefix, item.upper())
         name = "t_%s" % (base_name)
@@ -101,7 +107,16 @@ def make_tokens(prefix,pattern,val_func, tstr):
 
         #print "%s"  %( base_name )
         setattr(current_module, name , func)
-
+        # pprint.pprint({
+        #     'm': current_module,
+        #     'n': name ,
+        #     'f' : func,
+        #     'r' : func.__dict__,
+        #     'f2' : func.val_func.__dict__,
+        #     'f2d' : func.val_func.__doc__,
+        #     'node' : func.node,
+        #     'fd' : func.__doc__
+        # })
 
 def ntype_value(tok) :
     return tok 
@@ -508,4 +523,4 @@ make_tokens("OPERATOR", r'operator\s+(?P<val>%s)\s',op_token_value,"""
 def t_error(t):
     raise TypeError("Unknown text '%s'" % (t.value, ))
 
-lex.lex()
+g_lex = lex.lex()
