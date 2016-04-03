@@ -1,3 +1,6 @@
+pairs :
+	python pairs.py
+
 quine:
 	python quine.py
 

@@ -2,6 +2,9 @@
 """
 a quine
 
+First goal will be to generate normal python asts from the gcc nodes, 
+and following that to generate python code from c.
+
 The idea is that we have a self describing program that can emit itself.
 The difference to normal quines is that we treat the emitting of the code as just a mode of the program itself.
 We want to be able to :
@@ -22,6 +25,14 @@ We are going to want to connect :
 3. equivalent code in clang/llvm
 4. python asts
 
+
+Display on a website like 
+http://www.pythontutor.com/
+
+git@github.com:quantifiedcode/python-ast-visualizer.git
+
+https://github.com/srossross/Meta
+git@github.com:landscapeio/prospector.git
 """
 
 #~/py/python/Lib/ast.py
@@ -44,6 +55,9 @@ import unparse
 sys.path.append(home + "/py/appdirs")
 import appdirs
 
+sys.path.append(home + "/py/Meta")
+import meta
+
 #git@github.com:alex/rply.git
 sys.path.append(home + "/py/rply")
 import rply
@@ -62,7 +76,9 @@ import redbaron.nodes
 import pgen2.token
 import tuparser
 
+#hg clone https://bitbucket.org/takluyver/greentreesnakes
 # Read: http://greentreesnakes.readthedocs.org/en/latest/nodes.html#literals
+sys.path.append(home + "/py/greentreesnakes")
 
 #TODO
 # https://github.com/eliben/pycparser
