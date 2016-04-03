@@ -15,6 +15,13 @@ query and fitler parts of the program relative to the current execution or any p
 * emit the full or partial program memory
 * emit the full or partial assembly code
 
+We are going to want to connect :
+
+1. gcc tree node definitions
+2. the code the emits the tree codes
+3. equivalent code in clang/llvm
+4. python asts
+
 """
 
 #~/py/python/Lib/ast.py
@@ -99,11 +106,13 @@ class PyAst:
     def pyast(cls) :
         pass
 
-    @classmethod
-    def ast_flip(cls) :
+    def get_ast_args(self):
+        pass
+    
+    def ast_flip(self) :
         a = cls.pyast()
         if a :
-            n = a("foo")
+            n = a(self.get_ast_args())
             if n:
                 return cls.dounparse(n)
                 
@@ -118,6 +127,16 @@ class PyAst:
     @classmethod
     def verify(cls):
         print cls.pyast()
+
+class RedBaron:
+    
+    @classmethod
+    def redbaron(cls):
+        pass
+    
+    @classmethod
+    def verify(cls):
+        print cls.redbaron()
     
 class TuNode:
 
@@ -144,7 +163,7 @@ class NodeType(TuNode, PyAst):
     def verify(cls):
         pprint.pprint ({
             "Token" : cls.token(),
-            "ast" : cls.ast_flip()
+            "ast" : PyAst.verify(), #cls.ast_flip()
         })
 
 class Constant(NodeType):
@@ -177,7 +196,8 @@ class IntegerConstant(Constant):
         return pgen2.token.NUMBER
         # ~/py/python/Include/token.h same as in
 
-    def redbaron():
+    @classmethod
+    def redbaron(cls):
         return redbaron.nodes.IntNode
 
 #  https://github.com/inducer/pycparserext
@@ -250,7 +270,8 @@ class StringConstant(Constant):
         return pgen2.token.STRING
         # ~/py/python/Include/token.h same as in
 
-    def redbaron():
+    @classmethod
+    def redbaron(cls):
         return redbaron.nodes.StringNode
 
 # ~/py/python/Lib/lib2to3/
