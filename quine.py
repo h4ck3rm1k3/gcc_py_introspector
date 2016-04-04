@@ -33,6 +33,9 @@ git@github.com:quantifiedcode/python-ast-visualizer.git
 
 https://github.com/srossross/Meta
 git@github.com:landscapeio/prospector.git
+https://pypi.python.org/pypi/redhawk/
+http://alexleone.blogspot.com/2010/01/python-ast-pretty-printer.html
+
 """
 
 #~/py/python/Lib/ast.py

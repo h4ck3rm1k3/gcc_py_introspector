@@ -1,3 +1,7 @@
+
+translate :
+	python translate_to_python.py
+
 pairs :
 	python pairs.py
 
