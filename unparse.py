@@ -618,17 +618,36 @@ class Unparser:
         if t.optional_vars:
             self.write(" as ")
             self.dispatch(t.optional_vars)
-
+    #
+    def _Print(self , t):
+        self.write("#TODO print")
+        
     # GCC extensions
     def _VarDecl(self, t):
         self.write(t.name)
-        
+    def _dict(self, t):
+        self.write("# dict?" + pprint.pformat(t).replace("\n"," "))
+
+    def _tuple(self, t):
+        for x in t:
+            self.dispatch(x)
+            
+    def _DeclExpr(self, t):
+        self.write("#" + pprint.pformat(t.__dict__).replace("\n"," "))
+
+    def _NopExpr(self, t):
+        self.write("#NOP" + pprint.pformat(t.__dict__).replace("\n"," "))
+
+    def _ResultDecl(self, t):
+        self.write("#result" + pprint.pformat(t.__dict__).replace("\n"," "))
+
 def roundtrip(filename, output=sys.stdout):
-    with open(filename, "rb") as pyfile:
-        encoding = tokenize.detect_encoding(pyfile.readline)[0]
-    with open(filename, "r", encoding=encoding) as pyfile:
+    #with open(filename, "rb") as pyfile:
+    #    encoding = tokenize.detect_encoding(pyfile.readline)[0]
+    with open(filename, "r") as pyfile:
         source = pyfile.read()
     tree = compile(source, filename, "exec", ast.PyCF_ONLY_AST)
+    pprint.pprint(ast.dump(tree))
     Unparser(tree, output)
 
 

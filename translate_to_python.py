@@ -9,13 +9,13 @@ from ast import *
 
 def get_args(args):
     arg_list =[]
-    e = 0
-    while True:
-        n = "E"+str(e)
+    for e in range(0,20):
+        n = "fld:E"+str(e)
         if n in args:
             arg_list.append(args[n])
-        else:
+        else:            
             return arg_list
+
 
 class VoidType:
     pass
@@ -45,7 +45,9 @@ def call_expr(**kwargs):
     return Call(
         func=kwargs['fld:fn'],
         args=get_args(kwargs), # TODO
-        #keywords, starargs, kwargs
+        keywords=[],
+        starargs=[],
+        kwargs=[]
     )
 
 def component_ref(**kwargs):
@@ -57,7 +59,8 @@ def component_ref(**kwargs):
 def cond_expr(**kwargs):
     return If(
         test=kwargs['fld:OP0'],
-        body=kwargs['fld:OP1']
+        body=kwargs['fld:OP1'],
+        orelse=None,
         )
 
 
@@ -65,7 +68,7 @@ def decl_expr(**kwargs):
     pass
 def eq_expr(**kwargs):
     return Compare(
-        value=kwargs['fld:OP0'],
+        left=kwargs['fld:OP0'],
         ops=[Eq()],
         comparators=[
             kwargs['fld:OP1']
@@ -109,7 +112,8 @@ def identifier_node(**kwargs):
             id=kwargs['fld:string']
         )
     else:
-        pprint.pprint ({'no string':kwargs})
+        #pprint.pprint ({'no string':kwargs})
+        pass
 
 def integer_cst(**kwargs):
     return Num(kwargs['fld:low'])
@@ -129,14 +133,14 @@ def modify_expr(**kwargs):
 def ne_expr(**kwargs):
     if 'fld:OP0' in kwargs:
         return Compare(
-            value=kwargs['fld:OP0'],
+            left=kwargs['fld:OP0'],
             ops=[NotEq()],
             comparators=[
                 kwargs['fld:OP1']
             ]
         )
     else:
-        pprint.pprint(kwargs)
+        #pprint.pprint(kwargs)
         raise kwargs
 
 class NopExpr:
@@ -170,9 +174,9 @@ def string_cst(**kwargs):
 
 def truth_andif_expr(**kwargs):
 
-    return Compare(
-            value=kwargs['fld:OP0'],
-            ops=[And()],
+    return BoolOp(
+            values=[kwargs['fld:OP0']],
+            op=And(),
             comparators=[
                 kwargs['fld:OP1']
             ]
@@ -229,7 +233,7 @@ def rec(x,i=0):
             #if t not in f: # seen
             #    f[t]='ntype'
         else:
-            pprint.pprint(x)
+            #pprint.pprint(x)
             pass
         del x['rdf:type'] # get rid of this
     else:
@@ -246,7 +250,7 @@ def rec(x,i=0):
         n = l #.replace('fld:type','ftype')
         v = x[l]
         if type(v) is types.DictType:
-            pprint.pprint({"Before ref": v })
+            #pprint.pprint({"Before ref": v })
             v2 = rec(v,i+1)
             attrs[n] = v2
 
@@ -262,10 +266,10 @@ def rec(x,i=0):
             attrs[n] = v
     attrs['rdf:type']=t
 
-    pprint.pprint({'f':f,'i':attrs})
+    #pprint.pprint({'f':f,'i':attrs})
     r = f(**attrs)
     # debug the input and output
-    pprint.pprint({'o':r,'i':attrs})
+    #pprint.pprint({'o':r,'i':attrs})
     return r
 
 
