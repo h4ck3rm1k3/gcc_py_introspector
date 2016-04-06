@@ -4,97 +4,218 @@ import yaml
 import data.body2
 import types
 import pprint
-
+import sys
 from ast import *
 
-#print yaml.dump(deep)
+def get_args(args):
+    arg_list =[]
+    e = 0
+    while True:
+        n = "E"+str(e)
+        if n in args:
+            arg_list.append(args[n])
+        else:
+            return arg_list
 
-# tmap = {
-#     'function_decl':'FunctionDef',
-#     'identifier_node':'Name',
-#     'bind_expr':'Assign',
-#     'var_decl':'Assign',
-#     #'var_decl':'Assign',    
-# }
+class VoidType:
+    pass
+
+class IntType:
+    pass
 
 def addr_expr(**kwargs) :
+    if 'OP0' in kwargs:
+        return kwargs['OP0']
+    else:
+        return kwargs
+
+class ArrayType:
     pass
+
 def array_type(**kwargs) :
-    pass
+    return ArrayType()
+
 def bind_expr(**kwargs):
-    pass
+    # a list of times, the name contains the return object... may need to use that.
+    return kwargs['fld:body']
+
+    
 def call_expr(**kwargs):
-    pass
+    
+    return Call(
+        func=kwargs['fld:fn'],
+        args=get_args(kwargs), # TODO
+        #keywords, starargs, kwargs
+    )
+
 def component_ref(**kwargs):
-    pass
+    return Subscript(
+        value=kwargs['fld:OP0'],
+        slice=kwargs['fld:OP1'],
+    )
+
 def cond_expr(**kwargs):
-    pass
+    return If(
+        test=kwargs['fld:OP0'],
+        body=kwargs['fld:OP1']
+        )
+
+
 def decl_expr(**kwargs):
     pass
 def eq_expr(**kwargs):
-    pass
-def field_decl(**kwargs):
-    pass
-def function_decl(**kwargs):
-    pass
+    return Compare(
+        value=kwargs['fld:OP0'],
+        ops=[Eq()],
+        comparators=[
+            kwargs['fld:OP1']
+            ]
+        )
 
+class FieldDecl:
+    def __init__(self, args):
+        self.args=args
+
+def field_decl(**kwargs):
+    return FieldDecl(kwargs)
+
+class FunctionRef:
+    """
+    for functions with undefined bodies, we use this class to mark them.
+    """
+    def __init__(self, name):
+        self.name=name
+        
+def function_decl(**kwargs):
+    if kwargs['fld:body'] != 'undefined':
+        return FunctionDef(
+            name=str(kwargs['fld:name']),
+            args=[], # TODO
+            body=kwargs['fld:body'],
+            decorator_list=[],
+            returns=None)
+    else:
+        return FunctionRef(str(kwargs['fld:name']))
+
+class NameWrapper:
+    def __init__(self, id):
+        self._id=id
+    def __str__(self):
+        return self._id
+        
 def identifier_node(**kwargs):
     if 'fld:string' in kwargs:
-        return Name(kwargs['fld:string'])
+        return NameWrapper(
+            id=kwargs['fld:string']
+        )
     else:
         pprint.pprint ({'no string':kwargs})
 
 def integer_cst(**kwargs):
-    pass
+    return Num(kwargs['fld:low'])
+
 def integer_type(**kwargs):
-    pass
+    return IntType()
+
 def modify_expr(**kwargs):
-    pass
+    return Assign(
+        targets=[
+            kwargs['fld:OP0']
+        ],
+        value=kwargs['fld:OP1']
+    ),
+    
+    
 def ne_expr(**kwargs):
-    pass
+    if 'fld:OP0' in kwargs:
+        return Compare(
+            value=kwargs['fld:OP0'],
+            ops=[NotEq()],
+            comparators=[
+                kwargs['fld:OP1']
+            ]
+        )
+    else:
+        pprint.pprint(kwargs)
+        raise kwargs
+
+class NopExpr:
+    def __init__(self, args):
+        self.args=args
+
 def nop_expr(**kwargs):
+    return NopExpr(kwargs)
+
+class PointerType:
     pass
+
 def pointer_type(**kwargs):
-    pass
+    return PointerType()
+
+class ResultDecl:
+    def __init__(self, args):
+        self.args=args
+
 def result_decl(**kwargs):
-    pass
+    return ResultDecl(kwargs)
+
 def return_expr(**kwargs):
-    pass
+    return Return(kwargs['fld:expr'])
+
 def statement_list(**kwargs):
-    pass
+    return get_args(kwargs)
+
 def string_cst(**kwargs):
-    pass
+    return Str(kwargs['fld:string'])
+
 def truth_andif_expr(**kwargs):
-    pass
+
+    return Compare(
+            value=kwargs['fld:OP0'],
+            ops=[And()],
+            comparators=[
+                kwargs['fld:OP1']
+            ]
+        )
+
+
+class VarDecl:
+    def __init__(self, args):
+        self.name=str(args['fld:name'])
+        self.args=args
+
 def var_decl(**kwargs):
-    pass
+    return VarDecl(kwargs)
+    
 def void_type(**kwargs):
-    pass
+    return VoidType()
+
 _lookup = globals()
+
+class Unknown:
+    def __init__(self, args):
+        self.args=args
+
+def unknown(**kwargs):
+    return Unknown(kwargs)
+
 
 def lookup(x):
     if x in _lookup:
-        f = _lookup[x]
+        return _lookup[x]
     elif "_" + x  in _lookup:
-        f = _lookup['_' + x]
-    return f
+        return_lookup['_' + x]
+    else:
+        print "unknown " + x
+        return unknown
 
-# arguments
-# Assign
-# Call
-# Compare
-# Eq
-# Expr
-# If
-# Load
-# Module
-# Name
-# Num
-# Store
-# Str
-
+class DeclExpr:
+    def __init__(self, args):
+        self.args=args
+    
 def decl_expr(**kwargs):
-    pass
+    return DeclExpr(kwargs)
+
 of = {}
 
 def rec(x,i=0):
@@ -108,10 +229,14 @@ def rec(x,i=0):
             #if t not in f: # seen
             #    f[t]='ntype'
         else:
-            #pprint.pprint(x)
+            pprint.pprint(x)
             pass
         del x['rdf:type'] # get rid of this
-
+    else:
+        #pprint.pprint(x)
+        #raise Exception
+        pass
+    
     f = lookup(t)
     
     #body = t + "("
@@ -121,6 +246,7 @@ def rec(x,i=0):
         n = l #.replace('fld:type','ftype')
         v = x[l]
         if type(v) is types.DictType:
+            pprint.pprint({"Before ref": v })
             v2 = rec(v,i+1)
             attrs[n] = v2
 
@@ -135,11 +261,21 @@ def rec(x,i=0):
                     v= v.replace('link:','')
             attrs[n] = v
     attrs['rdf:type']=t
-    pprint.pprint(attrs)
-    return f(**attrs)
+
+    pprint.pprint({'f':f,'i':attrs})
+    r = f(**attrs)
+    # debug the input and output
+    pprint.pprint({'o':r,'i':attrs})
+    return r
 
 
-print rec(data.body2.deep)
+new_ast = rec(data.body2.deep)
+
+import unparse
+
+# now lets try and unparse it....
+unparse.Unparser(new_ast, sys.stdout)
+
 
 #for x in f:
 #    print "def %s(**kwargs):\n                pass" % x

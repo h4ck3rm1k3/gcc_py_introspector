@@ -5,6 +5,7 @@ import ast
 import tokenize
 import io
 import os
+import pprint
 
 # Large float and imaginary literals get turned into infinities in the AST.
 # We unparse those infinities to INFSTR.
@@ -618,6 +619,10 @@ class Unparser:
             self.write(" as ")
             self.dispatch(t.optional_vars)
 
+    # GCC extensions
+    def _VarDecl(self, t):
+        self.write(t.name)
+        
 def roundtrip(filename, output=sys.stdout):
     with open(filename, "rb") as pyfile:
         encoding = tokenize.detect_encoding(pyfile.readline)[0]
