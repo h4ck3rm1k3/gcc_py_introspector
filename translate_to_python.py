@@ -24,8 +24,11 @@ class IntType:
     pass
 
 def addr_expr(**kwargs) :
-    if 'OP0' in kwargs:
-        return kwargs['OP0']
+
+    if 'fld:type' in kwargs:
+        return kwargs['fld:type']
+    elif 'fld:OP0' in kwargs:
+        return kwargs['fld:OP0']
     else:
         return kwargs
 

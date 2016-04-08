@@ -1,3 +1,219 @@
+def array_type(**kwargs):
+    return "array"
+
+def result_decl(**kwargs):
+    return "return"
+
+def var_decl(**kwargs):
+    #pprint.pprint(kwargs)
+    return kwargs['name']
+
+def identifier_node(**kwargs):
+    return kwargs['string']
+
+######################
+
+def call_expr(**kwargs):
+    return {"call" : kwargs}
+
+def decl_expr(**kwargs):
+#    pprint.pprint({"decl_expr" : kwargs})
+    #return {"decl_expr" : kwargs}
+    return None
+
+def expr(**kwargs):
+#    pprint.pprint({"expr" : kwargs})
+    return {"expr" : kwargs}
+
+def cond_expr(**kwargs):
+#    pprint.pprint({"cond_expr" : kwargs})
+    return {"cond_expr" : kwargs}
+
+def ne_expr(**kwargs):
+#    pprint.pprint({"ne_expr" : kwargs})
+    return {"ne_expr" : kwargs}
+
+def addr_expr(**kwargs):
+    #pprint.pprint({"addr_expr" : kwargs})
+    if 'type' in kwargs:
+        return kwargs['type']
+    else:
+        return {"addr_expr" : kwargs}
+
+
+
+
+def modify_expr(**kwargs):
+#    pprint.pprint({"Modify":kwargs})
+    return [ kwargs['OP0'], "=", kwargs['OP1'] ]
+
+def truth_andif_expr(**kwargs):
+#    pprint.pprint({"truth_andif_expr" : kwargs})
+    return {"truth_andif_expr" : kwargs}
+
+def nop_expr(**kwargs):
+#    pprint.pprint({"nop_expr" : kwargs})
+    #return {"nop" : kwargs}
+    return kwargs['OP0']
+
+def bind_expr(**kwargs):
+#    pprint.pprint({"bind_expr" : kwargs})
+    return {"bind" : kwargs}
+
+def return_expr(**kwargs):
+#    pprint.pprint({"return_expr" : kwargs})
+    return {"ret" : kwargs}
+
+def eq_expr(**kwargs):
+#    pprint.pprint({"eq_expr" : kwargs})
+    return [ kwargs['OP0'], "==", kwargs['OP1'] ]
+
+def void_type(**kwargs):
+    return "void"
+
+def pointer_type(**kwargs):
+#    pprint.pprint({"pointer_type" : kwargs})
+    return {"ptr" : kwargs}
+
+def component_ref(**kwargs):
+#    pprint.pprint({"component_ref" : kwargs})
+    return {"comp_ref" : kwargs}
+
+def OP0(**kwargs):
+    return kwargs
+
+def OP1(**kwargs):
+    return kwargs
+
+def vars(**kwargs):
+    #pprint.pprint({"vars" : kwargs})
+    return {"vars" : kwargs}
+
+def _type(**kwargs):
+    return {'type':kwargs}
+
+def integer_type(**kwargs):
+    return "int"
+
+def integer_cst(**kwargs):
+    return kwargs['low']
+
+def size(**kwargs):
+    return kwargs
+
+def note(**kwargs):
+    return kwargs       
+
+def low(**kwargs):
+    #pprint.pprint({"low" : kwargs})
+    return {"low" : kwargs}
+
+def body(**kwargs):
+    #pprint.pprint({"body" : kwargs})
+    return {"body" : kwargs}
+
+def used(**kwargs):
+    return kwargs
+
+def string(**kwargs):
+    #pprint.pprint({"string" : kwargs})
+    return {"string" : kwargs}
+
+def string_cst(**kwargs):
+    #pprint.pprint({"string_cst" : kwargs})
+    return "\"" + kwargs['string'] + "\""
+    
+def srcp(**kwargs):
+    return kwargs
+
+def link(**kwargs):
+    return kwargs
+
+def fn(**kwargs):
+    #pprint.pprint({"fn" : kwargs})
+    return {"fn" : kwargs}
+
+def name(**kwargs):
+    #pprint.pprint({"name" : kwargs})
+    return {"name" : kwargs}
+    
+def bpos(**kwargs):
+    return kwargs
+
+def algn(**kwargs):
+    return kwargs
+
+def field_decl(**kwargs):
+    #pprint.pprint({"field_decl" : kwargs})
+    if 'name' in kwargs:
+        return "[" + str(kwargs['name']) + "]"
+    else:
+        return {"field_decl" : kwargs}
+        
+
+def statement_list(**kwargs):
+    #pprint.pprint({"statement_list" : kwargs})
+    r = []
+    for x in sorted(kwargs.keys()):
+        v = kwargs[x]
+        if v:
+            r.append(kwargs[x])
+    #return {"stmts" : kwargs}
+    return r
+
+def E2(**kwargs):
+    return kwargs
+def E8(**kwargs):
+    return kwargs
+def E5(**kwargs):
+    return kwargs
+def E4(**kwargs):
+    return kwargs
+def E7(**kwargs):
+    return kwargs
+def E6(**kwargs):
+    return kwargs
+def E1(**kwargs):
+    return kwargs
+def E0(**kwargs):
+    pprint.pprint(kwargs)
+    return kwargs
+def E3(**kwargs):
+    return kwargs
+def Unknown():
+    return "Unknown"
+
+def function_decl(**kwargs):
+    if kwargs['body'] == 'Unknown':
+        pass
+    else:
+        # y=open('example.yaml','a')
+        # j=open('example.json','a')
+        # y.write(
+        #print yaml.dump({"function": kwargs})
+        # j.write(json.dumps({"function": kwargs}, 
+        #                  sort_keys=True,
+        #                  indent=4,
+        #                  separators=(',', ': '))
+        # )
+        # y.close()
+        # j.close()
+        pprint.pprint({"function_decl" : kwargs})
+        return "Func(" + str(kwargs['name']) + ")"
+
+# special tree, name only
+stree = {'exprs':
+        {
+            u'node:addr_expr': {
+                u'fld:type': {
+                    u'node:function_decl': u'78', #this could contain an entire function
+                }
+            }
+        }
+}
+
+lookup = globals()
+
 from graphviz import Digraph
 from SPARQLWrapper import SPARQLWrapper, XML, N3, JSONLD, JSON, POST, GET, SELECT, CONSTRUCT, ASK, DESCRIBE
 from SPARQLWrapper.Wrapper import _SPARQL_DEFAULT, _SPARQL_XML, _SPARQL_JSON, _SPARQL_POSSIBLE, _RDF_XML, _RDF_N3, _RDF_JSONLD, _RDF_POSSIBLE
@@ -7,50 +223,59 @@ import prefix
 import types
 import json
 import pprint
+import json
+import yaml
+import types
 
-# special tree, name only
-fdecl = {
-    'name' : 'function decl tree',
-    'exprs' :  {
-        u'node:function_decl': {
-            u'fld:body': {u'skip': u'yes'},
-            u'fld:args': {u'node:parm_decl': u'45'},
-            u'fld:mngl': {u'node:identifier_node': u'528'},
-            u'fld:name': {u'node:identifier_node': u'3082'},
-        },
-    }
-}
 
-just_vals = {
-    'name' : 'just values tree',
-    'exprs' :  {
-        u'node:function_decl': {
-            u'fld:body': {u'skip': u'yes'},
-            u'fld:args': {u'node:parm_decl': u'45'},
-            u'fld:mngl': {u'node:identifier_node': u'528'},
-            u'fld:name': {u'node:identifier_node': u'3082'},
-        },
+def decl_expr(**kwargs):
+    pass
+f = {}
+
+def rec(x):
+    t = "Unknown"
+
+    if 'rdf:type' in x:
+        if  x['rdf:type']:
+            t = x['rdf:type']
+            t = t.replace('node:','')
+        else:
+            pass
+        del x['rdf:type'] # get rid of this        
+    args = {}
+
+    for l in x:
+        n = l.replace('fld:type','ftype')
+        n = n.replace('fld:','')
+        v = x[l]
+        if type(v) is types.DictType:
+            #pass
+            v2 = rec(v)
+            args[n] = v2 
+                        
+        elif type(v) in types.StringTypes:
+            if n in ('ntype','type','scpe','chain'):
+                pass
+            elif v =='':
+                pass
+            else:
+                if 'link:' in v:
+                    v= v.replace('link:','')
+                args[n] = v 
+        else:
+            #print type(v)
+            pass
+    f = None
+    if t in lookup:
+        f = lookup[t]
+    elif "_" + t  in lookup:
+        f = lookup['_' + t]
         
-    }
-}
+    return f(**args)
 
-stree = {
-    'name' : 'addr expr tree',
-    'exprs':
-        {
-            u'node:addr_expr': {
-                u'fld:type': {
-                    u'node:function_decl': fdecl, #this could contain an entire function
-                }
-            }
-        }
-}
 
-           
 
-tree = {
-    'name' : 'main tree',
-    'exprs':
+tree = {'exprs':
 
         {
             u'node:addr_expr': {
@@ -408,41 +633,8 @@ tree = {
                            #u'fld:unql': {u'node:integer_type': u'144'}
                        },
 
-            u'node:pointer_type': {u'fld:name': {u'node:type_decl': u'17'},
-                                  u'fld:ptd': {u'node:array_type': u'7',
-                                               u'node:function_type': u'77',
-                                               u'node:integer_type': u'40',
-                                               u'node:pointer_type': u'18',
-                                               u'node:real_type': u'6',
-                                               u'node:record_type': u'129',
-                                               u'node:union_type': u'2',
-                                               u'node:vector_type': u'3',
-                                               u'node:void_type': u'9'},
-                                  u'fld:size': {u'node:integer_cst': u'291'},
-                                  u'fld:unql': {u'node:pointer_type': u'62'}},
-            
-
-
         },
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# here are the types of objects that are ignored
-
-        
         
  'types': {
            u'node:array_ref': {u'fld:type': {u'node:integer_type': u'3'}},
@@ -487,24 +679,6 @@ tree = {
                                    #u'fld:size': {u'node:integer_cst': u'31'},
                                    u'fld:unql': {u'node:enumeral_type': u'5'}},
            u'node:eq_expr': {u'fld:type': {u'node:integer_type': u'25'}},
-
-
-             u'node:pointer_type': {
-            u'fld:name': {u'node:type_decl': u'17'},
-                               
-            u'fld:ptd': {u'node:array_type': u'7',
-                         u'node:function_type': u'77',
-                         u'node:integer_type': u'40',
-                         u'node:pointer_type': u'18',
-                         u'node:real_type': u'6',
-                         u'node:record_type': u'129',
-                         u'node:union_type': u'2',
-                         u'node:vector_type': u'3',
-                         u'node:void_type': u'9'},
-            u'fld:size': {u'node:integer_cst': u'291'},
-            u'fld:unql': {u'node:pointer_type': u'62'}},
-
-     
            u'node:field_decl': {
                #u'fld:scpe': {u'node:record_type': u'459',
                #                               u'node:union_type': u'103'},
@@ -560,7 +734,18 @@ tree = {
                                              u'node:pointer_type': u'44'}},
            u'node:plus_expr': {u'fld:type': {u'node:integer_type': u'10'}},
            u'node:pointer_plus_expr': {u'fld:type': {u'node:pointer_type': u'19'}},
-
+           u'node:pointer_type': {u'fld:name': {u'node:type_decl': u'17'},
+                                  u'fld:ptd': {u'node:array_type': u'7',
+                                               u'node:function_type': u'77',
+                                               u'node:integer_type': u'40',
+                                               u'node:pointer_type': u'18',
+                                               u'node:real_type': u'6',
+                                               u'node:record_type': u'129',
+                                               u'node:union_type': u'2',
+                                               u'node:vector_type': u'3',
+                                               u'node:void_type': u'9'},
+                                  u'fld:size': {u'node:integer_cst': u'291'},
+                                  u'fld:unql': {u'node:pointer_type': u'62'}},
            u'node:postdecrement_expr': {u'fld:type': {u'node:integer_type': u'1'}},
            u'node:postincrement_expr': {u'fld:type': {u'node:integer_type': u'1',
                                                       u'node:pointer_type': u'11'}},
@@ -636,13 +821,8 @@ SELECT ?a ?p ?o ?t  WHERE {
     }
 }
     """ % s)
-    d={
-        'node_id' : prefix.clean(s)
-    }
-    dt={
-        'node_id' : None # literal has no type... 
-    }
-    #pprint.pprint(results)
+    d={}
+    dt={}
     for x in results['results']['bindings']:
         v = prefix.clean(x['o']['value'])
         t = None
@@ -661,30 +841,22 @@ SELECT ?a ?p ?o ?t  WHERE {
         else:
             #d[k]=[d[k],v]
             raise Exception("duplicate")
-    pprint.pprint({'query_results':d}, depth=2)
+    
     return d, dt
 
-import types
-
-def recurse_ref(s, subtree):
-    print "RECURSE for %s\n" % s
-    print "using subtree : %s" % subtree['name']
+# recurse
+def recurse(s, deep=True):
+    #print "RECURSE for %s\n" % s
     d,dt = query(s)
-    pprint.pprint({"Got from db":d})
+    #pprint.pprint({"Got from db":d})
     if 'rdf:type' not in d:
         return d
-    
+    if not deep:
+        return d
     st = d['rdf:type']
     #print "st" + str(st)
     #pprint.pprint(dt)
     found = False
-
-
-            
-    if not 'exprs' in subtree:
-        pprint.pprint({"bad subtree": subtree}, depth=2)
-        raise Exception()
-    lookup = subtree['exprs']
     
     for k in d:
         r = None # result of the field
@@ -693,74 +865,46 @@ def recurse_ref(s, subtree):
         u = prefix.tg +v
 
         if type(st) is types.DictType:
-            print 'skip' + st
+            raise Exception("")
             pprint.pprint({
-                'case': 'is type',
-                 'k' :k,
-                 'ot' :ot,
-                 'st' : st
-            }, depth=2)
+                'k' :k,
+                'ot' :ot,
+                'st' : st
+            })
             #pprint.pprint(dt)
-            #pass # no type
+            pass # no type
         elif not ot : # no type, a literal
             if k.startswith('fld:'):
                 r =  prefix.clean(v) # just a literal
-                pprint.pprint({
-                    'case': 'is literal',
-                    'k' :k,
-                    'dt': dt,
-                    'ot' :ot,
-                    'st' : st
-                }, depth=2)
-                
                 found = True
             else:
-                pprint.pprint({
-                    'case': 'is no field',
-                    'k' :k,
-                    'ot' :ot,
-                    'st' : st,
-                    'r' : r,
-                    'v' : v,
-                }, depth=2)
-
                 r = v # we need to store the type field
                 found = True
                 
-        elif st in lookup:
-            if k in lookup[st]:
-                if ot in lookup[st][k]:
-                    subtree = lookup[st][k]
-                    
-                    if type(subtree) is types.DictType:
-                        if 'exprs' in subtree:
-                            r = recurse_ref(u, subtree)
-                            pprint.pprint({"Subtree":r}, depth=2)
-                        else:
-                            r = recurse_ref(u, tree)
-                            pprint.pprint({"tree":r}, depth=2)
-                    else:
-                        r = recurse_ref(u, tree)
-                        pprint.pprint({"tree2":r}, depth=2)
+        elif st in tree['exprs']:
+            if k in tree['exprs'][st]:
+                if ot in tree['exprs'][st][k]:
+                    r = recurse(u)
                     found = True
                 else:
                     pass # skip
         
         if not found:
-            r = recurse_ref(u, just_vals ) # just get one level of info for types and such
-            pprint.pprint({
-                "missing" : True,
-                'k' :k,
-                'ot' :ot,
-                'st' : st,
-                'u' :u,
-                'r' :r
-            }, depth=2)
-        d[k]=r
-        
-    pprint.pprint({"rec found":d}, depth=2)
-    return (d)
+            if st in stree['exprs']:
+                if k in stree['exprs'][st]:
+                    if ot in stree['exprs'][st][k]:
+                        r = recurse(u, False)
+                        #pprint.pprint(r)
+                        found = True
+                    else:
+                        pass
 
+        if not found:
+            r = recurse(u, False) # just get one level of info for types and such
+
+        d[k]=r
+
+    return (d)
 
 # print out what field types occur
 def start():
@@ -774,9 +918,9 @@ SELECT ?a  WHERE {
 """)               
     for x in results['results']['bindings']:
         print x['a']['value']
-        r= recurse_ref(x['a']['value'],tree)
-        o = open("data/body2.py","w")
-        o.write("deep={v2}".format(v2=pprint.pformat(r)))
-        o.close()
-    
+        r= recurse(x['a']['value'])
+        pprint.pprint(rec(r))
+
+
 start()
+

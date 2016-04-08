@@ -24,6 +24,7 @@ query :
 	python queryviz.py > /var/www/html/sparql/introspector/graphs/example.dot
 	dot /var/www/html/sparql/introspector/graphs/example.dot -Tpng -o /var/www/html/sparql/introspector/graphs/example.png
 
+# read in the TU create the data file in data/body2.py
 testbash1:
 	python reader.py /home/jamesmikedupont/bash/build/test1.tu
 

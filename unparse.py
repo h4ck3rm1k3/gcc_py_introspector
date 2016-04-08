@@ -625,8 +625,17 @@ class Unparser:
     # GCC extensions
     def _VarDecl(self, t):
         self.write(t.name)
-    def _dict(self, t):
-        self.write("# dict?" + pprint.pformat(t).replace("\n"," "))
+
+    #def _dict(self, t):
+    #    self.write("# dict?" + pprint.pformat(t).replace("\n"," "))
+
+    def _PointerType(self, t):
+        #self.write("# pointer" + pprint.pformat(t).replace("\n"," "))
+        pass
+
+    def _FunctionRef(self, t):
+        #self.write("# functionref" + pprint.pformat(t.__dict__).replace("\n"," "))
+        self.write(t.name)
 
     def _tuple(self, t):
         for x in t:
@@ -636,10 +645,12 @@ class Unparser:
         self.write("#" + pprint.pformat(t.__dict__).replace("\n"," "))
 
     def _NopExpr(self, t):
-        self.write("#NOP" + pprint.pformat(t.__dict__).replace("\n"," "))
+        #self.write("#NOP" + pprint.pformat(t.__dict__).replace("\n"," "))
+        pass
 
     def _ResultDecl(self, t):
-        self.write("#result" + pprint.pformat(t.__dict__).replace("\n"," "))
+        #self.write("#result" + pprint.pformat(t.__dict__).replace("\n"," "))
+        pass
 
 def roundtrip(filename, output=sys.stdout):
     #with open(filename, "rb") as pyfile:
