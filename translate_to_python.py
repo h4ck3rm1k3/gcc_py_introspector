@@ -166,8 +166,14 @@ class ResultDecl:
 def result_decl(**kwargs):
     return ResultDecl(kwargs)
 
+def get_value(t):
+    if isinstance(t, Assign):
+        return t.value
+        #pprint.pprint({"check" : t.__dict__})
+    
 def return_expr(**kwargs):
-    return Return(kwargs['fld:expr'])
+    #pprint.pprint({"Return Expr" : kwargs['fld:expr'][0].__dict__})
+    return Return(get_value(kwargs['fld:expr'][0]))
 
 def statement_list(**kwargs):
     return get_args(kwargs)

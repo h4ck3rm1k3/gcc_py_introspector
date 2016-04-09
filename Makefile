@@ -1,4 +1,8 @@
 
+recurse_all :
+	python query_function_example_python_all.py
+
+
 translate :
 	python translate_to_python.py
 
@@ -8,12 +12,15 @@ pairs :
 quine:
 	python quine.py
 
+
+
 recurse:
 	python query_function_example_python.py
 
 recurse3:
 	python query_function_example_direct.py
 
+# query the database and produce the data/body2.py
 recurse2:
 	python query_function_example.py
 
@@ -24,7 +31,7 @@ query :
 	python queryviz.py > /var/www/html/sparql/introspector/graphs/example.dot
 	dot /var/www/html/sparql/introspector/graphs/example.dot -Tpng -o /var/www/html/sparql/introspector/graphs/example.png
 
-# read in the TU create the data file in data/body2.py
+# read in the TU create the data file in produce rdf files, after this you need to  load them into the database and then run some queries
 testbash1:
 	python reader.py /home/jamesmikedupont/bash/build/test1.tu
 

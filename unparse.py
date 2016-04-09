@@ -111,6 +111,7 @@ class Unparser:
         self.fill("return")
         if t.value:
             self.write(" ")
+            #self.write("MikeReturn" + pprint.pformat(t.value[0].__dict__))
             self.dispatch(t.value)
 
     def _Pass(self, t):
@@ -642,7 +643,8 @@ class Unparser:
             self.dispatch(x)
             
     def _DeclExpr(self, t):
-        self.write("#" + pprint.pformat(t.__dict__).replace("\n"," "))
+        #self.write("\n# decl expr" + pprint.pformat(t.__dict__).replace("\n"," ") + "\n")
+        pass
 
     def _NopExpr(self, t):
         #self.write("#NOP" + pprint.pformat(t.__dict__).replace("\n"," "))
