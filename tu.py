@@ -5,6 +5,14 @@ lexer
 import ply.lex as lex
   # import ply.yacc as yacc
 from ply.lex import TOKEN
+import pprint
+DEBUG = 0
+
+states = (
+    ('str','exclusive'),
+    ('len','exclusive'),
+    ('adr','exclusive'),
+)
 
 tokens = [
     'ATTR_OP',
@@ -12,6 +20,7 @@ tokens = [
     'OP0_ATTR',
     'OP1_ATTR',
     'TYPE_ATTR',
+    'ADDR_ATTR',
     'ADDR_EXPR',
     'SPEC_ATTR',
     'SPEC_VALU',
@@ -20,27 +29,24 @@ tokens = [
     'FLOAT',
     'PSEUDO_TMPL',
     'STRG',
+    'STRGLEN',
     "NODE",
-#    "SPACE",
     'SPEC',
-
     "BUILTIN_FILE",
-#    'SCOPE',
-#    "INTCONST",
     'HXX_FILE',
     'ARTIFICIAL',
     'LANG',
-#    'ERROR',
     'SIGNED',
     'LINK',
     'STRUCT',
     'ACC',
-#    'DTYPE',
     'MEMBER',
-#    'INTERNAL',
-#    'STRG2',
-
     'NOTE',
+    'SOMESTRG', # catchall
+    'SOMEINT', # int
+    'HEXVAL',
+    'NTYPE_IDENTIFIER_NODE',
+
 #    'R'
 ]
 
@@ -76,7 +82,7 @@ def emit_parser_rule(base_name, prefix):
     rule = "%s_type : %s" % (prefix, base_name)
     parser_name = "p_%s" % (base_name.lower())
     #print "def %s(psr_val):\n    \'%s\'\n    psr_val[0] = %s_base(psr_val)\n" %(parser_name, rule, prefix)
-import pprint
+
 def make_tokens(prefix,pattern,val_func, tstr):
     '''
     create tokens
@@ -101,25 +107,30 @@ def make_tokens(prefix,pattern,val_func, tstr):
         base_name = "%s_%s" % (prefix, item.upper())
         name = "t_%s" % (base_name)
         tokens.append(base_name)
-        #print "created name %s regex %s"  %( name, regex )
-
         emit_parser_rule(base_name, prefix)
 
-        #print "%s"  %( base_name )
+
         setattr(current_module, name , func)
-        # pprint.pprint({
-        #     'm': current_module,
-        #     'n': name ,
-        #     'f' : func,
-        #     'r' : func.__dict__,
-        #     'f2' : func.val_func.__dict__,
-        #     'f2d' : func.val_func.__doc__,
-        #     'node' : func.node,
-        #     'fd' : func.__doc__
-        # })
+        if DEBUG:
+            print "created name %s regex %s"  %( name, regex )
+            print "basename %s"  %( base_name )
+            pprint.pprint({
+             'm': current_module,
+             'n': name ,
+             'f' : func,
+             'r' : func.__dict__,
+             'f2' : func.val_func.__dict__,
+             'f2d' : func.val_func.__doc__,
+             'node' : func.node,
+             'fd' : func.__doc__
+         })
 
 def ntype_value(tok) :
     return tok 
+
+def t_NTYPE_IDENTIFIER_NODE(tok):
+    r'identifier_node'
+    return tok
 
 # the following are node types
 make_tokens("NTYPE", "(?P<val>%s)",ntype_value,"""
@@ -168,7 +179,6 @@ ge_expr
 goto_expr
 gt_expr
 handler
-identifier_node
 if_stmt
 indirect_ref
 integer_cst
@@ -258,14 +268,27 @@ t_CONSTRUCTOR = 'constructor'
 
 
 def t_STRG(tok):
-    r'strg:\s+(?P<val>.+)\s+lngt:\s(?P<len>\d+)'
-    strval = tok.lexer.lexmatch.group("val")
-    strlen = int(tok.lexer.lexmatch.group("len"))
-    #print "String:" + strval + ";Length:" + str(strlen)
-    tok.value = strval[0:strlen] # only take the first n chars given by the len 
+    r'strg:\s+'
+    print 'enter str state'
+    tok.lexer.begin('str')  # begin the string group
+    #strval = tok.lexer.lexmatch.group("val")
+    #strlen = int(tok.lexer.lexmatch.group("len"))
+    #print "String start %s" % strval 
+    #tok.value = strval # only take the first n chars given by the len 
     return tok
 
-#t_STRG2 = r'.+\s+lngt:\s\d+?'
+
+def t_STRGLEN(tok):
+    r'lngt:\s*'  # (?P<len>\d+)
+    tok.lexer.begin('len')  # begin the string group
+    print 'len token'
+    #strval = tok.lexer.lexmatch.group("val")
+    #strlen = int(tok.lexer.lexmatch.group("len"))
+    #print "StringLen: '%d'" % strlen 
+    #print "String:" + strval + ";Length:" + str(strlen)
+    #tok.value = strlen
+    return tok
+
 
 t_LANG = r'C\s'
 #t_R = r'\sr\s'
@@ -300,6 +323,7 @@ def t_SPACE(tok):
 
 #t_ERROR = 'error_mark'
 
+
 @TOKEN(r'(?P<val>addr_expr)\s?')
 def t_ADDR_EXPR(tok) :
     tok.value = str(tok.lexer.lexmatch.group("val"))
@@ -322,6 +346,14 @@ def t_TYPE_ATTR(tok):
     r'type\s*:'
     tok.value = 'type'
     #print("TYPE_ATTR:%s" % tok.value)
+    return tok
+
+# attributes like 'address: 5fa31238843838' in the newer compilers
+def t_ADDR_ATTR(tok):
+    r'addr\s*:\s*'
+    tok.lexer.begin('adr')  # begin the string group
+    tok.value = 'addr'
+    print("ADDR_ATTR:%s" % tok.value)
     return tok
 
 
@@ -356,12 +388,12 @@ def attr_val(tok):
     tok.value = tok.value.replace(" ","")
     return tok
 
+# removing lngt
 # this next call creates tokens for the following fields
 # each field can be used to give a new key value pair to a node
 # the field name is used to construct a function for recieving it.
 make_tokens("ATTR", "(?P<val>%s)\s*:",attr_val, '''
 accs
-addr
 algn
 alis
 args
@@ -399,7 +431,6 @@ lang
 labl
 line
 link
-lngt
 low
 max
 mbr
@@ -452,7 +483,7 @@ t_HXX_FILE = r'(yes_no_type.hpp|' + \
 t_SIGNED = 'signed|unsigned'
 #t_SCOPE = r'\:\:'
 #t_INTCONST = r'(\-)?\d+'
-t_FLOAT = r'[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?'
+#t_FLOAT = r'[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?'
 t_ARTIFICIAL = r'artificial'
 t_LINK = r'static|undefined|extern'
 t_ACC = r'pub|priv|prot'
@@ -470,6 +501,27 @@ def op_token_value(tok) :
     strval = tok.lexer.lexmatch.group("val")
     tok.value = strval
     # print "OP%s" % strval
+    return tok
+
+# sub state tokens
+@TOKEN(r'(?P<hexval>[0-9a-f]+)')
+def t_adr_HEXVAL(tok) :
+    tok.value = int(tok.lexer.lexmatch.group("hexval"),16)
+    print("hexval %s " % tok.value)
+    return tok
+
+def t_str_SOMESTRG(tok):
+    r'(?P<val>\w+)\s*' # some string
+    strval = tok.lexer.lexmatch.group("val")
+    print "String: '%s'" % strval 
+    tok.value = strval
+    return tok
+
+def t_len_SOMEINT(tok):
+    r'(?P<val>\d+)\s*' # some int
+    strval = tok.lexer.lexmatch.group("val")
+    print "INT: '%s'" % strval 
+    tok.value = strval
     return tok
 
 make_tokens("OPERATOR", r'operator\s+(?P<val>%s)\s',op_token_value,"""
@@ -523,4 +575,19 @@ make_tokens("OPERATOR", r'operator\s+(?P<val>%s)\s',op_token_value,"""
 def t_error(t):
     raise TypeError("Unknown text '%s'" % (t.value, ))
 
+def t_str_error(t):
+    raise TypeError("Unknown text '%s'" % (t.value, ))
+
+def t_adr_error(t):
+    raise TypeError("Unknown text '%s'" % (t.value, ))
+
+def t_len_error(t):
+    raise TypeError("Unknown text '%s'" % (t.value, ))
+
+#g_lex = lex.lex(debug=1)
 g_lex = lex.lex()
+
+if __name__ == '__main__':
+    g_lex.runmain()
+
+#g_lex = lex.lex()

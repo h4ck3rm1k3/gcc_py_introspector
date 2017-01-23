@@ -1,7 +1,7 @@
 '''
 reader
 '''
-
+import pprint
 
 import ply.yacc as yacc # Get the token map from the lexer.  This is required.
 from tu import tokens
@@ -42,12 +42,23 @@ def p_node(psr_val):
     # psr_val[0] = "%s(id: %s, %s )" % (psr_val[2],psr_val[1],psr_val[3])
     psr_val[0] = tuast.Node(psr_val[2], psr_val[1], psr_val[3])
 
-# # empty_node
-def p_node_empty(psr_val):
-     # the node with no attrs
-     'node : NODE ntype'
-     #print "empty node %s %s " % (psr_val[2], psr_val[1])
-     psr_val[0] = tuast.Node(psr_val[2], psr_val[1], [])
+    # the first rule is important
+def p_node_id(psr_val):
+    # the identifier node declaration
+    'node : NODE ntype_id str_attrs len_attrs addr_attrs'
+    #print "main NODE %s" % psr_val[1]
+    #print "main TYPE %s" % psr_val[2]
+    #print "main ATTRS %s" % psr_val[3]
+    #print "main stack : %s" % psr_val.stack
+    # psr_val[0] = "%s(id: %s, %s )" % (psr_val[2],psr_val[1],psr_val[3])
+    psr_val[0] = tuast.Node(psr_val[2], psr_val[1], psr_val[3])
+
+# # # empty_node
+# def p_node_empty(psr_val):
+#      # the node with no attrs
+#      'node : NODE ntype'
+#      #print "empty node %s %s " % (psr_val[2], psr_val[1])
+#      psr_val[0] = tuast.Node(psr_val[2], psr_val[1], [])
 
 
 def ntype_base(psr_val):
@@ -82,8 +93,8 @@ def std_attrs(psr_val):
 
 def std_attrs2(psr_val):
 
-    #print "val1: %s " %  psr_val[1]
-    #print "val2: %s " %  psr_val[2]
+    print "val1: %s " %  psr_val[1]
+    print "val2: %s " %  psr_val[2]
     #print "val3: %s " %  psr_val[3]
 
 #    m=matches(psr_val)
@@ -94,8 +105,11 @@ def std_attrs2(psr_val):
 #        type_str = "UNKNOWN_TODO %s" % m
         
     node = tuast.Attr(type_str, psr_val[2])
-    result = append_list(psr_val[3], node)
-    return result
+    pprint.pprint(psr_val[0])
+    pprint.pprint(psr_val[1])
+    #pprint.pprint(psr_val[2])
+    #result = append_list(psr_val[3], node)
+    return []
 
 
 #create_rules()
@@ -293,7 +307,7 @@ def p_ntype_handler(psr_val):
     psr_val[0] = ntype_base(psr_val)
 
 def p_ntype_identifier_node(psr_val):
-    'ntype : NTYPE_IDENTIFIER_NODE'
+    'ntype_id : NTYPE_IDENTIFIER_NODE'
     psr_val[0] = ntype_base(psr_val)
 
 def p_ntype_if_stmt(psr_val):
@@ -606,9 +620,9 @@ def p_attr_vars(psr_val):
     'attrtype : ATTR_VARS'
     psr_val[0] = attr_base(psr_val)
 
-def p_attr_addr(psr_val):
-    'attrtype : ATTR_ADDR'
-    psr_val[0] = attr_base(psr_val)
+# def p_attr_addr(psr_val):
+#     'attrtype : ATTR_ADDR'
+#     psr_val[0] = attr_base(psr_val)
 
 def p_attr_algn(psr_val):
     'attrtype : ATTR_ALGN'
@@ -748,10 +762,6 @@ def p_attr_line(psr_val):
 
 def p_attr_link(psr_val):
     'attrtype : ATTR_LINK'
-    psr_val[0] = attr_base(psr_val)
-
-def p_attr_lngt(psr_val):
-    'attrtype : ATTR_LNGT'
     psr_val[0] = attr_base(psr_val)
 
 def p_attr_low(psr_val):
@@ -1117,6 +1127,13 @@ def p_attrs_type(psr_val):
     'attrs :  TYPE_ATTR attrval attrs'
     psr_val[0] = std_attrs(psr_val)
 
+# attributes like 'address: 5fa31238843838' in the newer compilers    
+# the addr: attribute
+def p_attrs_addr(psr_val):
+    #           1     2         3
+    'attrs :  ADDR_ATTR SOMEINT attrs'
+    psr_val[0] = std_attrs(psr_val)
+
 def p_attrs_op0(psr_val):
     #           1     2     3
     'attrs :  OP0_ATTR attrval attrs'
@@ -1132,12 +1149,19 @@ def p_attrs_done(psr_val):
     #print (stack)
     psr_val[0] = [] # empty list
 
-def p_attrs_spec2(psr_val):
-    #            1          2        3        4
-    'attrs :  SPEC_ATTR SPEC_VALU SPEC_VALU attrs'
-    attr_list = psr_val[4]
-    node = tuast.SpecAttr(psr_val[1], psr_val[2], psr_val[3])
-    psr_val[0] = append_list(attr_list, node)
+# def p_attrs_spec2(psr_val):
+#     #            1          2        3        4
+#     'attrs :  SPEC_ATTR SPEC_VALU SPEC_VALU attrs'
+#     attr_list = psr_val[4]
+#     node = tuast.SpecAttr(psr_val[1], psr_val[2], psr_val[3])
+#     psr_val[0] = append_list(attr_list, node)
+#     return psr_val[0]
+
+def p_attrs_spec3(psr_val):
+    #          1        2
+    'attrs :  SPEC_VALU attrs'
+    node = tuast.SpecAttr3(psr_val[1])
+    psr_val[0] = append_list(psr_val[2], node)
     return psr_val[0]
 
 def p_attrs_spec1(psr_val):
@@ -1147,12 +1171,6 @@ def p_attrs_spec1(psr_val):
     psr_val[0] = append_list(psr_val[3], node)
     return psr_val[0]
 
-def p_attrs_spec2(psr_val):
-    #          1        2
-    'attrs :  SPEC_VALU attrs'
-    node = tuast.SpecAttr3(psr_val[1])
-    psr_val[0] = append_list(psr_val[2], node)
-    return psr_val[0]
 
 def p_attrs_note(psr_val):
     'attrs :  NOTE'
@@ -1160,11 +1178,71 @@ def p_attrs_note(psr_val):
     psr_val[0] = tuast.NoteAttr(psr_val[1])
 
 
-def p_attrs_strg(psr_val):
-    'attrs : STRG'
+# def p_strlist(psr_val):
+#     'strlist : SOMESTRG strlist'
+#     m=psr_val[1]
+#     if m:
+#         print "string list '%s'" % m
+#         psr_val[0] = [tuast.String(m)]
+
+# def p_strlist2(psr_val):
+#     'strlist : SOMESTRG'
+#     m=psr_val[1]
+#     psr_val.lexer.pop_state()
+#     if m:
+#         print "single string '%s'" % m
+#         psr_val[0] = [tuast.String(m)]
+
+def p_attrs_strg2(psr_val):
+    'str_attrs : STRG SOMESTRG'
     m=psr_val[1]
     if m:
+        print "single string '%s'" % m
         psr_val[0] = [tuast.String(m)]
+
+    #print 'pop str state' ,  psr_val.lexer.lexstateinfo
+    psr_val.lexer.begin('INITIAL')
+
+#addr_attrs
+def p_attrs_addrs(psr_val):
+    'addr_attrs : ADDR_ATTR HEXVAL'
+    psr_val.lexer.begin('INITIAL')
+    m=psr_val[1]
+    if m:
+        print "string with length", m
+        psr_val[0] = [tuast.String(m)]
+
+def p_attrs_strglen(psr_val):
+    'len_attrs : STRGLEN SOMEINT'
+    psr_val.lexer.begin('INITIAL')
+    m=psr_val[1]
+    if m:
+        print "string with length", m
+        psr_val[0] = [tuast.String(m)]
+
+#def p_attrs_strglen2(psr_val):
+#    'attrs : STRGLEN HEXVAL'
+ #   psr_val.lexer.begin('INITIAL')
+ #   m=psr_val[1]
+ #   if m:
+ #       print "string with length", m
+#        psr_val[0] = [tuast.String(m)]
+
+# def p_hexval(psr_val):
+#     'hexval : STRGLEN HEXVAL'
+#     m=psr_val[1]
+#     if m:
+#         print "strlen", m
+#         psr_val[0] = [tuast.String(m)]
+
+ 
+def p_attrs_strg_addr(psr_val):
+    'attrs : ADDR_ATTR HEXVAL'
+    m=psr_val[1]
+    if m:
+        print "addr length", m
+        psr_val[0] = [tuast.String(m)]
+
 
 
 def p_attrs_member(psr_val):
@@ -1308,8 +1386,8 @@ def p_node_addr_expr_type(psr_val):
 
 def p_error(psr_val):
     print "Check Syntax error in input! %s" % psr_val
-    print "Line Number: %s" % psr_val.lineno
-    print "Line Pos: %s" % psr_val.lexpos
+    #print "Line Number: %s" % psr_val.lineno
+    #print "Line Pos: %s" % psr_val.lexpos
     print("Parser %s" % parser)
     pass
 

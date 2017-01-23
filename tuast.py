@@ -1,5 +1,3 @@
-
-
 class NodeBase:
 
     def __init__(self, nid, ntype, vals):

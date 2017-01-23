@@ -269,8 +269,8 @@ def parse_l(l, debug, error_file):
         if not x:
             error_file.write(l + "\n")
             print "Error on Line:%s" % l
-            #print "Stack:%s" % stack
-            #print "parser %s" % parser
+            print "Stack:%s" % stack
+            #print "parser %s" % pprint.pformat(parser.__dict__)
             #if not debug:
             #    x = parser.parse(l, debug=True)
         else:
@@ -334,7 +334,7 @@ def main():
 try:
     main()
 except Exception as e:
-    print "error %s" % e
+    print "Error occured '%s'" % e
 
 debug_file = open("output.debug", "w")
 debug_file.write("data=%s" % pprint.pformat(deps))
