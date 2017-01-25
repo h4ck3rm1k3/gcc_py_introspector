@@ -42,8 +42,12 @@ def p_node(psr_val):
     # psr_val[0] = "%s(id: %s, %s )" % (psr_val[2],psr_val[1],psr_val[3])
     psr_val[0] = tuast.Node(psr_val[2], psr_val[1], psr_val[3])
 
-# def p_node_addr(psr_val):
-#     'node : NODE ntype attrs addr_attrs'
+def p_node_attrs(psr_val):
+    'node : NODE ntype attrs addr_attrs'
+    psr_val[0] = tuast.Node(psr_val[2], psr_val[1], psr_val[3])
+    
+#def p_node_addr2(psr_val):
+#     'attrs : addr_attrs'
 #     psr_val[0] = tuast.Node(psr_val[2], psr_val[1], psr_val[3])
     
 # the first rule is important
@@ -894,7 +898,7 @@ def p_attr_unql(psr_val):
     psr_val[0] = attr_base(psr_val)
 
 def p_attr_used(psr_val):
-    'attrtype : ATTR_USED'
+    'attrtype_used : ATTR_USED'
     psr_val[0] = attr_base(psr_val)
 
 def p_attr_val(psr_val):
@@ -1490,7 +1494,14 @@ def p_attrs_type2(psr_val):
 #     print 'p_attrs_type4'
 #     #psr_val.lexer.begin('INITIAL')  # go back
 
+def p_attrs_used(psr_val):
+    #           type_     2     3
+    'attrs : attrtype_used SOMEINT2'
+    psr_val.lexer.begin('INITIAL')  # go back
+    print 'finished TYPE_ATTR NODE'
+    psr_val[0] = std_attrs(psr_val)
 
+    
 def p_attrs_type2(psr_val):
     #           type_     2     3
     'type_attrs : TYPE_ATTR NODE INT SOMEINT2'
