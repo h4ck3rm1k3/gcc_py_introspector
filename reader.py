@@ -178,8 +178,9 @@ def report(x,l):
                     add_field(g, x.node_id, x.vals.name , x.vals.value.val)
                     
                 else:
-                    pprint.pprint( ["not a node ref", x.vals.value ] )
-                    raise Exception("TODO")
+                    #pprint.pprint( ["not a node ref", x.vals.value ] )
+                    #raise Exception("TODO")
+                    pass
 
             else:
                 pprint.pprint( ["no vals", x ] )

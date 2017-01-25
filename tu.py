@@ -10,11 +10,18 @@ DEBUG = 0
 
 states = (
     ('str','exclusive'),
+    ('sign','exclusive'), # main attribute
     ('len','exclusive'),
+    ('prec','exclusive'),
+    ('algn','exclusive'),
     ('adr','exclusive'),
+#    ('type','exclusive'),
 )
 
 tokens = [
+    'ATTR_ALGN',
+    'ATTR_SIGN',
+    'ATTR_PREC',
     'ATTR_OP',
     'ATTR_En',
     'OP0_ATTR',
@@ -29,8 +36,9 @@ tokens = [
     'FLOAT',
     'PSEUDO_TMPL',
     'STRG',
-    'STRGLEN',
+#    'STRGLEN',
     "NODE",
+    "TNODE",
     'SPEC',
     "BUILTIN_FILE",
     'HXX_FILE',
@@ -44,10 +52,18 @@ tokens = [
     'NOTE',
     'SOMESTRG', # catchall
     'SOMEINT', # int
+    'SOMEINT2', # int
+    'SOMEHEX2', # int
+    'SOMEHEX3', # int
+    'SOMEHEX4', # int
     'HEXVAL',
     'NTYPE_IDENTIFIER_NODE',
 
-#    'R'
+    # special names
+ #   'LONG',
+    'INT',
+ #   'UNSIGNED',
+    'STRGLEN2'
 ]
 
 
@@ -206,6 +222,7 @@ overload
 parm_decl
 plus_expr
 pointer_type
+pointer_bounds_type
 pointer_plus_expr
 postdecrement_expr
 postincrement_expr
@@ -278,15 +295,21 @@ def t_STRG(tok):
     return tok
 
 
-def t_STRGLEN(tok):
+# def t_STRGLEN(tok):
+#     r'lngt:\s*'  # (?P<len>\d+)
+#     #tok.lexer.begin('len')  # begin the string group
+#     print 'len token'
+#     #strval = tok.lexer.lexmatch.group("val")
+#     #strlen = int(tok.lexer.lexmatch.group("len"))
+#     #print "StringLen: '%d'" % strlen 
+#     #print "String:" + strval + ";Length:" + str(strlen)
+#     #tok.value = strlen
+#     return tok
+
+def t_str_STRGLEN2(tok): # end of string
     r'lngt:\s*'  # (?P<len>\d+)
-    tok.lexer.begin('len')  # begin the string group
-    print 'len token'
-    #strval = tok.lexer.lexmatch.group("val")
-    #strlen = int(tok.lexer.lexmatch.group("len"))
-    #print "StringLen: '%d'" % strlen 
-    #print "String:" + strval + ";Length:" + str(strlen)
-    #tok.value = strlen
+    #tok.lexer.begin('len')  # begin the string group
+    print 'string lngt: token'
     return tok
 
 
@@ -303,7 +326,7 @@ def t_QUAL(tok):
 
 
 def t_NODE(tok):
-    r'\@(?P<val>\d+)'
+    r'\@(?P<val>\d+)\s+'
     #print "Match %s" % (tok.lexer.lexmatch)
     strval = tok.lexer.lexmatch.group("val")
     #print ("NODEID:%s" % strval)
@@ -342,18 +365,13 @@ def t_OP1_ATTR(tok):
     tok.value = str(tok.lexer.lexmatch.group("val"))
     return tok
 
-def t_TYPE_ATTR(tok):
-    r'type\s*:'
-    tok.value = 'type'
-    #print("TYPE_ATTR:%s" % tok.value)
-    return tok
 
 # attributes like 'address: 5fa31238843838' in the newer compilers
 def t_ADDR_ATTR(tok):
     r'addr\s*:\s*'
-    tok.lexer.begin('adr')  # begin the string group
     tok.value = 'addr'
-    print("ADDR_ATTR:%s" % tok.value)
+    print("entering ADDR_ATTR:%s" % tok.value)
+    tok.lexer.begin('adr')  # begin the string group
     return tok
 
 
@@ -377,7 +395,31 @@ def t_ATTR_OP(tok):
     #print("OPATTR:%s" % tok.value)
     return tok
 
+def t_ATTR_PREC(tok):
+    r'prec\s*:\s*'
+    tok.value = 'prec'
+    print("entering ADDR_PREC:%s" % tok.value)
+    tok.lexer.begin('prec')  # begin the string group
+    return tok
 
+def t_ATTR_ALGN(tok):
+    r'algn\s*:\s*'
+    tok.value = 'algn'
+    print("entering ADDR_ALGN:%s" % tok.value)
+    tok.lexer.begin('algn')  # begin the string group
+    return tok
+
+def t_ATTR_SIGN(tok):
+    r'sign\s*:\s*'
+    tok.value = 'sign'
+    print("entering ADDR_SIGN:%s" % tok.value)
+    tok.lexer.begin('sign') 
+    return tok
+        
+def t_sign_SIGNED(tok):
+    r'signed|unsigned'
+    tok.lexer.begin('INITIAL')  # end the capture
+    return tok
 
 def attr_val(tok):
 
@@ -388,13 +430,15 @@ def attr_val(tok):
     tok.value = tok.value.replace(" ","")
     return tok
 
+#sign
+#prec
+#algn
 # removing lngt
 # this next call creates tokens for the following fields
 # each field can be used to give a new key value pair to a node
 # the field name is used to construct a function for recieving it.
 make_tokens("ATTR", "(?P<val>%s)\s*:",attr_val, '''
 accs
-algn
 alis
 args
 argt
@@ -442,7 +486,6 @@ note
 nst
 orig
 parm
-prec
 prms
 ptd
 purp
@@ -451,7 +494,6 @@ refd
 retn
 rslt
 scpe
-sign
 size
 spcs
 srcp
@@ -480,7 +522,7 @@ t_SPEC_ATTR.__doc__ = r'(?P<val>%s)\s*:' % make_re('spec')
 t_BUILTIN_FILE = r'\<built\-in\>:0'
 t_HXX_FILE = r'(yes_no_type.hpp|' + \
              r'[\-\+A-Za-z_\-0-9]+(\.(h|hdl|c|txx|tcc|hpp|cpp|cxx|hxx|pb\.h|pb\.c))?):\d+'
-t_SIGNED = 'signed|unsigned'
+
 #t_SCOPE = r'\:\:'
 #t_INTCONST = r'(\-)?\d+'
 #t_FLOAT = r'[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?'
@@ -504,11 +546,28 @@ def op_token_value(tok) :
     return tok
 
 # sub state tokens
-@TOKEN(r'(?P<hexval>[0-9a-f]+)')
+#@TOKEN(r)
 def t_adr_HEXVAL(tok) :
+    '(?P<hexval>[0-9a-f]+)'
     tok.value = int(tok.lexer.lexmatch.group("hexval"),16)
     print("hexval %s " % tok.value)
+    tok.lexer.begin('INITIAL')
     return tok
+
+# ## string values
+def t_INT(tok):
+    r'int:\s+'
+    return tok
+
+# ## string values
+# def t_str_LONG(tok):
+#     r'long\s+'
+#     return tok
+
+
+# def t_str_UNSIGNED(tok):
+#     r'unsigned\s+'
+#     return tok
 
 def t_str_SOMESTRG(tok):
     r'(?P<val>\w+)\s*' # some string
@@ -517,10 +576,55 @@ def t_str_SOMESTRG(tok):
     tok.value = strval
     return tok
 
-def t_len_SOMEINT(tok):
+def t_prec_algn_len_SOMEINT(tok):
     r'(?P<val>\d+)\s*' # some int
     strval = tok.lexer.lexmatch.group("val")
     print "INT: '%s'" % strval 
+    tok.value = strval
+    tok.lexer.begin('INITIAL')
+    return tok
+
+
+######################################################################
+# type goes into a special state with 
+def t_TYPE_ATTR(tok):
+    r'type\s*:\s*'
+    #tok.lexer.begin('type')
+    print("begin TYPE_ATTR: '%s'" % tok.value)
+    return tok
+
+# def t_TNODE(tok):
+#     r'\@(?P<val>\d+)\s+'
+#     strval = tok.lexer.lexmatch.group("val")
+#     tok.value = strval
+#     return tok
+
+
+def t_SOMEINT2(tok):
+    r'(?P<val>(0x)?\-?\d+)\s+' # some int
+    strval = tok.lexer.lexmatch.group("val")
+    print "INT const: '%s'" % strval 
+    tok.value = strval
+    return tok
+
+def t_SOMEHEX2(tok):
+    r'(?P<val>0x[0-9a-h]+)\s+' # some int
+    strval = tok.lexer.lexmatch.group("val")
+    print "HEX2 const: '%s'" % strval 
+    tok.value = strval
+    return tok
+
+def t_SOMEHEX3(tok):
+    r'(?P<val>[0-9a-h]+)\s+' # some int
+    strval = tok.lexer.lexmatch.group("val")
+    print "HEX3 const: '%s'" % strval 
+    tok.value = strval
+    return tok
+
+def t_SOMEHEX4(tok):
+    r'(?P<val>[0-9a-h]+)$' # some int
+    strval = tok.lexer.lexmatch.group("val")
+    print "HEX4 const: '%s'" % strval 
     tok.value = strval
     return tok
 
@@ -576,13 +680,25 @@ def t_error(t):
     raise TypeError("Unknown text '%s'" % (t.value, ))
 
 def t_str_error(t):
-    raise TypeError("Unknown text '%s'" % (t.value, ))
+    raise TypeError("Unknown str text '%s'" % (t.value, ))
+
+def t_prec_error(t):
+    raise TypeError("Unknown prec text '%s'" % (t.value, ))
 
 def t_adr_error(t):
-    raise TypeError("Unknown text '%s'" % (t.value, ))
+    raise TypeError("Unknown adr text '%s'" % (t.value, ))
 
 def t_len_error(t):
-    raise TypeError("Unknown text '%s'" % (t.value, ))
+    raise TypeError("Unknown len text '%s'" % (t.value, ))
+
+def t_algn_error(t):
+    raise TypeError("Unknown len text '%s'" % (t.value, ))
+
+def t_sign_error(t):
+    raise TypeError("Unknown sign text '%s'" % (t.value, ))
+
+# def t_type_error(t):
+#     raise TypeError("Unknown type text '%s'" % (t.value, ))
 
 #g_lex = lex.lex(debug=1)
 g_lex = lex.lex()
