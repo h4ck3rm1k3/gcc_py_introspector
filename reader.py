@@ -157,7 +157,8 @@ def report(x,l):
                     elif isinstance(v2, tuast.Link):
                         g.add([u, p, structure("link",v2.val)])
                     else:
-                        pprint.pprint( v2 )
+                        #pprint.pprint( v2 )
+                        pass
 
                 elif isinstance(v, tuast.SpecAttr3):
                     vn = attr(v.value)
@@ -170,7 +171,8 @@ def report(x,l):
                         clean(v.val) #https://github.com/RDFLib/rdflib/issues/614
                     )])
                 else:
-                    pprint.pprint( ["OTHER", v ] )
+                    #pprint.pprint( ["OTHER", v ] )
+                    pass
         else:
             if isinstance(x.vals, tuast.Attr):
                 if isinstance(x.vals.value, tuast.NodeRef):
@@ -183,8 +185,9 @@ def report(x,l):
                     pass
 
             else:
-                pprint.pprint( ["no vals", x ] )
-                raise Exception("TODO")
+                pass
+                #pprint.pprint( ["no vals", x ] )
+                #raise Exception("TODO")
     else:
 
         if isinstance(x, tuast.AddrExprTyped):
@@ -199,10 +202,11 @@ def report(x,l):
                 
             #g.add([u, p, structure("link",v2.val)])
         elif isinstance(x, tuast.Node):
-            print "TODO some node" + str(x)
-            pprint.pprint( ["TODO", x.__dict__ ] )
+            #print "TODO some node" + str(x)
+            #pprint.pprint( ["TODO", x.__dict__ ] )
+            pass
         else:
-            pprint.pprint( ["no vals", x ] )
+            #pprint.pprint( ["no vals", x ] )
             raise Exception("TODO")
         
 def lex(l, debug, error_file):
@@ -228,7 +232,8 @@ def lex(l, debug, error_file):
         print stack
         # raise exp
     if debug:
-        print "Line %s" % l
+        #print "Line %s" % l
+        pass
 
 def parse_l(l, debug, error_file):
     '''
@@ -296,6 +301,9 @@ def parse_l(l, debug, error_file):
         traceback.print_exc()
         print exp
         print "EXP Line:%s" % l
+        f = open ('lasterror.txt','w')
+        f.write(l)
+        f.close()
         print "EXP Stack:%s" % stack
         raise exp
     
@@ -335,7 +343,7 @@ def main():
 try:
     main()
 except Exception as e:
-    print "Error occured '%s'" % e
+    print "Error occurred '%s'" % e
 
 debug_file = open("output.debug", "w")
 debug_file.write("data=%s" % pprint.pformat(deps))

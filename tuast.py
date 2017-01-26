@@ -21,8 +21,8 @@ class NodeBase:
             else:
                 return [
                     self.node_type, 
-                    [self.vals.keys()], 
-                    [self.vals.values()]
+                    #[self.vals.keys()], 
+                    #[self.vals.values()]
                 ]
         else:
             return  [
@@ -45,7 +45,8 @@ class NodeBase:
                 val="|".join(["Val:%s %s" % (str(attr.type), attr) for attr in self.vals])
             else:
                 #print "CHECK VAL TYPE %s" % str(self.vals.type)
-                val="Val %s %s" % (self.vals.type, self.vals),
+                #val="Val %s %s" % (self.vals.type, self.vals),
+                pass
         return "T|%s|%s"  % (self.node_type,val)
 
 class Node(NodeBase):
