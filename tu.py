@@ -323,7 +323,7 @@ def t_QUAL(tok):
 def t_NODE(tok):
     r'\@(?P<val>\d+)\s+'
     #print "Match %s" % (tok.lexer.lexmatch)
-    strval = tok.lexer.lexmatch.group("val")
+    #strval = tok.lexer.lexmatch.group("val")
     #print ("NODEID:%s" % strval)
     #y =0
 
@@ -331,7 +331,7 @@ def t_NODE(tok):
     #     y = y + 1
     #     print ("test:%d %s" % (y, x))
 
-    tok.value = strval
+    tok.value = "SOMENODE"
     return tok
 
 
@@ -344,14 +344,16 @@ def t_SPACE(tok):
 
 @TOKEN(r'(?P<val>addr_expr)\s?')
 def t_ADDR_EXPR(tok) :
-    tok.value = str(tok.lexer.lexmatch.group("val"))
+    #tok.value = str(tok.lexer.lexmatch.group("val"))
+    tok.value = "SOMEADDR"
     #print("NTYPE ADDR EXPR %s " % tok.value)
     return tok
 
 def t_OP0_ATTR(tok):
     r'(?P<val>OP0)\s*:'
     #count_non_null(tok)
-    tok.value = str(tok.lexer.lexmatch.group("val"))
+    #tok.value = str(tok.lexer.lexmatch.group("val"))
+    tok.value = "SOMEADDR"
     #print("OP0_ATTR %s " % tok.value)
     return tok
 
@@ -520,8 +522,10 @@ def t_SPEC_ATTR(tok):
 
 
 t_BUILTIN_FILE = r'\<built\-in\>:0'
-t_HXX_FILE = r'(yes_no_type.hpp|' + \
-             r'[\-\+A-Za-z_\-0-9]+(\.(h|hdl|c|txx|tcc|hpp|cpp|cxx|hxx|pb\.h|pb\.c))?):\d+'
+def t_HXX_FILE(tok):
+    r'(yes_no_type.hpp|[\-\+A-Za-z_\-0-9]+(\.(h|hdl|c|txx|tcc|hpp|cpp|cxx|hxx|pb\.h|pb\.c))?):\d+'
+    tok.value = "SOMEFILE" # strval
+    return tok
 
 #t_SCOPE = r'\:\:'
 #t_INTCONST = r'(\-)?\d+'
@@ -549,7 +553,7 @@ def op_token_value(tok) :
 #@TOKEN(r)
 def t_adr_HEXVAL(tok) :
     '(?P<hexval>[0-9a-f]+)(\s|$)'
-    #tok.value = int(tok.lexer.lexmatch.group("hexval"),16)
+    tok.value = "HEXVAL" #int(tok.lexer.lexmatch.group("hexval"),16)
     #print("hexval1 %s " % tok.value)
     goto_state(tok,'INITIAL')
     return tok
@@ -571,9 +575,9 @@ def t_INT(tok):
 
 def t_str_SOMESTRG(tok):
     r'(?P<val>.+\s*)(lngt:\s*(\d+)\s*|$)' # some string
-    strval = tok.lexer.lexmatch.group("val")
+    #strval = tok.lexer.lexmatch.group("val")
     #print "String: '%s'" % strval 
-    tok.value = strval
+    tok.value = "SOMESTR" # strval
     goto_state(tok,'INITIAL')  # begin the string group
     return tok
 
@@ -581,7 +585,8 @@ def t_prec_algn_len_SOMEINT(tok):
     r'(?P<val>\d+)\s*' # some int
     strval = tok.lexer.lexmatch.group("val")
     #print "INT: '%s'" % strval 
-    tok.value = strval
+    #tok.value = strval
+    tok.value = "SOMEINT"
     goto_state(tok,'INITIAL')
     return tok
 
@@ -608,14 +613,15 @@ def t_SOMEINT2(tok):
     r'(?P<val>(0x)?\-?\d+)\s+' # some int
     strval = tok.lexer.lexmatch.group("val")
     #print "INT const: '%s'" % strval 
-    tok.value = strval
+    #tok.value = strval
+    tok.value = "SOMEINT"
     return tok
 
 def t_adr_SOMEHEX2(tok):
     r'(?P<val>0x[0-9a-h]+)(\s|$)' # some int
     strval = tok.lexer.lexmatch.group("val")
     #print "HEX2 const: '%s'" % strval 
-    tok.value = strval
+    tok.value = "SOMEHEX2"
     return tok
 
 def t_SOMEHEX2(tok):
@@ -623,6 +629,7 @@ def t_SOMEHEX2(tok):
     strval = tok.lexer.lexmatch.group("val")
     #print "HEX2 const: '%s'" % strval 
     tok.value = strval
+    tok.value = "SOMEHEX2b"
     return tok
 
 def t_adr_SOMEHEX3(tok):
@@ -630,6 +637,7 @@ def t_adr_SOMEHEX3(tok):
     strval = tok.lexer.lexmatch.group("val")
     #print "HEX3 const: '%s'" % strval 
     tok.value = strval
+    tok.value = "SOMEHEX3"
     return tok
 
 def t_adr_SOMEHEX4(tok):
@@ -637,6 +645,7 @@ def t_adr_SOMEHEX4(tok):
     strval = tok.lexer.lexmatch.group("val")
     #print "HEX4 const: '%s'" % strval 
     tok.value = strval
+    tok.value = "SOMEHEX4"
     return tok
 
 def t_SOMEHEX4(tok):
@@ -644,6 +653,7 @@ def t_SOMEHEX4(tok):
     strval = tok.lexer.lexmatch.group("val")
     #print "HEX4 const: '%s'" % strval 
     tok.value = strval
+    tok.value = "SOMEHEX4b"
     return tok
 
 make_tokens("OPERATOR", r'operator\s+(?P<val>%s)\s',op_token_value,"""
