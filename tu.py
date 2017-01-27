@@ -9,6 +9,10 @@ import pprint
 DEBUG = 0
 import sys
 
+def goto_state(p,v):
+    #print "going to state %s" % v
+    p.lexer.begin(v)  # begin the string group
+
 states = (
     ('str','exclusive'),
     ('sign','exclusive'), # main attribute
@@ -32,6 +36,7 @@ tokens = [
     'TYPE_ATTR',
     'ADDR_ATTR',
     'ADDR_EXPR',
+#    'PREDICT_EXPR',
     'SPEC_ATTR',
     'SPEC_VALU',
     'CONSTRUCTOR',
@@ -155,6 +160,7 @@ bit_and_expr
 bit_ior_expr
 bit_not_expr
 bit_xor_expr
+bit_field_ref
 boolean_type
 bound_template_template_parm
 break_stmt
@@ -221,6 +227,7 @@ postdecrement_expr
 postincrement_expr
 predecrement_expr
 preincrement_expr
+predict_expr
 ptrmem_cst
 real_cst
 real_type
@@ -252,6 +259,7 @@ tree_vec
 trunc_div_expr
 trunc_mod_expr
 truth_and_expr
+truth_or_expr
 truth_andif_expr
 truth_not_expr
 truth_orif_expr
@@ -280,7 +288,7 @@ t_CONSTRUCTOR = 'constructor'
 def t_STRG(tok):
     r'strg:\s*'
     #print 'enter str state'
-    tok.lexer.begin('str')  # begin the string group
+    goto_state(tok,'str')  # begin the string group
     #strval = tok.lexer.lexmatch.group("val")
     #strlen = int(tok.lexer.lexmatch.group("len"))
     #print "String start"
@@ -289,13 +297,13 @@ def t_STRG(tok):
 
 def t_LEN(tok): # constructor length
     r'lngt:\s*(\d+)'  # (?P<len>\d+)
-    #tok.lexer.begin('len')  # begin the string group
+    #goto_state(tok,'len')  # begin the string group
     #print 'constructor lngt: token'
     return tok
 
 # def t_str_STRGLEN2(tok): # end of string
 #     r'lngt:\s*'  # (?P<len>\d+)
-#     #tok.lexer.begin('len')  # begin the string group
+#     #goto_state(tok,'len')  # begin the string group
 #     #print 'string lngt: token'
 #     return tok
 
@@ -356,16 +364,16 @@ def t_OP1_ATTR(tok):
 # attributes like 'address: 5fa31238843838' in the newer compilers
 def t_ADDR_ATTR(tok):
     r'addr\s*:\s*'
-    tok.value = 'addr'
+    #tok.value = 'addr'
     #print("entering ADDR_ATTR:%s" % tok.value)
-    tok.lexer.begin('adr')  # begin the string group
+    goto_state(tok,'adr')  # begin the string group
     return tok
 
 
-# def t_ATTR_En(tok):
-#     '''(%s|E\d+)\s*:'''
-#     tok.value = tok.value.replace(" :","")
-#     return tok
+def t_ATTR_En(tok):
+    '(E\d+)\s*:'
+    tok.value = tok.value.replace(" :","")
+    return tok
 
 def count_non_null(tok):
     count = 0 
@@ -386,26 +394,33 @@ def t_ATTR_PREC(tok):
     r'prec\s*:\s*'
     tok.value = 'prec'
     #print("entering ADDR_PREC:%s" % tok.value)
-    tok.lexer.begin('prec')  # begin the string group
+    goto_state(tok,'prec')  # begin the string group
     return tok
 
 def t_ATTR_ALGN(tok):
     r'algn\s*:\s*'
     tok.value = 'algn'
     #print("entering ADDR_ALGN:%s" % tok.value)
-    tok.lexer.begin('algn')  # begin the string group
+    goto_state(tok,'algn')  # begin the string group
     return tok
 
 def t_ATTR_SIGN(tok):
     r'sign\s*:\s*'
     tok.value = 'sign'
-    #print("entering ADDR_SIGN:%s" % tok.value)
-    tok.lexer.begin('sign') 
+    #print("entering ATTR_SIGN:%s" % tok.value)
+    goto_state(tok,'sign') 
     return tok
         
 def t_sign_SIGNED(tok):
+    r'signed' #|unsigned
+    #print 'found signed'
+    goto_state(tok,'INITIAL')  # end the capture
+    return tok
+
+def t_SIGNED(tok):
     r'signed|unsigned'
-    tok.lexer.begin('INITIAL')  # end the capture
+    #print 'found signed'
+    goto_state(tok,'INITIAL')  # end the capture
     return tok
 
 def attr_val(tok):
@@ -533,10 +548,10 @@ def op_token_value(tok) :
 # sub state tokens
 #@TOKEN(r)
 def t_adr_HEXVAL(tok) :
-    '(?P<hexval>[0-9a-f]+)'
-    tok.value = int(tok.lexer.lexmatch.group("hexval"),16)
-    #print("hexval %s " % tok.value)
-    tok.lexer.begin('INITIAL')
+    '(?P<hexval>[0-9a-f]+)(\s|$)'
+    #tok.value = int(tok.lexer.lexmatch.group("hexval"),16)
+    #print("hexval1 %s " % tok.value)
+    goto_state(tok,'INITIAL')
     return tok
 
 # ## string values
@@ -559,7 +574,7 @@ def t_str_SOMESTRG(tok):
     strval = tok.lexer.lexmatch.group("val")
     #print "String: '%s'" % strval 
     tok.value = strval
-    tok.lexer.begin('INITIAL')  # begin the string group
+    goto_state(tok,'INITIAL')  # begin the string group
     return tok
 
 def t_prec_algn_len_SOMEINT(tok):
@@ -567,7 +582,7 @@ def t_prec_algn_len_SOMEINT(tok):
     strval = tok.lexer.lexmatch.group("val")
     #print "INT: '%s'" % strval 
     tok.value = strval
-    tok.lexer.begin('INITIAL')
+    goto_state(tok,'INITIAL')
     return tok
 
 
@@ -575,7 +590,7 @@ def t_prec_algn_len_SOMEINT(tok):
 # type goes into a special state with 
 def t_TYPE_ATTR(tok):
     r'type\s*:\s*'
-    #tok.lexer.begin('type')
+    #goto_state(tok,'type')
     #print("begin TYPE_ATTR: '%s'" % tok.value)
     return tok
 
@@ -596,22 +611,36 @@ def t_SOMEINT2(tok):
     tok.value = strval
     return tok
 
-def t_SOMEHEX2(tok):
-    r'(?P<val>0x[0-9a-h]+)\s+' # some int
+def t_adr_SOMEHEX2(tok):
+    r'(?P<val>0x[0-9a-h]+)(\s|$)' # some int
     strval = tok.lexer.lexmatch.group("val")
     #print "HEX2 const: '%s'" % strval 
     tok.value = strval
     return tok
 
-def t_SOMEHEX3(tok):
-    r'(?P<val>[0-9a-h]+)\s+' # some int
+def t_SOMEHEX2(tok):
+    r'(?P<val>0x[0-9a-h]+)(\s|$)' # some int
+    strval = tok.lexer.lexmatch.group("val")
+    #print "HEX2 const: '%s'" % strval 
+    tok.value = strval
+    return tok
+
+def t_adr_SOMEHEX3(tok):
+    r'(?P<val>[0-9a-h]+)(\s|$)' # some int
     strval = tok.lexer.lexmatch.group("val")
     #print "HEX3 const: '%s'" % strval 
     tok.value = strval
     return tok
 
+def t_adr_SOMEHEX4(tok):
+    r'(?P<val>[0-9a-h]+)(\s|$)' # some hex
+    strval = tok.lexer.lexmatch.group("val")
+    #print "HEX4 const: '%s'" % strval 
+    tok.value = strval
+    return tok
+
 def t_SOMEHEX4(tok):
-    r'(?P<val>[0-9a-h]+)$' # some int
+    r'(?P<val>[0-9a-h]+)(\s|$)' # some hex
     strval = tok.lexer.lexmatch.group("val")
     #print "HEX4 const: '%s'" % strval 
     tok.value = strval

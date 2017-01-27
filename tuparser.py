@@ -28,7 +28,7 @@ def matches(psr_val, debug=True):
     for group in psr_val.lexer.lexmatch.groups() :
         c = c+1
         if group:
-            print("DEBUG",c,group)
+           # print("DEBUG",c,group)
             ret.append(group)
     return ret
 
@@ -156,6 +156,10 @@ def p_ntype_switch_expr(psr_val):
 
 def p_ntype_truth_and_expr(psr_val):
     'ntype : NTYPE_TRUTH_AND_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_truth_or_expr(psr_val):
+    'ntype : NTYPE_TRUTH_OR_EXPR'
     psr_val[0] = ntype_base(psr_val)
 
 def p_ntype_aggr_init_expr(psr_val):
@@ -452,6 +456,14 @@ def p_ntype_predecrement_expr(psr_val):
 
 def p_ntype_preincrement_expr(psr_val):
     'ntype : NTYPE_PREINCREMENT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_predict_expr(psr_val):
+    'ntype : NTYPE_PREDICT_EXPR'
+    psr_val[0] = ntype_base(psr_val)
+
+def p_ntype_bitfield_ref(psr_val):
+    'ntype : NTYPE_BIT_FIELD_REF'
     psr_val[0] = ntype_base(psr_val)
 
 def p_ntype_ptrmem_cst(psr_val):
@@ -1123,14 +1135,14 @@ def p_idx_val_list2(p):
 ##########################################
 def p_node_constructor(psr_val):
     #            1             2
-    'node : NODE CONSTRUCTOR LEN idx_val_list'
+    'node : NODE CONSTRUCTOR LEN idx_val_list attr_list'
     #print "CHECK LIST1 %s" % psr_val[3]
     # psr_val[0] = "%s(id: %s, %s )" % (psr_val[2],psr_val[1],psr_val[3])
     psr_val[0] = tuast.NodeConstructor(psr_val[2], psr_val[1], psr_val[3])
 
 def p_node_mem_ref(psr_val):
-    'node : NODE NTYPE_MEM_REF'
-    psr_val[0] = tuast.NodeConstructor(psr_val[2], psr_val[1], psr_val[3])
+    'node : NODE NTYPE_MEM_REF attr_list'
+    #psr_val[0] = tuast.NodeConstructor(psr_val[2], psr_val[1], psr_val[3])
 
 # def p_addr_attrs3(psr_val):
 #     'attrs :  addr_attrs'
@@ -1220,7 +1232,7 @@ def p_attrs_spec3(psr_val):
      #          1        2
      'attrs :  SPEC_VALU'
      node = tuast.SpecAttr3(psr_val[1])
-     psr_val[0] = append_list(psr_val[2], node)
+     #psr_val[0] = append_list(psr_val[2], node)
      return psr_val[0]
 
 # def p_attrs_spec1(psr_val):
@@ -1292,15 +1304,17 @@ def p_attrs_addrs(psr_val):
     if m:
         #print "address is set to", m
         psr_val[0] = [tuast.String(m)]
+    #print 'after hexval'
     goto_initial(psr_val)
 
 def p_attrs_addrs2(psr_val):
     'addr_attrs : ADDR_ATTR SOMEHEX3'
     m=psr_val[1]
     if m:
-        print "address is set to", m
+        #print "address is set to", m
         psr_val[0] = [tuast.String(m)]
     goto_initial(psr_val)
+
 
 def p_attrs_addrs3(psr_val):
     'addr_attrs : ADDR_ATTR SOMEHEX4'
@@ -1479,7 +1493,7 @@ def p_node_addr_expr(psr_val):
     psr_val[0] = tuast.AddrExpr(psr_val[2], psr_val[1], psr_val[4])
 
 def p_node_addr_expr2(psr_val):
-    'node : NODE ADDR_EXPR type_attrs OP0_ATTR NODE'
+    'node : NODE ADDR_EXPR type_attrs attr_list'
     #         1   2            3    4 
     psr_val[0] = tuast.AddrExpr(psr_val[2], psr_val[1], psr_val[4])
 
@@ -1506,7 +1520,7 @@ def p_error(psr_val):
 
 def p_attrs_prec(psr_val):
     #           1     2         3
-    'attrs :  ATTR_PREC SOMEINT'
+    'attrs :  ATTR_PREC SOMEINT2'
     psr_val[0] = std_attrs(psr_val)
     goto_initial(psr_val)  # begin the string group
 

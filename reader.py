@@ -235,7 +235,9 @@ def lex(l, debug, error_file):
         #print "Line %s" % l
         pass
 
-def parse_l(l, debug, error_file):
+
+
+def parse_l(l, debug, error_file, f):
     '''
     preprocessing of the line
     '''
@@ -274,8 +276,8 @@ def parse_l(l, debug, error_file):
         
         if not x:
             error_file.write(l + "\n")
-            print "Error on Line:%s" % l
-            print "Stack:%s" % stack
+            #print "Error on Line:%s" % l
+            #print "Stack:%s" % stack
             #print "parser %s" % pprint.pformat(parser.__dict__)
             #if not debug:
             #    x = parser.parse(l, debug=True)
@@ -301,11 +303,9 @@ def parse_l(l, debug, error_file):
         traceback.print_exc()
         print exp
         print "EXP Line:%s" % l
-        f = open ('lasterror.txt','w')
         f.write(l)
-        f.close()
         print "EXP Stack:%s" % stack
-        raise exp
+        #raise exp
     
     #print "Stack:%s" % stack
 
@@ -323,6 +323,8 @@ def main():
     else:
         debug = False
 
+    f = open ('lasterror.txt','wa')
+
     line = ""
     for l in fd.readlines():
         l = l.strip()
@@ -331,15 +333,16 @@ def main():
 
         if l[0] == '@':
             if line:
-                parse_l(line, debug, error_file)
+                parse_l(line, debug, error_file, f)
             line = l
         else:
             line = line + " " + l
     fd.close()
 
     if line:
-        parse_l(line, debug, error_file)
-
+        parse_l(line, debug, error_file, f)
+    f.close()
+        
 try:
     main()
 except Exception as e:
