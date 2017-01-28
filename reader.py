@@ -303,7 +303,7 @@ def parse_l(l, debug, error_file, f):
         traceback.print_exc()
         print exp
         print "EXP Line:%s" % l
-        f.write(l)
+        f.write(l + "\n")
         print "EXP Stack:%s" % stack
         #raise exp
     
