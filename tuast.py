@@ -1,3 +1,7 @@
+import re
+from attributes import node_type
+import pprint
+
 class NodeBase:
 
     def __init__(self, nid, ntype, vals):
@@ -50,9 +54,9 @@ class NodeBase:
         return "T|%s|%s"  % (self.node_type,val)
 
 class Node(NodeBase):
-
     def __init__(self, ntype, nid, vals):
         NodeBase.__init__(self,nid, ntype, vals)
+
 
 class ExprBase(Node):
     pass
@@ -216,6 +220,31 @@ class String(Value):
     def values(self):
         return ["String",self.val]
 
+class String2(Value):
+
+    def __init__(self, v):
+        m = re.match(r'(.*)lngt: (\d+)\s+addr:\s+([a-h0-9]+)$',v)
+        if m :
+            l = int(m.group(2))
+            v2 = v[0:l]
+            self.addr = m.group(3)
+            Value.__init__(self, v2)
+        else:
+            Value.__init__(self, v)
+
+    @property
+    def type(self):
+        return "STR"
+
+    def keys(self):
+        pass
+
+    def values(self):
+        return ["String",self.val]
+
+    def __repr__(self):
+        return "'%s'" % (self.val)
+
 class Note(Value):
 
     def __init__(self, v):
@@ -333,3 +362,10 @@ class FilePos(Attr):
 
 class FileBuiltin(AttrBase):
     pass
+
+@node_type('identifier_node')
+class Identifier(Node):
+    def __init__(self, a, b, c):
+        pprint.pprint    ([a,b,c])
+    def __str__(self):
+        return "TODo"

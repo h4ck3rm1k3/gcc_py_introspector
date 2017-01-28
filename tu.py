@@ -8,10 +8,8 @@ from ply.lex import TOKEN
 import pprint
 DEBUG = 0
 import sys
-
-def goto_state(p,v):
-    #print "going to state %s" % v
-    p.lexer.begin(v)  # begin the string group
+from attributes import token_rule
+from utils import goto_state,  emit_parser_rule
 
 states = (
     ('str','exclusive'),
@@ -66,7 +64,6 @@ tokens = [
     'SOMEHEX4', # int
     'HEXVAL',
     'NTYPE_IDENTIFIER_NODE',
-
     # special names
  #   'LONG',
     'INT',
@@ -74,28 +71,15 @@ tokens = [
 #    'STRGLEN2'
 ]
 
+@token_rule
+def attr_val(tok):
 
-
-
-
-# create parser rules
-def create_rules(tstr):
-    for token in tstr.split():
-        token = token.upper()
-        func = lambda x: x
-        rule = "ntype : %s" % token
-        func.__doc__ = rule
-        current_module = sys.modules[__name__]
-        name = "p_%s" % (token.lower())
-        #print "name %s(psr_val):\n    \'%s\'\n    return ntype_base(psr_val)\n" %(name, rule)
-        setattr(current_module, name , func)
-
-
-def emit_parser_rule(base_name, prefix):
-    # parser
-    rule = "%s_type : %s" % (prefix, base_name)
-    parser_name = "p_%s" % (base_name.lower())
-    #print "def %s(psr_val):\n    \'%s\'\n    psr_val[0] = %s_base(psr_val)\n" %(parser_name, rule, prefix)
+    val = None
+    #print("IN ATTR:%s" % tok.value)
+    #print("UNMATCHED ATTR:%s" % tok.value)
+    tok.value = tok.value.replace(":","")
+    tok.value = tok.value.replace(" ","")
+    return tok
 
 def make_tokens(prefix,pattern,val_func, tstr):
     '''
@@ -123,7 +107,6 @@ def make_tokens(prefix,pattern,val_func, tstr):
         tokens.append(base_name)
         emit_parser_rule(base_name, prefix)
 
-
         setattr(current_module, name , func)
         if DEBUG:
             #print "created name %s regex %s"  %( name, regex )
@@ -139,12 +122,16 @@ def make_tokens(prefix,pattern,val_func, tstr):
              'fd' : func.__doc__
          })
 
-def ntype_value(tok) :
-    return tok 
 
+@token_rule
 def t_NTYPE_IDENTIFIER_NODE(tok):
     r'identifier_node'
     return tok
+
+# this is a generic rule for all generated rules
+@token_rule
+def ntype_value(tok) :
+    return tok 
 
 # the following are node types
 make_tokens("NTYPE", "(?P<val>%s)",ntype_value,"""
@@ -285,6 +272,8 @@ t_PSEUDO_TMPL = 'pseudo|tmpl'
 t_CONSTRUCTOR = 'constructor'
 
 
+
+@token_rule
 def t_STRG(tok):
     r'strg:\s*'
     #print 'enter str state'
@@ -295,23 +284,21 @@ def t_STRG(tok):
     #tok.value = strval # only take the first n chars given by the len 
     return tok
 
+
+@token_rule
 def t_LEN(tok): # constructor length
     r'lngt:\s*(\d+)'  # (?P<len>\d+)
     #goto_state(tok,'len')  # begin the string group
     #print 'constructor lngt: token'
     return tok
 
-# def t_str_STRGLEN2(tok): # end of string
-#     r'lngt:\s*'  # (?P<len>\d+)
-#     #goto_state(tok,'len')  # begin the string group
-#     #print 'string lngt: token'
-#     return tok
-
 
 t_LANG = r'C\s'
 #t_R = r'\sr\s'
 
 
+
+@token_rule
 def t_QUAL(tok):
     r'c\s|v\s|cv\s|r\s'
     strval = tok.value
@@ -320,6 +307,8 @@ def t_QUAL(tok):
     return tok
 
 
+
+@token_rule
 def t_NODE(tok):
     r'\@(?P<val>\d+)\s+'
     #print "Match %s" % (tok.lexer.lexmatch)
@@ -331,10 +320,12 @@ def t_NODE(tok):
     #     y = y + 1
     #     print ("test:%d %s" % (y, x))
 
-    tok.value = "SOMENODE"
+    #tok.value = "SOMENODE"
     return tok
 
 
+
+@token_rule
 def t_SPACE(tok):
     r'\s+'
     pass
@@ -343,20 +334,26 @@ def t_SPACE(tok):
 
 
 @TOKEN(r'(?P<val>addr_expr)\s?')
+
+@token_rule
 def t_ADDR_EXPR(tok) :
     #tok.value = str(tok.lexer.lexmatch.group("val"))
-    tok.value = "SOMEADDR"
+    #tok.value = "SOMEADDR"
     #print("NTYPE ADDR EXPR %s " % tok.value)
     return tok
 
+
+@token_rule
 def t_OP0_ATTR(tok):
     r'(?P<val>OP0)\s*:'
     #count_non_null(tok)
     #tok.value = str(tok.lexer.lexmatch.group("val"))
-    tok.value = "SOMEADDR"
+    #tok.value = "SOMEADDR"
     #print("OP0_ATTR %s " % tok.value)
     return tok
 
+
+@token_rule
 def t_OP1_ATTR(tok):
     r'(?P<val>OP1)\s*:'
     tok.value = str(tok.lexer.lexmatch.group("val"))
@@ -364,6 +361,8 @@ def t_OP1_ATTR(tok):
 
 
 # attributes like 'address: 5fa31238843838' in the newer compilers
+
+@token_rule
 def t_ADDR_ATTR(tok):
     r'addr\s*:\s*'
     #tok.value = 'addr'
@@ -372,18 +371,15 @@ def t_ADDR_ATTR(tok):
     return tok
 
 
+
+@token_rule
 def t_ATTR_En(tok):
     '(E\d+)\s*:'
     tok.value = tok.value.replace(" :","")
     return tok
 
-def count_non_null(tok):
-    count = 0 
-    for v in tok.lexer.lexmatch.groups():
-        if v is not None :
-            print "check %s %d"  % (v, count)
-        count = count + 1
 
+@token_rule
 def t_ATTR_OP(tok):
     '''(?P<val>OP\d+)\s*:'''
     # count_non_null(tok)
@@ -392,6 +388,8 @@ def t_ATTR_OP(tok):
     #print("OPATTR:%s" % tok.value)
     return tok
 
+
+@token_rule
 def t_ATTR_PREC(tok):
     r'prec\s*:\s*'
     tok.value = 'prec'
@@ -399,6 +397,8 @@ def t_ATTR_PREC(tok):
     goto_state(tok,'prec')  # begin the string group
     return tok
 
+
+@token_rule
 def t_ATTR_ALGN(tok):
     r'algn\s*:\s*'
     tok.value = 'algn'
@@ -406,6 +406,8 @@ def t_ATTR_ALGN(tok):
     goto_state(tok,'algn')  # begin the string group
     return tok
 
+
+@token_rule
 def t_ATTR_SIGN(tok):
     r'sign\s*:\s*'
     tok.value = 'sign'
@@ -413,26 +415,22 @@ def t_ATTR_SIGN(tok):
     goto_state(tok,'sign') 
     return tok
         
+
+@token_rule
 def t_sign_SIGNED(tok):
     r'signed' #|unsigned
     #print 'found signed'
     goto_state(tok,'INITIAL')  # end the capture
     return tok
 
+
+@token_rule
 def t_SIGNED(tok):
     r'signed|unsigned'
     #print 'found signed'
     goto_state(tok,'INITIAL')  # end the capture
     return tok
 
-def attr_val(tok):
-
-    val = None
-    #print("IN ATTR:%s" % tok.value)
-    #print("UNMATCHED ATTR:%s" % tok.value)
-    tok.value = tok.value.replace(":","")
-    tok.value = tok.value.replace(" ","")
-    return tok
 
 #sign
 #prec
@@ -512,6 +510,8 @@ valu
 vfld
 ''')
 
+
+@token_rule
 def t_SPEC_ATTR(tok):
     r'spec:\s*'
     #strval = tok.lexer.lexmatch.group("val")
@@ -522,9 +522,11 @@ def t_SPEC_ATTR(tok):
 
 
 t_BUILTIN_FILE = r'\<built\-in\>:0'
+
+@token_rule
 def t_HXX_FILE(tok):
     r'(yes_no_type.hpp|[\-\+A-Za-z_\-0-9]+(\.(h|hdl|c|txx|tcc|hpp|cpp|cxx|hxx|pb\.h|pb\.c))?):\d+'
-    tok.value = "SOMEFILE" # strval
+    #tok.value = "SOMEFILE" # strval
     return tok
 
 #t_SCOPE = r'\:\:'
@@ -549,111 +551,120 @@ def op_token_value(tok) :
     # print "OP%s" % strval
     return tok
 
-# sub state tokens
-#@TOKEN(r)
+
+@token_rule
 def t_adr_HEXVAL(tok) :
     '(?P<hexval>[0-9a-f]+)(\s|$)'
-    tok.value = "HEXVAL" #int(tok.lexer.lexmatch.group("hexval"),16)
+    #tok.value = "HEXVAL" #int(tok.lexer.lexmatch.group("hexval"),16)
     #print("hexval1 %s " % tok.value)
     goto_state(tok,'INITIAL')
     return tok
 
 # ## string values
+
+@token_rule
 def t_INT(tok):
     r'int:\s+'
     return tok
 
-# ## string values
-# def t_str_LONG(tok):
-#     r'long\s+'
-#     return tok
 
 
-# def t_str_UNSIGNED(tok):
-#     r'unsigned\s+'
-#     return tok
 
+@token_rule
 def t_str_SOMESTRG(tok):
     r'(?P<val>.+\s*)(lngt:\s*(\d+)\s*|$)' # some string
     #strval = tok.lexer.lexmatch.group("val")
     #print "String: '%s'" % strval 
-    tok.value = "SOMESTR" # strval
+    #tok.value = "SOMESTR" # strval
     goto_state(tok,'INITIAL')  # begin the string group
     return tok
 
+
+@token_rule
 def t_prec_algn_len_SOMEINT(tok):
     r'(?P<val>\d+)\s*' # some int
     strval = tok.lexer.lexmatch.group("val")
     #print "INT: '%s'" % strval 
     #tok.value = strval
-    tok.value = "SOMEINT"
+    #tok.value = "SOMEINT"
     goto_state(tok,'INITIAL')
     return tok
 
 
 ######################################################################
 # type goes into a special state with 
+
+@token_rule
 def t_TYPE_ATTR(tok):
     r'type\s*:\s*'
     #goto_state(tok,'type')
     #print("begin TYPE_ATTR: '%s'" % tok.value)
     return tok
 
-# def t_TNODE(tok):
-#     r'\@(?P<val>\d+)\s+'
-#     strval = tok.lexer.lexmatch.group("val")
-#     tok.value = strval
-#     return tok
 
+
+@token_rule
 def t_SPEC_REGISTER(t):
     r'register'
     return t
 
+
+@token_rule
 def t_SOMEINT2(tok):
     r'(?P<val>(0x)?\-?\d+)\s+' # some int
     strval = tok.lexer.lexmatch.group("val")
     #print "INT const: '%s'" % strval 
     #tok.value = strval
-    tok.value = "SOMEINT"
+    #tok.value = "SOMEINT"
     return tok
 
+
+@token_rule
 def t_adr_SOMEHEX2(tok):
     r'(?P<val>0x[0-9a-h]+)(\s|$)' # some int
     strval = tok.lexer.lexmatch.group("val")
     #print "HEX2 const: '%s'" % strval 
-    tok.value = "SOMEHEX2"
+    #tok.value = "SOMEHEX2"
     return tok
 
+
+@token_rule
 def t_SOMEHEX2(tok):
     r'(?P<val>0x[0-9a-h]+)(\s|$)' # some int
     strval = tok.lexer.lexmatch.group("val")
     #print "HEX2 const: '%s'" % strval 
     tok.value = strval
-    tok.value = "SOMEHEX2b"
+    #tok.value = "SOMEHEX2b"
     return tok
 
+
+@token_rule
 def t_adr_SOMEHEX3(tok):
     r'(?P<val>[0-9a-h]+)(\s|$)' # some int
     strval = tok.lexer.lexmatch.group("val")
     #print "HEX3 const: '%s'" % strval 
     tok.value = strval
-    tok.value = "SOMEHEX3"
+    #tok.value = "SOMEHEX3"
     return tok
 
+
+@token_rule
 def t_adr_SOMEHEX4(tok):
     r'(?P<val>[0-9a-h]+)(\s|$)' # some hex
     strval = tok.lexer.lexmatch.group("val")
     #print "HEX4 const: '%s'" % strval 
     tok.value = strval
-    tok.value = "SOMEHEX4"
+    #tok.value = "SOMEHEX4"
     return tok
 
+
+@token_rule
 def t_SOMEHEX4(tok):
     r'(?P<val>[0-9a-h]+)(\s|$)' # some hex
     strval = tok.lexer.lexmatch.group("val")
     #print "HEX4 const: '%s'" % strval 
     tok.value = strval
-    tok.value = "SOMEHEX4b"
+    #tok.value = "SOMEHEX4b"
     return tok
 
 make_tokens("OPERATOR", r'operator\s+(?P<val>%s)\s',op_token_value,"""
@@ -704,29 +715,41 @@ make_tokens("OPERATOR", r'operator\s+(?P<val>%s)\s',op_token_value,"""
 """)
 
 
+
+@token_rule
 def t_error(t):
     raise TypeError("Unknown text '%s'" % (t.value, ))
 
+
+@token_rule
 def t_str_error(t):
     raise TypeError("Unknown str text '%s'" % (t.value, ))
 
+
+@token_rule
 def t_prec_error(t):
     raise TypeError("Unknown prec text '%s'" % (t.value, ))
 
+
+@token_rule
 def t_adr_error(t):
     raise TypeError("Unknown adr text '%s'" % (t.value, ))
 
+
+@token_rule
 def t_len_error(t):
     raise TypeError("Unknown len text '%s'" % (t.value, ))
 
+
+@token_rule
 def t_algn_error(t):
     raise TypeError("Unknown len text '%s'" % (t.value, ))
 
+
+@token_rule
 def t_sign_error(t):
     raise TypeError("Unknown sign text '%s'" % (t.value, ))
 
-# def t_type_error(t):
-#     raise TypeError("Unknown type text '%s'" % (t.value, ))
 
 #g_lex = lex.lex(debug=1)
 g_lex = lex.lex()

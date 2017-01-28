@@ -227,9 +227,9 @@ def lex(l, debug, error_file):
     except Exception as exp:
         error_file.write(l + "\n")
         print "LEX ERROR1 %s %s" % (ptype, pval)
-        print l
-        print exp
-        print stack
+        print "L",l
+        print "EXP",exp
+        print "Stack",stack
         # raise exp
     if debug:
         #print "Line %s" % l
@@ -301,7 +301,7 @@ def parse_l(l, debug, error_file, f):
         print "parse error : "+ l + "\n"
         error_file.write(l + "\n")
         traceback.print_exc()
-        print exp
+        print "Exp",exp
         print "EXP Line:%s" % l
         f.write(l + "\n")
         print "EXP Stack:%s" % stack
@@ -355,4 +355,4 @@ debug_file.close()
 #print "\n".join(sorted(seen.keys()))
 
 
-print g.serialize("output.xml")
+#print ""g.serialize("output.xml")
