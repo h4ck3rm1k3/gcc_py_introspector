@@ -11,7 +11,9 @@ def get_value(x):
         return x.value
     else:
         return pprint.pformat(x)
-    
+
+funcs = {}
+
 def parser_rule(f):
     """ 
     parser rule
@@ -23,28 +25,36 @@ def parser_rule(f):
     def wrapper(psr_val):
         
         #if len(psr_val.stack) ==  1:
-        #print 'Parser f', f, doc
+        print 'Parser f', f, doc
+        funcs[f]=1
         #pprint.pprint({ 'slice' :psr_val.slice,
         #                'stack' : psr_val.stack})
         #pprint.pprint(psr_val.__dict__)
-        #pprint.pprint(dir(psr_val))
+        #rpprint.pprint(dir(psr_val))
         i = 0
 
-        # if isinstance(psr_val,lex.LexToken):
-        #     #print psr_val
-        # else:
-        #     for x in psr_val.slice :
-        #         #print "\t\t\tITEM:",i,":", pprint.pformat(x),"Value:",pprint.pformat(get_value(x))
-        #         i = i +1
-        #         #, pprint.pformat(dir(x))
+        if isinstance(psr_val,lex.LexToken):
+            #print psr_val
+            pass
+        else:
+             for x in psr_val.slice[1:] :
+                 print "\t\t\tITEM:",i,":", pprint.pformat(x),"Value:",pprint.pformat(get_value(x))
+                 i = i +1
+        #         #, pprint.pformat(dir(x))            
+        r= f(psr_val)
+        x =psr_val.slice[0]
+        print "\t\t\tresult:",i,":", pprint.pformat(x),"Value:",pprint.pformat(get_value(x))
 
-            
-        return f(psr_val)
+        
+        return r
+    
+
+    
     wrapper.doc = doc
     return wrapper
 
 registry = {}
-
+types = {}
 def parser_node_rule(f):
     """ 
     parser node rule
@@ -71,15 +81,19 @@ def parser_node_rule(f):
             
         r= f(psr_val)
         if node_type in registry  :
-            print "going to create ", node_type
+            #print "going to create ", node_type
             cls = registry[node_type]
-
             obj = cls(node_id, node_type, psr_val)
-            print obj
+            #print obj
             psr_val[0] = obj
         else:
-            pprint.pprint(registry)
-            print "going to create default", node_type, node_id
+            #pprint.pprint(registry)
+            #print "going to create default", node_type, node_id
+            if node_type not in types:
+                types[node_type]=1
+            else:
+                types[node_type]=types[node_type]+1
+            
             psr_val[0] = TNode(node_id, node_type , psr_val)
         
     wrapper.doc = doc
@@ -139,3 +153,6 @@ def node_type(name):
 
     
     return SomeType
+def report():
+    #pprint.pprint( types)
+    pprint.pprint( funcs)

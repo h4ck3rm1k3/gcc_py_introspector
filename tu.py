@@ -312,7 +312,7 @@ def t_QUAL(tok):
 def t_NODE(tok):
     r'\@(?P<val>\d+)\s+'
     #print "Match %s" % (tok.lexer.lexmatch)
-    #strval = tok.lexer.lexmatch.group("val")
+    strval = tok.lexer.lexmatch.group("val")
     #print ("NODEID:%s" % strval)
     #y =0
 
@@ -320,7 +320,7 @@ def t_NODE(tok):
     #     y = y + 1
     #     print ("test:%d %s" % (y, x))
 
-    #tok.value = "SOMENODE"
+    tok.value = strval
     return tok
 
 

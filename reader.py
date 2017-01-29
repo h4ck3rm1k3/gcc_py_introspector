@@ -110,8 +110,8 @@ def add_field(g, ni, fname, oid):
 def report(x,l):
     #print("Results1 %s -> %s | %s" % (x.node_id, x.keys(),l))
     assert(x)
-    k = x.keys()
-    assert(k)
+    #k = x.keys()
+    #assert(k)
     #print l
     #print k
     nt = x.node_type
@@ -128,86 +128,86 @@ def report(x,l):
     #pprint.pprint([ l ])
     #pprint.pprint([ x ])
     # now add the vals
-    if (x.vals):
-        #pprint.pprint([ "Vals", x.vals ])
-        if isinstance(x.vals, list):
-            for v in x.vals:
+    # if (x.vals):
+    #     #pprint.pprint([ "Vals", x.vals ])
+    #     if isinstance(x.vals, list):
+    #         for v in x.vals:
 
-                if isinstance(v, tuast.Attr):
-                    p = attr(v.name)
-                    v2 =v.value
-                    #pprint.pprint([v.name, v2, v2.__dict__ ])
-                    if isinstance(v2, tuast.NodeRef):
-                        o = rdflib.URIRef('http://' + domain + '/' + filename + '#' + v.value.val)                        
-                        g.add([u, p, o])                        
-                    elif isinstance(v2, tuast.Signed):
-                        g.add([u, p, rdflib.Literal(v2.val)])
-                    elif isinstance(v2, tuast.Float):
-                        g.add([u, p, rdflib.Literal(v2.val)])
-                    elif isinstance(v2, tuast.Struct):
-                        g.add([u, p, structure("structure",v2.val)])
-                    elif isinstance(v2, tuast.FileBuiltin):
-                        g.add([u, p, rdflib.Literal("true")])
-                    elif isinstance(v2, tuast.Qual):
-                        g.add([u, p, structure("qual",v2.val)])                        
-                    elif isinstance(v2, tuast.Artificial):
-                        g.add([u, p, structure("artificial",v2.val)])
-                    elif isinstance(v2, tuast.FilePos):
-                        g.add([u, p, rdflib.Literal(v2.value)])
-                    elif isinstance(v2, tuast.Link):
-                        g.add([u, p, structure("link",v2.val)])
-                    else:
-                        #pprint.pprint( v2 )
-                        pass
+    #             if isinstance(v, tuast.Attr):
+    #                 p = attr(v.name)
+    #                 v2 =v.value
+    #                 #pprint.pprint([v.name, v2, v2.__dict__ ])
+    #                 if isinstance(v2, tuast.NodeRef):
+    #                     o = rdflib.URIRef('http://' + domain + '/' + filename + '#' + v.value.val)                        
+    #                     g.add([u, p, o])                        
+    #                 elif isinstance(v2, tuast.Signed):
+    #                     g.add([u, p, rdflib.Literal(v2.val)])
+    #                 elif isinstance(v2, tuast.Float):
+    #                     g.add([u, p, rdflib.Literal(v2.val)])
+    #                 elif isinstance(v2, tuast.Struct):
+    #                     g.add([u, p, structure("structure",v2.val)])
+    #                 elif isinstance(v2, tuast.FileBuiltin):
+    #                     g.add([u, p, rdflib.Literal("true")])
+    #                 elif isinstance(v2, tuast.Qual):
+    #                     g.add([u, p, structure("qual",v2.val)])                        
+    #                 elif isinstance(v2, tuast.Artificial):
+    #                     g.add([u, p, structure("artificial",v2.val)])
+    #                 elif isinstance(v2, tuast.FilePos):
+    #                     g.add([u, p, rdflib.Literal(v2.value)])
+    #                 elif isinstance(v2, tuast.Link):
+    #                     g.add([u, p, structure("link",v2.val)])
+    #                 else:
+    #                     #pprint.pprint( v2 )
+    #                     pass
 
-                elif isinstance(v, tuast.SpecAttr3):
-                    vn = attr(v.value)
-                    p = attr(v.name)
-                    g.add([u, p, vn])
+    #             elif isinstance(v, tuast.SpecAttr3):
+    #                 vn = attr(v.value)
+    #                 p = attr(v.name)
+    #                 g.add([u, p, vn])
                     
-                elif isinstance(v, tuast.String):
-                    p = attr("string")
-                    g.add([u, p, rdflib.Literal(
-                        clean(v.val) #https://github.com/RDFLib/rdflib/issues/614
-                    )])
-                else:
-                    #pprint.pprint( ["OTHER", v ] )
-                    pass
-        else:
-            if isinstance(x.vals, tuast.Attr):
-                if isinstance(x.vals.value, tuast.NodeRef):
-                    # a tree_list item with a "valu" field
-                    add_field(g, x.node_id, x.vals.name , x.vals.value.val)
+    #             elif isinstance(v, tuast.String):
+    #                 p = attr("string")
+    #                 g.add([u, p, rdflib.Literal(
+    #                     clean(v.val) #https://github.com/RDFLib/rdflib/issues/614
+    #                 )])
+    #             else:
+    #                 #pprint.pprint( ["OTHER", v ] )
+    #                 pass
+    #     else:
+    #         if isinstance(x.vals, tuast.Attr):
+    #             if isinstance(x.vals.value, tuast.NodeRef):
+    #                 # a tree_list item with a "valu" field
+    #                 add_field(g, x.node_id, x.vals.name , x.vals.value.val)
                     
-                else:
-                    #pprint.pprint( ["not a node ref", x.vals.value ] )
-                    #raise Exception("TODO")
-                    pass
+    #             else:
+    #                 #pprint.pprint( ["not a node ref", x.vals.value ] )
+    #                 #raise Exception("TODO")
+    #                 pass
 
-            else:
-                pass
-                #pprint.pprint( ["no vals", x ] )
-                #raise Exception("TODO")
-    else:
+    #         else:
+    #             pass
+    #             #pprint.pprint( ["no vals", x ] )
+    #             #raise Exception("TODO")
+    # else:
 
-        if isinstance(x, tuast.AddrExprTyped):
-            #print "NodeId:" +
-            #print "node type:" +x.node_type
-            #print "Vals:" + str(x.vals)
-            #pprint.pprint( ["op_0", x.op_0 ] )
-            #pprint.pprint( ["expr_type", x.expr_type ] )
+    #     if isinstance(x, tuast.AddrExprTyped):
+    #         #print "NodeId:" +
+    #         #print "node type:" +x.node_type
+    #         #print "Vals:" + str(x.vals)
+    #         #pprint.pprint( ["op_0", x.op_0 ] )
+    #         #pprint.pprint( ["expr_type", x.expr_type ] )
 
-            add_field(g, x.node_id, "OP0", x.op_0)
-            add_field(g, x.node_id, "type", x.expr_type)
+    #         add_field(g, x.node_id, "OP0", x.op_0)
+    #         add_field(g, x.node_id, "type", x.expr_type)
                 
-            #g.add([u, p, structure("link",v2.val)])
-        elif isinstance(x, tuast.Node):
-            #print "TODO some node" + str(x)
-            #pprint.pprint( ["TODO", x.__dict__ ] )
-            pass
-        else:
-            #pprint.pprint( ["no vals", x ] )
-            raise Exception("TODO")
+    #         #g.add([u, p, structure("link",v2.val)])
+    #     elif isinstance(x, tuast.Node):
+    #         #print "TODO some node" + str(x)
+    #         #pprint.pprint( ["TODO", x.__dict__ ] )
+    #         pass
+    #     else:
+    #         #pprint.pprint( ["no vals", x ] )
+    #         raise Exception("TODO")
         
 def lex(l, debug, error_file):
     """
@@ -356,3 +356,6 @@ debug_file.close()
 
 
 #print ""g.serialize("output.xml")
+#types[node_type]=1
+import attributes
+attributes.report()
