@@ -46,4 +46,5 @@ nosetests.xml
 *~
 \.#*
 \#*
-*.bak
+*.bak*.err
+*/*.err
