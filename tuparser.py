@@ -19,7 +19,7 @@ import tuast  # import Link
 from utils import goto_initial, create_list, merge_list
 
 # the first rule is important
-
+import nodes
 
 
 
@@ -27,7 +27,7 @@ from utils import goto_initial, create_list, merge_list
 def p_node_id(psr_val):
     # the identifier node declaration
     'node : NODE HEXVAL attr_list' # len_attrs
-    psr_val[0] = { 'node' : psr_val[1],
+    psr_val[0] = { 'node' : nodes.declare(psr_val[1]),
                    'hexval' :psr_val[2],
                    'attr_list' : psr_val[3]
     }
@@ -44,7 +44,7 @@ def p_node_constructor(psr_val):
     #psr_val[0] = tuast.NodeConstructor(psr_val[2], psr_val[1], psr_val[3])
     psr_val[0] = {
         '__type__' :'constructor',
-        'node' : psr_val[1],
+        'node' : nodes.declare(psr_val[1]),
         'len' : psr_val[2],
         'idx_val' : psr_val[3],
         'attr_list' : psr_val[4],
@@ -319,7 +319,11 @@ def p_operator_subs(psr_val):
 @parser_rule
 def p_idx_val_item(psr_val):
     'idx_val_item : ATTR_IDX NODE ATTR_VAL NODE'
-    psr_val[0] = [psr_val[1],psr_val[2],psr_val[3]]
+    psr_val[0] = { 'idx':psr_val[1],
+                   'nodes': nodes.reference(psr_val[2]),
+                   'attrval': psr_val[3],
+                   'node2': nodes.reference(psr_val[4])
+    }
 
 @parser_rule
 def p_idx_val_list(psr_val):

@@ -1,7 +1,7 @@
 from functools import wraps
 import pprint
 import ply.lex as lex
-
+import nodes
 class TNode :
     def __init__(x, v, z, o):
         pass
@@ -96,6 +96,8 @@ def parser_node_rule(f):
                 types[anode_type]=types[anode_type]+1
             
             psr_val[0] = TNode(node_id, anode_type , psr_val)
+            
+        pprint.pprint(psr_val[0])
         
     wrapper.doc = doc
     return wrapper
@@ -154,9 +156,12 @@ def node_type(name):
 
     
     return SomeType
+
+
 def report():
+    print 'report'
     #pprint.pprint( types)
-    pprint.pprint( funcs)
+    #pprint.pprint( funcs)
 
 
 
@@ -174,6 +179,49 @@ def parser_simple_rule(f):
 
         field_name = psr_val.slice[1]
         field_value = psr_val.slice[2]        
+        #print 'Parser rule f', field_name, field_value
+        #pprint.pprint({ 'slice' :psr_val.slice,
+        #                'stack' : psr_val.stack})
+        #pprint.pprint(psr_val.__dict__)
+        #pprint.pprint(dir(psr_val))
+        #i = 0 
+        #for x in psr_val.slice :
+        #    print "\t\t\tITEM:",i,":", pprint.pformat(x),"Value:",pprint.pformat(get_value(x))
+        #    i = i +1
+            
+        r= f(psr_val)
+        # if node_type in registry  :
+        #     #print "going to create ", node_type
+        #     cls = registry[node_type]
+        #     obj = cls(node_id, node_type, psr_val)
+        #     #print obj
+        #     psr_val[0] = obj
+        # else:
+        #     #pprint.pprint(registry)
+        #     #print "going to create default", node_type
+        #     if node_type not in types:
+        #         types[node_type]=1
+        #     else:
+        #         types[node_type]=types[node_type]+1
+            
+        psr_val[0] = { 'node_type' : f.__name__, 'val' :field_value.value, 'name': field_name.value }
+        #print " attr %s" % pprint.pformat( psr_val[0])
+        
+    wrapper.doc = doc
+    return wrapper
+
+def parser_simple_rule_node(f):
+    """ 
+    parser simple rule
+    """
+    doc = f.__doc__
+    #pprint.pprint( dir(f))
+    #pprint.pprint( f.__dict__)
+    @wraps(f)
+    def wrapper(psr_val):
+
+        field_name = psr_val.slice[1]
+        field_value = nodes.reference(psr_val.slice[2])        
         #print 'Parser rule f', field_name, field_value
         #pprint.pprint({ 'slice' :psr_val.slice,
         #                'stack' : psr_val.stack})
