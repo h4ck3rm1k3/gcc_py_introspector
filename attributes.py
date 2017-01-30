@@ -25,7 +25,7 @@ def parser_rule(f):
     def wrapper(psr_val):
         
         #if len(psr_val.stack) ==  1:
-        print 'Parser f', f, doc
+        #print 'Parser f', f, doc
         funcs[f]=1
         #pprint.pprint({ 'slice' :psr_val.slice,
         #                'stack' : psr_val.stack})
@@ -33,17 +33,18 @@ def parser_rule(f):
         #rpprint.pprint(dir(psr_val))
         i = 0
 
-        if isinstance(psr_val,lex.LexToken):
-            #print psr_val
-            pass
-        else:
-             for x in psr_val.slice[1:] :
-                 print "\t\t\tITEM:",i,":", pprint.pformat(x),"Value:",pprint.pformat(get_value(x))
-                 i = i +1
+        # if isinstance(psr_val,lex.LexToken):
+        #     #print psr_val
+        #     pass
+        # else:
+            
+             # for x in psr_val.slice[1:] :
+             #     print "\t\t\tITEM:",i,":", pprint.pformat(x),"Value:",pprint.pformat(get_value(x))
+             #     i = i +1
         #         #, pprint.pformat(dir(x))            
         r= f(psr_val)
         x =psr_val.slice[0]
-        print "\t\t\tresult:",i,":", pprint.pformat(x),"Value:",pprint.pformat(get_value(x))
+        #print "\t\t\tresult:",i,":", pprint.pformat(x),"Value:",pprint.pformat(get_value(x))
 
         
         return r
@@ -66,7 +67,7 @@ def parser_node_rule(f):
     def wrapper(psr_val):
 
         node_id= psr_val.slice[1]
-        node_type= psr_val.slice[2].value
+        anode_type= psr_val.slice[2].value
         
         #print 'Parser node f', node_id.value, node_type.value
         #pprint.pprint({ 'slice' :psr_val.slice,
@@ -80,21 +81,21 @@ def parser_node_rule(f):
             #, pprint.pformat(dir(x))
             
         r= f(psr_val)
-        if node_type in registry  :
+        if anode_type in registry  :
             #print "going to create ", node_type
-            cls = registry[node_type]
-            obj = cls(node_id, node_type, psr_val)
+            cls = registry[anode_type]
+            obj = cls(node_id, anode_type, psr_val)
             #print obj
             psr_val[0] = obj
         else:
             #pprint.pprint(registry)
             #print "going to create default", node_type, node_id
-            if node_type not in types:
-                types[node_type]=1
+            if anode_type not in types:
+                types[anode_type]=1
             else:
-                types[node_type]=types[node_type]+1
+                types[anode_type]=types[anode_type]+1
             
-            psr_val[0] = TNode(node_id, node_type , psr_val)
+            psr_val[0] = TNode(node_id, anode_type , psr_val)
         
     wrapper.doc = doc
     return wrapper
@@ -156,3 +157,50 @@ def node_type(name):
 def report():
     #pprint.pprint( types)
     pprint.pprint( funcs)
+
+
+
+
+
+def parser_simple_rule(f):
+    """ 
+    parser simple rule
+    """
+    doc = f.__doc__
+    #pprint.pprint( dir(f))
+    #pprint.pprint( f.__dict__)
+    @wraps(f)
+    def wrapper(psr_val):
+
+        field_name = psr_val.slice[1]
+        field_value = psr_val.slice[2]        
+        #print 'Parser rule f', field_name, field_value
+        #pprint.pprint({ 'slice' :psr_val.slice,
+        #                'stack' : psr_val.stack})
+        #pprint.pprint(psr_val.__dict__)
+        #pprint.pprint(dir(psr_val))
+        #i = 0 
+        #for x in psr_val.slice :
+        #    print "\t\t\tITEM:",i,":", pprint.pformat(x),"Value:",pprint.pformat(get_value(x))
+        #    i = i +1
+            
+        r= f(psr_val)
+        # if node_type in registry  :
+        #     #print "going to create ", node_type
+        #     cls = registry[node_type]
+        #     obj = cls(node_id, node_type, psr_val)
+        #     #print obj
+        #     psr_val[0] = obj
+        # else:
+        #     #pprint.pprint(registry)
+        #     #print "going to create default", node_type
+        #     if node_type not in types:
+        #         types[node_type]=1
+        #     else:
+        #         types[node_type]=types[node_type]+1
+            
+        psr_val[0] = { 'node_type' : f.__name__, 'val' :field_value.value, 'name': field_name.value }
+        #print " attr %s" % pprint.pformat( psr_val[0])
+        
+    wrapper.doc = doc
+    return wrapper

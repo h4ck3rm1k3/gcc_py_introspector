@@ -169,9 +169,13 @@ def merge_list(t) :
 
             if 'attrs' in t:
                 if 'type' in t['attrs']:
-                    f = t['attrs']['type']
-                    v = t['attrs']['val']
-                    r[f]=v
+                    if 'val' in t['attrs']:
+                        f = t['attrs']['type']
+                        v = t['attrs']['val']
+                        r[f]=v
+                    else:
+                        pprint.pprint(t['attrs'])
+
             
     #pprint.pprint({'merged': r})
     return r

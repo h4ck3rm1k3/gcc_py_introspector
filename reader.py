@@ -114,16 +114,16 @@ def report(x,l):
     #assert(k)
     #print l
     #print k
-    nt = x.node_type
-    ni = x.node_id                        
-    u = rdflib.URIRef('http://' + domain + '/' + filename + '#' + ni  )
-    # Literal('foo')
-    g.add([u, rdflib.RDF.type, mnt(nt)])
+    # nt = x.node_type
+    # ni = x.node_id                        
+    # u = rdflib.URIRef('http://' + domain + '/' + filename + '#' + ni  )
+    # # Literal('foo')
+    # g.add([u, rdflib.RDF.type, mnt(nt)])
 
-    ## add in one link per filename for easy deletion
-    fop = attr("source_file")
-    fo = rdflib.URIRef('http://' + domain + '/' + filename )                        
-    g.add([u, fop, fo])
+    # ## add in one link per filename for easy deletion
+    # fop = attr("source_file")
+    # fo = rdflib.URIRef('http://' + domain + '/' + filename )                        
+    # g.add([u, fop, fo])
     
     #pprint.pprint([ l ])
     #pprint.pprint([ x ])

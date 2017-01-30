@@ -1,5 +1,6 @@
 from attributes import parser_node_rule
 
+
 @parser_node_rule
 def p_ADDR_EXPR_node(psr_val):
     'node : NODE ADDR_EXPR attr_list'
@@ -66,6 +67,7 @@ def p_NTYPE_EQ_EXPR_node(psr_val):
 @parser_node_rule
 def p_NTYPE_FIELD_DECL_node(psr_val):
     'node : NODE NTYPE_FIELD_DECL attr_list'
+
 @parser_node_rule
 def p_NTYPE_FUNCTION_DECL_node(psr_val):
     'node : NODE NTYPE_FUNCTION_DECL attr_list'
@@ -390,3 +392,6 @@ def p_NTYPE_DOTSTAR_EXPR_node(psr_val):
     'node : NODE NTYPE_DOTSTAR_EXPR attr_list'
 
 
+@parser_node_rule
+def p_NTYPE_IDENTIFIER_NODE_node(psr_val):
+    'node : NODE NTYPE_IDENTIFIER_NODE attr_list'

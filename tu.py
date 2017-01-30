@@ -39,23 +39,23 @@ tokens = [
     'SPEC_VALU',
     'CONSTRUCTOR',
     'QUAL',
-    'FLOAT',
-    'PSEUDO_TMPL',
+#    'FLOAT',
+#    'PSEUDO_TMPL',
     'STRG',
 #    'STRGLEN',
     "NODE",
 #    "TNODE",
-    'SPEC',
+#    'SPEC',
     "BUILTIN_FILE",
     'HXX_FILE',
     'ARTIFICIAL',
-    'LANG',
+#    'LANG',
     'SIGNED',
     'LINK',
     'STRUCT',
-    'ACC',
+#    'ACC',
     'MEMBER',
-    'NOTE',
+#    'NOTE',
     'SOMESTRG', # catchall
     'SOMEINT', # int
     'SOMEINT2', # int
@@ -265,7 +265,7 @@ while_stmt
 """)
 
 
-t_PSEUDO_TMPL = 'pseudo|tmpl'
+#t_PSEUDO_TMPL = 'pseudo|tmpl'
 #t_DTYPE = 'long|int'
 
 # can be used as a node type or a note
@@ -293,7 +293,7 @@ def t_LEN(tok): # constructor length
     return tok
 
 
-t_LANG = r'C\s'
+#t_LANG = r'C\s'
 #t_R = r'\sr\s'
 
 
@@ -439,9 +439,9 @@ def t_SIGNED(tok):
 # this next call creates tokens for the following fields
 # each field can be used to give a new key value pair to a node
 # the field name is used to construct a function for recieving it.
+#alis
 make_tokens("ATTR", "(?P<val>%s)\s*:",attr_val, '''
 accs
-alis
 args
 argt
 base
@@ -534,11 +534,11 @@ def t_HXX_FILE(tok):
 #t_FLOAT = r'[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?'
 t_ARTIFICIAL = r'artificial'
 t_LINK = r'static|undefined|extern'
-t_ACC = r'pub|priv|prot'
+#t_ACC = r'pub|priv|prot'
 t_STRUCT = r'struct|union'
 t_MEMBER = r'member|destructor|binfo|ptrmem'
-t_NOTE = r'operator|conversion'
-t_SPEC = r'spec\s'
+#t_NOTE = r'operator|conversion'
+#t_SPEC = r'spec\s'
 t_SPEC_VALU = r'mutable|bitfield|pure|virt'
 
 
