@@ -395,3 +395,10 @@ def p_NTYPE_DOTSTAR_EXPR_node(psr_val):
 @parser_node_rule
 def p_NTYPE_IDENTIFIER_NODE_node(psr_val):
     'node : NODE NTYPE_IDENTIFIER_NODE attr_list'
+
+@parser_node_rule
+def p_NTYPE_SAVE_EXPR_node(psr_val):
+    'node : NODE NTYPE_SAVE_EXPR attr_list'
+@parser_node_rule
+def p_NTYPE_ASM_EXPR_node(psr_val):
+    'node : NODE NTYPE_ASM_EXPR attr_list'

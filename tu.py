@@ -34,6 +34,8 @@ tokens = [
     'TYPE_ATTR',
     'ADDR_ATTR',
     'ADDR_EXPR',
+    'ASM_EXPR',
+    'SAVE_EXPR',
 #    'PREDICT_EXPR',
     'SPEC_ATTR',
     'SPEC_VALU',
@@ -128,6 +130,11 @@ def t_NTYPE_IDENTIFIER_NODE(tok):
     r'identifier_node'
     return tok
 
+@token_rule
+def t_NTYPE_SAVE_EXPR(tok):
+    r'save_expr'
+    return tok
+
 # this is a generic rule for all generated rules
 @token_rule
 def ntype_value(tok) :
@@ -137,6 +144,8 @@ def ntype_value(tok) :
 make_tokens("NTYPE", "(?P<val>%s)",ntype_value,"""
 aggr_init_expr
 alignof_expr
+asm_expr
+save_expr
 array_ref
 array_type
 arrow_expr
