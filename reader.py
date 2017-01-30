@@ -359,3 +359,6 @@ debug_file.close()
 #types[node_type]=1
 import attributes
 attributes.report()
+
+import nodes
+nodes.report()

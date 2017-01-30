@@ -2,6 +2,8 @@ from functools import wraps
 import pprint
 import ply.lex as lex
 import nodes
+funcs = {}
+
 class TNode :
     def __init__(x, v, z, o):
         pass
@@ -12,7 +14,7 @@ def get_value(x):
     else:
         return pprint.pformat(x)
 
-funcs = {}
+
 
 def parser_rule(f):
     """ 
@@ -44,13 +46,8 @@ def parser_rule(f):
         #         #, pprint.pformat(dir(x))            
         r= f(psr_val)
         x =psr_val.slice[0]
-        #print "\t\t\tresult:",i,":", pprint.pformat(x),"Value:",pprint.pformat(get_value(x))
-
-        
+        #print "\t\t\tresult:",i,":", pprint.pformat(x),"Value:",pprint.pformat(get_value(x))        
         return r
-    
-
-    
     wrapper.doc = doc
     return wrapper
 
@@ -66,7 +63,7 @@ def parser_node_rule(f):
     @wraps(f)
     def wrapper(psr_val):
 
-        node_id= psr_val.slice[1]
+        node_id= nodes.declare(psr_val.slice[1])
         anode_type= psr_val.slice[2].value
         
         #print 'Parser node f', node_id.value, node_type.value
@@ -149,23 +146,15 @@ def node_type(name):
         #     #node_type, node_id, psr_val
         #     #self.obj = theclass()
         #     #print "Created",self, theclass, name            
-        #the_name = name
-        
+        #the_name = name        
     global  registry   
-    # save this class
-
-    
+    # save this class   
     return SomeType
-
 
 def report():
     print 'report'
     #pprint.pprint( types)
     #pprint.pprint( funcs)
-
-
-
-
 
 def parser_simple_rule(f):
     """ 
@@ -247,7 +236,7 @@ def parser_simple_rule_node(f):
         #     else:
         #         types[node_type]=types[node_type]+1
             
-        psr_val[0] = { 'node_type' : f.__name__, 'val' :field_value.value, 'name': field_name.value }
+        psr_val[0] = { 'node_type' : f.__name__, 'val' :field_value, 'name': field_name.value }
         #print " attr %s" % pprint.pformat( psr_val[0])
         
     wrapper.doc = doc

@@ -462,7 +462,7 @@ class Identifier(Node):
     def __init__(self, nodeid, nodetype , nodedata):
         #print "Nodetype '%s'" %nodetype
         #print "Nodeid '%s'" %nodeid.value
-        Node.__init__(self,nodeid.value, nodetype)
+        Node.__init__(self,nodeid, nodetype)
         self.value = nodedata.slice[-1].value.val
         self.addr = nodedata.slice[-1].value.addr
         #pprint.pprint    ([nodeid.value,nodetype,nodedata.slice[-1].value])
