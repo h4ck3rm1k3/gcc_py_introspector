@@ -215,7 +215,7 @@ def parser_simple_rule_node(f):
     def wrapper(psr_val):
 
         field_name = psr_val.slice[1]
-        field_value = nodes.reference(psr_val.slice[2])        
+        field_value = nodes.reference(psr_val.slice[2].value)        
         #print 'Parser rule f', field_name, field_value
         #pprint.pprint({ 'slice' :psr_val.slice,
         #                'stack' : psr_val.stack})

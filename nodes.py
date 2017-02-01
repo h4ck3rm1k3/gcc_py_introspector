@@ -20,8 +20,12 @@ nodes = {}
 def reference(n):
     global stack
 
-    stack.append(n)
-    
+    if isinstance(n,lex.LexToken):
+        raise Exception("check")
+        stack.append(n.value)
+    else:
+        stack.append(n)
+        
     if not isinstance(n, basestring):
         n = n.value
         
@@ -72,7 +76,14 @@ def statement(x):
         
 
 def report():
-    pprint.pprint(nodes)
+    for n in nodes:
+        d = nodes[n]
+        dc=d['decl']
+        pprint.pprint({
+            'tst':1,
+            n  : d,
+            'dcl': dc.__dict__
+        })
     #pass
 
     
