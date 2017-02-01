@@ -4,6 +4,8 @@ reader module
 import sys
 import os
 import pprint
+import nodes
+
 home = os.environ['HOME']
 user = os.environ['USER']
 
@@ -54,7 +56,7 @@ else:
 OPRE = r'op\s([0-9]+)\s*:\s\@'
 ERE = r'\s([0-9]+)\s+:\s\@'
 vals = {}
-seen = {} 
+#seen = {} 
 deps = {}
 filename = sys.argv[1].replace(home,'projects')
 domain = 'introspector.xyz'
@@ -119,12 +121,10 @@ def report(x,l):
     # u = rdflib.URIRef('http://' + domain + '/' + filename + '#' + ni  )
     # # Literal('foo')
     # g.add([u, rdflib.RDF.type, mnt(nt)])
-
     # ## add in one link per filename for easy deletion
     # fop = attr("source_file")
     # fo = rdflib.URIRef('http://' + domain + '/' + filename )                        
-    # g.add([u, fop, fo])
-    
+    # g.add([u, fop, fo])    
     #pprint.pprint([ l ])
     #pprint.pprint([ x ])
     # now add the vals
@@ -132,7 +132,6 @@ def report(x,l):
     #     #pprint.pprint([ "Vals", x.vals ])
     #     if isinstance(x.vals, list):
     #         for v in x.vals:
-
     #             if isinstance(v, tuast.Attr):
     #                 p = attr(v.name)
     #                 v2 =v.value
@@ -159,12 +158,10 @@ def report(x,l):
     #                 else:
     #                     #pprint.pprint( v2 )
     #                     pass
-
     #             elif isinstance(v, tuast.SpecAttr3):
     #                 vn = attr(v.value)
     #                 p = attr(v.name)
-    #                 g.add([u, p, vn])
-                    
+    #                 g.add([u, p, vn])                    
     #             elif isinstance(v, tuast.String):
     #                 p = attr("string")
     #                 g.add([u, p, rdflib.Literal(
@@ -177,29 +174,24 @@ def report(x,l):
     #         if isinstance(x.vals, tuast.Attr):
     #             if isinstance(x.vals.value, tuast.NodeRef):
     #                 # a tree_list item with a "valu" field
-    #                 add_field(g, x.node_id, x.vals.name , x.vals.value.val)
-                    
+    #                 add_field(g, x.node_id, x.vals.name , x.vals.value.val)                    
     #             else:
     #                 #pprint.pprint( ["not a node ref", x.vals.value ] )
     #                 #raise Exception("TODO")
     #                 pass
-
     #         else:
     #             pass
     #             #pprint.pprint( ["no vals", x ] )
     #             #raise Exception("TODO")
     # else:
-
     #     if isinstance(x, tuast.AddrExprTyped):
     #         #print "NodeId:" +
     #         #print "node type:" +x.node_type
     #         #print "Vals:" + str(x.vals)
     #         #pprint.pprint( ["op_0", x.op_0 ] )
     #         #pprint.pprint( ["expr_type", x.expr_type ] )
-
     #         add_field(g, x.node_id, "OP0", x.op_0)
-    #         add_field(g, x.node_id, "type", x.expr_type)
-                
+    #         add_field(g, x.node_id, "type", x.expr_type)                
     #         #g.add([u, p, structure("link",v2.val)])
     #     elif isinstance(x, tuast.Node):
     #         #print "TODO some node" + str(x)
@@ -208,7 +200,7 @@ def report(x,l):
     #     else:
     #         #pprint.pprint( ["no vals", x ] )
     #         raise Exception("TODO")
-        
+    
 def lex(l, debug, error_file):
     """
     try and lex the input
@@ -234,8 +226,6 @@ def lex(l, debug, error_file):
     if debug:
         #print "Line %s" % l
         pass
-
-
 
 def parse_l(l, debug, error_file, f):
     '''
@@ -273,7 +263,7 @@ def parse_l(l, debug, error_file, f):
     # now try and parse the input
     try:
         x = parser.parse(l, debug=debug)
-        
+
         if not x:
             error_file.write(l + "\n")
             #print "Error on Line:%s" % l
@@ -287,14 +277,17 @@ def parse_l(l, debug, error_file, f):
                 print("Results1 %s" % x)
             else:
                 s = str(x)
-                if not s in seen:
-                    seen[s]=1
-                    if debug:
-                        print("Results2 '%s'" % s)
+                # if not s in seen:
+                #     seen[s]=1
+                #     if debug:
+                #         print("Results2 '%s'" % s)
 
         if debug :
             print "Stack:%s" % stack
             print "parser %s" % parser
+
+        return x
+    
     #except QueryBadFormed as e:
     #    raise e
     except Exception as exp:
@@ -308,7 +301,7 @@ def parse_l(l, debug, error_file, f):
         #raise exp
     
     #print "Stack:%s" % stack
-
+    return None
 
 def main():
     """
@@ -333,24 +326,24 @@ def main():
 
         if l[0] == '@':
             if line:
-                parse_l(line, debug, error_file, f)
+                nodes.statement(parse_l(line, debug, error_file, f))
             line = l
         else:
             line = line + " " + l
     fd.close()
 
     if line:
-        parse_l(line, debug, error_file, f)
+        nodes.statement(parse_l(line, debug, error_file, f))
     f.close()
         
-try:
-    main()
-except Exception as e:
-    print "Error occurred '%s'" % e
+#try:
+main()
+#except Exception as e:
+#    print "Error occurred '%s'" % e
 
-debug_file = open("output.debug", "w")
-debug_file.write("data=%s" % pprint.pformat(deps))
-debug_file.close()
+#debug_file = open("output.debug", "w")
+#debug_file.write("data=%s" % pprint.pformat(deps))
+#debug_file.close()
 
 #print "\n".join(sorted(seen.keys()))
 

@@ -3,7 +3,9 @@ from attributes import node_type
 import pprint
 
 class NodeBase:
-
+    def nid(self):
+        return self.node_id
+    
     def __init__(self, nid, ntype):
         #print "node id %s" % nid
         self.node_id = nid
@@ -449,7 +451,7 @@ class FunctionDecl(Decl):
     def __init__(self, nodeid, nodetype , nodedata):
         #print "Nodetype '%s'" %nodetype
         #print "Nodeid '%s'" %nodeid.value
-        Decl.__init__(self,nodeid.value, nodetype)
+        Decl.__init__(self,nodeid.value(), nodetype)
         #self.value = nodedata.slice[-1].value.val
         #
         #pprint.pprint(nodedata.slice[-1].__dict__)

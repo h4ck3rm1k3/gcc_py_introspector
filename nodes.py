@@ -1,6 +1,9 @@
 import pprint
 import ply.lex as lex
 
+stack = []
+
+
 class Node :
     def __init__(self, n):
         self.n = n
@@ -15,7 +18,10 @@ nodes = {}
 
 
 def reference(n):
+    global stack
 
+    stack.append(n)
+    
     if not isinstance(n, basestring):
         n = n.value
         
@@ -32,6 +38,7 @@ def reference(n):
 
 
 def declare(n):
+
     if not isinstance(n, basestring):
         n = n.value
 
@@ -45,5 +52,27 @@ def declare(n):
         
     return Node(n)
 
+def statement(x):
+    global stack
+    
+    if x:
+        nid = "%s" % x.nid()
+        #print 'Statement:', nid, stack
+
+        #print "Debug",x,x.nid()
+        #pprint.pprint(x)
+        #pprint.pprint(x.__dict__)
+        if nid in nodes:
+            nodes[nid]['decl'] = x
+        else:
+            nodes[nid] = { 'decl' : x }
+
+        nodes[nid]['stack'] =list(stack)
+        stack=[]        
+        
+
 def report():
     pprint.pprint(nodes)
+    #pass
+
+    

@@ -5,14 +5,19 @@ import nodes
 funcs = {}
 
 class TNode :
-    def __init__(x, v, z, o):
-        pass
+    def __init__(self, node_id, node_type, o):
+        self.node_id=node_id
+        self.node_type=node_type
+        self.o=o
+    def nid(self):
+        return self.node_id
 
 def get_value(x):
     if 'value' in x.__dict__:
         return x.value
     else:
-        return pprint.pformat(x)
+        return None
+        #return pprint.pformat(x)
 
 
 
@@ -94,7 +99,7 @@ def parser_node_rule(f):
             
             psr_val[0] = TNode(node_id, anode_type , psr_val)
             
-        pprint.pprint(psr_val[0])
+        #pprint.pprint(psr_val[0])
         
     wrapper.doc = doc
     return wrapper
