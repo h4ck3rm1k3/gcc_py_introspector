@@ -21,8 +21,6 @@ from utils import goto_initial, create_list, merge_list
 # the first rule is important
 import nodes
 
-
-
 @parser_rule
 def p_node_id(psr_val):
     # the identifier node declaration
@@ -31,8 +29,6 @@ def p_node_id(psr_val):
                    'hexval' :psr_val[2],
                    'attr_list' : psr_val[3]
     }
-
-
     goto_initial(psr_val)  # begin the string group
 
 @parser_rule
@@ -319,11 +315,15 @@ def p_operator_subs(psr_val):
 @parser_rule
 def p_idx_val_item(psr_val):
     'idx_val_item : ATTR_IDX NODE ATTR_VAL NODE'
+    nd = nodes.reference(psr_val[2],'idx')
+    nd2 = nodes.reference(psr_val[4],'val')
     psr_val[0] = { 'idx':psr_val[1],
-                   'nodes': nodes.reference(psr_val[2]),
+                   'nodes': nd,
                    'attrval': psr_val[3],
-                   'node2': nodes.reference(psr_val[4])
+                   'node2': nd2
     }
+    #nd.ref(psr_val[0])
+    #nd2.ref(psr_val[0])
 
 @parser_rule
 def p_idx_val_list(psr_val):

@@ -594,11 +594,13 @@ def p_attrs_type6(psr_val):
     goto_initial(psr_val)  # go back
     #print 'finished TYPE_ATTR NODE'
     #psr_val[0] = std_attrs(psr_val)
+    nd= nodes.reference(psr_val[2], 'type')
     psr_val[0] = { '__type__': 'type',
-                   'node' : nodes.reference(psr_val[2]),
+                   'node' : nd,
                    'int': psr_val[3],
                    'someint':psr_val[4],
     }
+    #nd.ref(psr_val[0])
     
 @parser_rule
 def p_attrs_type3(psr_val):
@@ -607,11 +609,13 @@ def p_attrs_type3(psr_val):
     goto_initial(psr_val)  # go back
     #print 'finished TYPE_ATTR NODE'
     #psr_val[0] = std_attrs(psr_val)
+    nd=nodes.reference(psr_val[2],'type')
     psr_val[0] = { '__type__': 'type',
-                   'node': nodes.reference(psr_val[2]),
+                   'node': nd,
                    'int': psr_val[3],
                    'somehex': psr_val[4]
     }
+    #nd.ref(psr_val[0])
 
 @parser_rule
 def p_attrs_type3b(psr_val):
@@ -621,11 +625,13 @@ def p_attrs_type3b(psr_val):
     #print 'finished TYPE_ATTR NODE'
     #psr_val[0] = std_attrs(psr_val)
     #psr_val[0] = [psr_val[1],psr_val[2],psr_val[3],psr_val[4]]
+    nd =nodes.reference(psr_val[2],'type')
     psr_val[0] = { '__type__': 'type',
-                   'node': nodes.reference(psr_val[2]),
+                   'node': nd,
                    'int': psr_val[3],
                    'somehex': psr_val[4]
     }
+    #nd.ref(psr_val[0])
 
 
 @parser_rule
@@ -635,7 +641,9 @@ def p_attrs_type5(psr_val):
     #print 'finished TYPE_ATTR NODE'
     #goto_initial(psr_val)  # go back
     #psr_val[0] = std_attrs(psr_val)
-    psr_val[0] = { psr_val[1] : nodes.reference(psr_val[2]) }
+    nd = nodes.reference(psr_val[2],'type')
+    psr_val[0] = { psr_val[1] : nd }
+    #nd.ref(psr_val[0])
     
 #parser_rule
 def p_attrs_strg3(psr_val):

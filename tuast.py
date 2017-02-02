@@ -446,6 +446,22 @@ class FileBuiltin(AttrBase):
 class Decl(Node):
     pass
 
+def pstack(o):
+    r = ""
+    #print "Stack:%s" % pprint.pformat(self.o.stack)
+    #pprint.pprint(dir(self.o))
+    #pprint.pprint(self.o.__dict__)
+    for s in o.stack:
+        if s.type == '$end':
+            pass
+        else:
+            s1= "[type:%s t2:%s value:%s]," % (s.type, type(s.value), s.value.node_id)
+            r = r + s1
+            #print "Stack",s,pprint.pformat(s)
+            #print "Stack",s,pprint.pformat(dir(s))
+            #print "Stack",s,pprint.pformat(s.__dict__)
+    return r
+
 @node_type('function_decl')
 class FunctionDecl(Decl):
     def __init__(self, nodeid, nodetype , nodedata):
@@ -453,11 +469,13 @@ class FunctionDecl(Decl):
         #print "Nodeid '%s'" %nodeid.value
         Decl.__init__(self,nodeid.value(), nodetype)
         #self.value = nodedata.slice[-1].value.val
-        #
+        self.nodedata=nodedata
         #pprint.pprint(nodedata.slice[-1].__dict__)
         #pprint.pprint([nodeid.value,nodetype,nodedata.slice])
     def __str__(self):
         return "FunctionDecl: %s %s " % (self.node_id, pprint.pformat(self.__dict__))
+    def __repr__(self):
+        return "FunctionDecl: %s %s %s" % (self.node_id, pprint.pformat(self.__dict__),pstack(self.nodedata))
     
 @node_type('identifier_node')
 class Identifier(Node):

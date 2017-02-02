@@ -1,3 +1,11 @@
+testfunc:
+	python reader.py tests/funcdecl1.tu
+
+testchain:
+	python reader.py tests/test_chain.tu
+
+testempty:
+	python reader.py tests/empty.tu
 
 recurse_all :
 	python query_function_example_python_all.py
