@@ -1,3 +1,12 @@
+testid:
+	python reader.py tests/test_id.tu 	
+
+testnote:
+	python reader.py tests/test_note.tu
+
+testfunc2:
+	python reader.py tests/funcdecl2.tu
+
 testfunc:
 	python reader.py tests/funcdecl1.tu
 

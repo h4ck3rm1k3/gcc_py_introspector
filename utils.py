@@ -1,5 +1,5 @@
 import sys
-import pprint
+import pprint2
 
 def append_list(current_list, node):
     if current_list :
@@ -110,9 +110,9 @@ def std_attrs2(psr_val):
 #    if not type_str :
 #        type_str = "UNKNOWN_TODO %s" % m
     #node = tuast.Attr(type_str, psr_val[2])
-    #pprint.pprint(psr_val[0])
-    #pprint.pprint(psr_val[1])
-    #pprint.pprint(psr_val[2])
+    #pprint2.pprint(psr_val[0])
+    #pprint2.pprint(psr_val[1])
+    #pprint2.pprint(psr_val[2])
     #result = append_list(psr_val[3], node)
     return []
 def std_attrs(psr_val):
@@ -160,7 +160,7 @@ def attr_base(psr_val):
 
 # merge the attributes in the list with the object
 def merge_list(t) :
-    #pprint.pprint({'merge':t})
+    #pprint2.pprint({'merge':t})
     r =  {}
     if '__type__' in t :
         if t['__type__'] == 'attr_list':
@@ -174,8 +174,11 @@ def merge_list(t) :
                         v = t['attrs']['val']
                         r[f]=v
                     else:
-                        pprint.pprint(t['attrs'])
+
+                        raise Exception(
+                            pprint2.pformat2(t['attrs'])
+                        )
 
             
-    #pprint.pprint({'merged': r})
+    #pprint2.pprint({'merged': r})
     return r

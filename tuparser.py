@@ -12,7 +12,7 @@ def p_any_node(psr_val):
     # the node declaration
     psr_val[0]=psr_val[1]
 
-import pprint
+import pprint2
 import ply.yacc as yacc # Get the token map from the lexer.  This is required.
 from tu import tokens
 import tuast  # import Link
@@ -365,14 +365,13 @@ def p_attr_lista(psr_val):
 def p_attr_list3(psr_val):
     'attr_list : type_attrs attr_list'
     #psr_val[0] = {'type_attrs'psr_val[1],psr_val[2]{
-    psr_val[0] = merge_list({'__type__':'attr_list', 'attrs': psr_val[1], 'list': psr_val[2]})
-
-
-
-
-
-
-
+    psr_val[0] = merge_list(
+        {
+            '__type__':'attr_list',
+            'attrs': psr_val[1],
+            'list': psr_val[2]
+        }
+    )
 
 # @parser_rule
 # def p_attr_link(psr_val):

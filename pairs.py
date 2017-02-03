@@ -5,7 +5,7 @@
 # component_ref ? Attribute
 
 # decl_expr Complex
-import pprint
+import pprint2
 import inspect
 
 import sys
@@ -18,7 +18,7 @@ import meta
 def p(**kwargs):
     stack = inspect.stack()
     kwargs['__stack'] = stack
-    pprint.pprint( kwargs)
+    pprint2.pprint( kwargs)
     
 class Tu:
     def __init__(self, name):

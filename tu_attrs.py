@@ -2,6 +2,10 @@ from attributes import parser_rule,parser_node_rule, parser_simple_rule, parser_
 from utils import goto_initial, create_list, merge_list
 import tuast
 import nodes
+class Attr :
+    def __init__(self, d):
+        self.d = d
+        
 @parser_simple_rule_node
 def p_attr_accs(psr_val):
     'attrs : ATTR_ACCS NODE'
@@ -378,17 +382,18 @@ def p_attrs_spec2(psr_val):
      #psr_val[0] = { 'spec': psr_val[2] }
 
 
-@parser_rule
+#@parser_rule
 def p_attrs_note(psr_val):
     'attrs :  ATTR_NOTE ARTIFICIAL'
-    psr_val[0] = psr_val[1]
+    psr_val[0] = { 'note': psr_val[1] }
+    nodes.attrs(psr_val[0])
 
-@parser_rule
+#@parser_rule
 def p_attrs_member(psr_val):
     'attrs : MEMBER'
     # psr_val[0]="MEMBER(%s)" % psr_val[1]
     psr_val[0] = { 'member': psr_val[1] }
-
+    nodes.attrs(psr_val[0])
 
 # @parser_rule
 # def p_attrval_note(psr_val):
@@ -560,34 +565,38 @@ def p_attrs_algn(psr_val):
 #     #psr_val[0] = std_attrs(psr_val)
 #     #psr_val[0] = {psr_val[1]:psr_val[2]}
 
-@parser_rule
+#@parser_rule
 def p_attrs_strg_empty(psr_val):
     'str_attrs : STRG ' # no string....
     m=psr_val[1]
     if m:
         #print "simple string list '%s'" % m
-        psr_val[0] = m
+        psr_val[0] = { 'string':m.val}
+        nodes.attrs(psr_val[0])
     goto_initial(psr_val)
     
-@parser_rule
+#@parser_rule
 def p_attrs_addrs2(psr_val):
     'addr_attrs : ADDR_ATTR SOMEHEX3'
     m=psr_val[2]
     if m:
         #print "address is set to", m
         psr_val[0] = { 'addr': m }
+        nodes.attrs(psr_val[0])
     goto_initial(psr_val)
     
-@parser_rule
+#@parser_rule
 def p_attrs_addrs3(psr_val):
     'addr_attrs : ADDR_ATTR SOMEHEX4'
     m=psr_val[2]
     if m:
         #print "address is set to", m
         psr_val[0] = { 'addr': m }
+        nodes.attrs(psr_val[0])
     goto_initial(psr_val)
     
-@parser_rule
+ 
+#@parser_rule
 def p_attrs_type6(psr_val):
     #           type_     2     3
     'type_attrs : TYPE_ATTR NODE INT SOMEINT2'
@@ -595,14 +604,17 @@ def p_attrs_type6(psr_val):
     #print 'finished TYPE_ATTR NODE'
     #psr_val[0] = std_attrs(psr_val)
     nd= nodes.reference(psr_val[2], 'type')
-    psr_val[0] = { '__type__': 'type',
-                   'node' : nd,
-                   'int': psr_val[3],
-                   'someint':psr_val[4],
+    psr_val[0] = {
+        'type': 'type',
+        'val': {
+            'type' : nd,
+            'type_name' : 'int',
+            'type_size':psr_val[4]
+        }
     }
-    #nd.ref(psr_val[0])
+    nodes.attrs(psr_val[0])
     
-@parser_rule
+#@parser_rule
 def p_attrs_type3(psr_val):
     #           type_     2     3
     'type_attrs : TYPE_ATTR NODE INT SOMEHEX2'
@@ -610,14 +622,18 @@ def p_attrs_type3(psr_val):
     #print 'finished TYPE_ATTR NODE'
     #psr_val[0] = std_attrs(psr_val)
     nd=nodes.reference(psr_val[2],'type')
-    psr_val[0] = { '__type__': 'type',
-                   'node': nd,
-                   'int': psr_val[3],
-                   'somehex': psr_val[4]
+    psr_val[0] = {
+        'type': 'type',
+        'val': {
+            'type': nd,
+            'type_name': 'int',
+            'type_size': psr_val[4]
+        }
     }
     #nd.ref(psr_val[0])
+    nodes.attrs(psr_val[0])
 
-@parser_rule
+#@parser_rule
 def p_attrs_type3b(psr_val):
     #           type_     2     3
     'type_attrs : TYPE_ATTR NODE INT SOMEHEX3'
@@ -626,15 +642,19 @@ def p_attrs_type3b(psr_val):
     #psr_val[0] = std_attrs(psr_val)
     #psr_val[0] = [psr_val[1],psr_val[2],psr_val[3],psr_val[4]]
     nd =nodes.reference(psr_val[2],'type')
-    psr_val[0] = { '__type__': 'type',
-                   'node': nd,
-                   'int': psr_val[3],
-                   'somehex': psr_val[4]
+    psr_val[0] = {
+        'type': 'type',
+        'val' : {
+            'type': nd,
+            'type_name': 'int',
+            'type_size': psr_val[4]
+        }
     }
     #nd.ref(psr_val[0])
 
+    nodes.attrs(psr_val[0])
 
-@parser_rule
+#@parser_rule
 def p_attrs_type5(psr_val):
     #           type_     2     3
     'type_attrs : TYPE_ATTR NODE' # len_attrs
@@ -642,8 +662,14 @@ def p_attrs_type5(psr_val):
     #goto_initial(psr_val)  # go back
     #psr_val[0] = std_attrs(psr_val)
     nd = nodes.reference(psr_val[2],'type')
-    psr_val[0] = { psr_val[1] : nd }
-    #nd.ref(psr_val[0])
+    psr_val[0] = {
+        'type': 'type',
+        'val' : {
+            'type' : nd
+        }
+    }
+    #nd.ref( psr_val[0])
+    nodes.attrs(psr_val[0])
     
 #parser_rule
 def p_attrs_strg3(psr_val):
@@ -651,10 +677,11 @@ def p_attrs_strg3(psr_val):
     m=psr_val[2]
     if m:
         #print "simple string '%s'" % m
-        psr_val[0] = tuast.String2(m)
+        psr_val[0] = {'string':tuast.String2(m)}
     goto_initial(psr_val)
+    nodes.attrs(psr_val[0])
     
-@parser_rule
+#@parser_rule
 def p_attrs_addrs(psr_val):
     'addr_attrs : ADDR_ATTR HEXVAL'
     m=psr_val[2]
@@ -664,3 +691,4 @@ def p_attrs_addrs(psr_val):
     #print 'after hexval'
     goto_initial(psr_val)
     psr_val[0] = { 'addr': m }
+    nodes.attrs({ 'addr': m })

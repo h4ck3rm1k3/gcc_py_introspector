@@ -1,6 +1,6 @@
 import re
 from attributes import node_type
-import pprint
+import pprint2
 
 class NodeBase:
     def nid(self):
@@ -448,18 +448,18 @@ class Decl(Node):
 
 def pstack(o):
     r = ""
-    #print "Stack:%s" % pprint.pformat(self.o.stack)
-    #pprint.pprint(dir(self.o))
-    #pprint.pprint(self.o.__dict__)
+    #print "Stack:%s" % pprint2.pformat(self.o.stack)
+    #pprint2.pprint(dir(self.o))
+    #pprint2.pprint(self.o.__dict__)
     for s in o.stack:
         if s.type == '$end':
             pass
         else:
             s1= "[type:%s t2:%s value:%s]," % (s.type, type(s.value), s.value.node_id)
             r = r + s1
-            #print "Stack",s,pprint.pformat(s)
-            #print "Stack",s,pprint.pformat(dir(s))
-            #print "Stack",s,pprint.pformat(s.__dict__)
+            #print "Stack",s,pprint2.pformat(s)
+            #print "Stack",s,pprint2.pformat(dir(s))
+            #print "Stack",s,pprint2.pformat(s.__dict__)
     return r
 
 @node_type('function_decl')
@@ -470,12 +470,12 @@ class FunctionDecl(Decl):
         Decl.__init__(self,nodeid.value(), nodetype)
         #self.value = nodedata.slice[-1].value.val
         self.nodedata=nodedata
-        #pprint.pprint(nodedata.slice[-1].__dict__)
-        #pprint.pprint([nodeid.value,nodetype,nodedata.slice])
+        #pprint2.pprint(nodedata.slice[-1].__dict__)
+        #pprint2.pprint([nodeid.value,nodetype,nodedata.slice])
     def __str__(self):
-        return "FunctionDecl: %s %s " % (self.node_id, pprint.pformat(self.__dict__))
+        return "FunctionDecl: %s %s " % (self.node_id, pprint2.pformat2(self.__dict__))
     def __repr__(self):
-        return "FunctionDecl: %s %s %s" % (self.node_id, pprint.pformat(self.__dict__),pstack(self.nodedata))
+        return "FunctionDecl: %s %s %s" % (self.node_id, pprint2.pformat2(self.__dict__),pstack(self.nodedata))
     
 @node_type('identifier_node')
 class Identifier(Node):
@@ -483,8 +483,12 @@ class Identifier(Node):
         #print "Nodetype '%s'" %nodetype
         #print "Nodeid '%s'" %nodeid.value
         Node.__init__(self,nodeid, nodetype)
-        self.value = nodedata.slice[-1].value.val
-        self.addr = nodedata.slice[-1].value.addr
-        #pprint.pprint    ([nodeid.value,nodetype,nodedata.slice[-1].value])
+        v = nodedata.slice[-1].value
+        #pprint2.pprint ({'value':nodeid.value(), 'type': nodetype, 'v': v})
+        self.value = v['string']
+
+        if 'addr' in v:
+            self.addr = v['addr']
+        
     def __str__(self):
         return "Identifier: %s %s " % (self.node_id, self.value)

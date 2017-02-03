@@ -3,7 +3,7 @@ reader module
 '''
 import sys
 import os
-import pprint
+import pprint2
 import nodes
 
 home = os.environ['HOME']
@@ -20,7 +20,7 @@ urllib2.install_opener(opener)
 
 
 
-#pprint.pprint(sys.path)
+#pprint2.pprint(sys.path)
 import re
 import tuast
 import traceback
@@ -125,17 +125,17 @@ def report(x,l):
     # fop = attr("source_file")
     # fo = rdflib.URIRef('http://' + domain + '/' + filename )                        
     # g.add([u, fop, fo])    
-    #pprint.pprint([ l ])
-    #pprint.pprint([ x ])
+    #pprint2.pprint([ l ])
+    #pprint2.pprint([ x ])
     # now add the vals
     # if (x.vals):
-    #     #pprint.pprint([ "Vals", x.vals ])
+    #     #pprint2.pprint([ "Vals", x.vals ])
     #     if isinstance(x.vals, list):
     #         for v in x.vals:
     #             if isinstance(v, tuast.Attr):
     #                 p = attr(v.name)
     #                 v2 =v.value
-    #                 #pprint.pprint([v.name, v2, v2.__dict__ ])
+    #                 #pprint2.pprint([v.name, v2, v2.__dict__ ])
     #                 if isinstance(v2, tuast.NodeRef):
     #                     o = rdflib.URIRef('http://' + domain + '/' + filename + '#' + v.value.val)                        
     #                     g.add([u, p, o])                        
@@ -156,7 +156,7 @@ def report(x,l):
     #                 elif isinstance(v2, tuast.Link):
     #                     g.add([u, p, structure("link",v2.val)])
     #                 else:
-    #                     #pprint.pprint( v2 )
+    #                     #pprint2.pprint( v2 )
     #                     pass
     #             elif isinstance(v, tuast.SpecAttr3):
     #                 vn = attr(v.value)
@@ -168,7 +168,7 @@ def report(x,l):
     #                     clean(v.val) #https://github.com/RDFLib/rdflib/issues/614
     #                 )])
     #             else:
-    #                 #pprint.pprint( ["OTHER", v ] )
+    #                 #pprint2.pprint( ["OTHER", v ] )
     #                 pass
     #     else:
     #         if isinstance(x.vals, tuast.Attr):
@@ -176,29 +176,29 @@ def report(x,l):
     #                 # a tree_list item with a "valu" field
     #                 add_field(g, x.node_id, x.vals.name , x.vals.value.val)                    
     #             else:
-    #                 #pprint.pprint( ["not a node ref", x.vals.value ] )
+    #                 #pprint2.pprint( ["not a node ref", x.vals.value ] )
     #                 #raise Exception("TODO")
     #                 pass
     #         else:
     #             pass
-    #             #pprint.pprint( ["no vals", x ] )
+    #             #pprint2.pprint( ["no vals", x ] )
     #             #raise Exception("TODO")
     # else:
     #     if isinstance(x, tuast.AddrExprTyped):
     #         #print "NodeId:" +
     #         #print "node type:" +x.node_type
     #         #print "Vals:" + str(x.vals)
-    #         #pprint.pprint( ["op_0", x.op_0 ] )
-    #         #pprint.pprint( ["expr_type", x.expr_type ] )
+    #         #pprint2.pprint( ["op_0", x.op_0 ] )
+    #         #pprint2.pprint( ["expr_type", x.expr_type ] )
     #         add_field(g, x.node_id, "OP0", x.op_0)
     #         add_field(g, x.node_id, "type", x.expr_type)                
     #         #g.add([u, p, structure("link",v2.val)])
     #     elif isinstance(x, tuast.Node):
     #         #print "TODO some node" + str(x)
-    #         #pprint.pprint( ["TODO", x.__dict__ ] )
+    #         #pprint2.pprint( ["TODO", x.__dict__ ] )
     #         pass
     #     else:
-    #         #pprint.pprint( ["no vals", x ] )
+    #         #pprint2.pprint( ["no vals", x ] )
     #         raise Exception("TODO")
     
 def lex(l, debug, error_file):
@@ -268,7 +268,7 @@ def parse_l(l, debug, error_file, f):
             error_file.write(l + "\n")
             #print "Error on Line:%s" % l
             #print "Stack:%s" % stack
-            #print "parser %s" % pprint.pformat(parser.__dict__)
+            #print "parser %s" % pprint2.pformat(parser.__dict__)
             #if not debug:
             #    x = parser.parse(l, debug=True)
         else:
@@ -298,7 +298,7 @@ def parse_l(l, debug, error_file, f):
         print "EXP Line:%s" % l
         f.write(l + "\n")
         print "EXP Stack:%s" % stack
-        #raise exp
+        raise exp
     
     #print "Stack:%s" % stack
     return None
@@ -342,7 +342,7 @@ main()
 #    print "Error occurred '%s'" % e
 
 #debug_file = open("output.debug", "w")
-#debug_file.write("data=%s" % pprint.pformat(deps))
+#debug_file.write("data=%s" % pprint2.pformat(deps))
 #debug_file.close()
 
 #print "\n".join(sorted(seen.keys()))

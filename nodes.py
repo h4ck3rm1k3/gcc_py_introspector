@@ -1,10 +1,12 @@
-import pprint
+import pprint2
 import ply.lex as lex
 import pdb; 
 stack = []
 astack = []
-
+import pprint
 nodes = {}
+def pprintpprint(x):
+    pprint.pprint(x)
 
 class Node :
     def __init__(self, n):
@@ -31,7 +33,7 @@ class Node :
         
     def usedby(self, x, n):
         
-        # print "USED:%s" % pprint.pformat({
+        # print "USED:%s" % pprint2.pformat({
         #     'node': self.n,
         #     'usedby':x,
         #     'usedby2':x.nid(),
@@ -90,7 +92,7 @@ def declare(n):
     return nodes[n]['node']
 
 def statement(x):
-    #print "statement %s" % pprint.pformat(x)
+    #print "statement %s" % pprint2.pformat(x)
     
     global stack
     global astack
@@ -105,8 +107,8 @@ def statement(x):
         #print "stmt %s" % nid
         
         #print "Debug",x,x.nid()
-        #pprint.pprint(x)
-        #pprint.pprint(x.__dict__)
+        #pprintpprint(x)
+        #pprintpprint(x.__dict__)
         if nid in nodes:
             nodes[nid]['decl'] = x
         else:
@@ -127,6 +129,7 @@ def statement(x):
         
 
 def report():
+    print "Nodes Report:"
     for n in nodes.keys():
         d = nodes[n]
         dc = None
@@ -135,7 +138,7 @@ def report():
 
         # now we resolve the references
         
-        pprint.pprint({
+        pprintpprint({
             #'tst':1,
             'n' : n,
             'data'  : d,
@@ -145,5 +148,7 @@ def report():
     
     
 def attrs(v):
-    #pprint.pprint(v)
+    if type (v) == str:
+        raise Exception(v)
+    #pprintpprint({'push':v})
     astack.append(v)

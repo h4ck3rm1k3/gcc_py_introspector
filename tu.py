@@ -1,11 +1,11 @@
 '''
 lexer
 '''
-  # import pprint
+
 import ply.lex as lex
   # import ply.yacc as yacc
 from ply.lex import TOKEN
-import pprint
+import pprint2
 DEBUG = 0
 import sys
 from attributes import token_rule
@@ -113,7 +113,7 @@ def make_tokens(prefix,pattern,val_func, tstr):
         if DEBUG:
             #print "created name %s regex %s"  %( name, regex )
             #print "basename %s"  %( base_name )
-            pprint.pprint({
+            pprint2.pprint({
              'm': current_module,
              'n': name ,
              'f' : func,
@@ -608,6 +608,7 @@ def t_TYPE_ATTR(tok):
     r'type\s*:\s*'
     #goto_state(tok,'type')
     #print("begin TYPE_ATTR: '%s'" % tok.value)
+    tok.value = 'type'
     return tok
 
 
