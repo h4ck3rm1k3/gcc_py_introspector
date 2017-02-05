@@ -3,15 +3,25 @@ import pprint2
 import ply.lex as lex
 import nodes
 funcs = {}
+
+# class SomeType:
+#     def __call__(self):
+#         pass
+        
 def debug(*args,**kvargs):
     #pprint2.pprint({'args':args,'kvargs':kvargs})
     pass
+
+import pprint
+def debug2(*args,**kvargs):
+    pprint.pprint({'args':args,'kvargs':kvargs})
+
 
 class TNode :
     def __init__(self, node_id, node_type, o):
         self.node_id=node_id
         self.node_type=node_type
-        self.o=o
+        #self.o=o
     def nid(self):
         return self.node_id.n
 
@@ -31,7 +41,7 @@ class TNode :
                 debug( "Stack",s,pprint2.pformat(s.__dict__))
         return r
             
-    def __repr__(self):
+    def __rep2r__(self):
         return "!TNode:id='%s',type:'%s',obj:'%s'!" % (
             self.node_id.n,
             self.node_type,
@@ -42,10 +52,11 @@ class TNode :
 
 def get_value(x):
     if 'value' in x.__dict__:
+        return pprint2.pformat2(x)
         return x.value
     else:
         return None
-        #return pprint2.pformat(x)
+        
 
 def parser_rule(f):
     """
@@ -58,7 +69,7 @@ def parser_rule(f):
     def wrapper(psr_val):
 
         #if len(psr_val.stack) ==  1:
-        debug( 'Parser f', f, doc)
+        debug2( 'Parser f', f, doc)
         funcs[f]=1
         debug(pprint2.pformat2({ 'slice' :psr_val.slice,
                         'stack' : psr_val.stack}))
@@ -72,7 +83,8 @@ def parser_rule(f):
         # else:
 
         for x in psr_val.slice[1:] :
-            debug( "\t\t\tITEM:",i,":", pprint2.pformat2(x),"Value:",pprint2.pformat2(get_value(x)))
+            pprint.pprint(x)
+            debug2( "\t\t\tITEM:",i,":", pprint2.pformat2(x),"Value:",pprint2.pformat2(get_value(x)))
             nodes.attrs(get_value(x))
             
             i = i +1
@@ -161,6 +173,16 @@ def node_type(name):
     #return cls
 
     class SomeType:
+
+        class Pickle:
+            pass
+        
+        def __name__(self):
+            return 'Sometype'
+        
+        def __call__(self):
+            return SomeType.Pickle()
+
         #the_class =  theclass
         #the_name =  name
         #@classmethod

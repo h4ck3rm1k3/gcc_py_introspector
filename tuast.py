@@ -1,10 +1,22 @@
 import re
 from attributes import node_type
 import pprint2
+import pprint
 
 class NodeBase:
     def nid(self):
-        return self.node_id
+        
+        i = self.node_id
+        if type (i) == str:
+            return i
+        else:
+            return i.nid()
+        #pprint.pprint(type(i))
+         #   pprint.pprint(dir(i))
+          #  pprint.pprint(i)
+          #  raise Exception (i)
+        
+        
     
     def __init__(self, nid, ntype):
         #print "node id %s" % nid
@@ -469,12 +481,12 @@ class FunctionDecl(Decl):
         #print "Nodeid '%s'" %nodeid.value
         Decl.__init__(self,nodeid.value(), nodetype)
         #self.value = nodedata.slice[-1].value.val
-        self.nodedata=nodedata
+        #self.nodedata=nodedata
         #pprint2.pprint(nodedata.slice[-1].__dict__)
         #pprint2.pprint([nodeid.value,nodetype,nodedata.slice])
-    def __str__(self):
+    def __str2__(self):
         return "FunctionDecl: %s %s " % (self.node_id, pprint2.pformat2(self.__dict__))
-    def __repr__(self):
+    def __repr2__(self):
         return "FunctionDecl: %s %s %s" % (self.node_id, pprint2.pformat2(self.__dict__),pstack(self.nodedata))
     
 @node_type('identifier_node')

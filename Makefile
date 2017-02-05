@@ -1,3 +1,34 @@
+runall:
+	python runtest.py
+
+testfield:
+	python reader.py tests/bitfield.tu 
+	python load_pickle.py
+
+testload:
+	python load_pickle.py
+
+testlsof:
+	python reader.py ../lsof/main.c.001t.tu
+	python load_pickle.py
+	# ../lsof/arg.c.001t.tu
+	# ../lsof/dstore.c.001t.tu
+	# ../lsof/proc.c.001t.tu
+	# ../lsof/dfile.c.001t.tu
+	# ../lsof/empty.c.001t.tu
+	# ../lsof/store.c.001t.tu
+	# ../lsof/dmnt.c.001t.tu
+	# ../lsof/main.c.001t.tu
+	# ../lsof/usage.c.001t.tu
+	# ../lsof/dnode.c.001t.tu
+	# ../lsof/misc.c.001t.tu
+	# ../lsof/util.c.001t.tu
+	# ../lsof/dproc.c.001t.tu
+	# ../lsof/node.c.001t.tu
+	# ../lsof/dsock.c.001t.tu
+	# ../lsof/print.c.001t.tu
+
+
 testid:
 	python reader.py tests/test_id.tu 	
 

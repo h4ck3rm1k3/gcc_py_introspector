@@ -571,10 +571,21 @@ def p_attrs_strg_empty(psr_val):
     m=psr_val[1]
     if m:
         #print "simple string list '%s'" % m
-        psr_val[0] = { 'string':m.val}
+        if isinstance(m, basestring):
+            psr_val[0] = { 'type': 'string' , 'val' :m}
+        else:
+            psr_val[0] = { 'type': 'string' , 'val' :m.val}
         nodes.attrs(psr_val[0])
     goto_initial(psr_val)
-    
+
+#@parser_rule
+def p_attrs_spec3(psr_val):
+     #          1        2
+     'attrs :  SPEC_VALU'
+     #psr_val[0] = { 'spec_value' : psr_val[1] }
+     psr_val[0] = { 'type' : 'spec', 'val' :psr_val[1]     }
+     nodes.attrs(psr_val[0])
+
 #@parser_rule
 def p_attrs_addrs2(psr_val):
     'addr_attrs : ADDR_ATTR SOMEHEX3'

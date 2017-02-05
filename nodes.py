@@ -1,18 +1,34 @@
 import pprint2
 import ply.lex as lex
-import pdb; 
+import pdb
+#import pickledb
+import pickle
+import pprint
+
+nodes = {}
 stack = []
 astack = []
-import pprint
-nodes = {}
+
 def pprintpprint(x):
     pprint.pprint(x)
+
+
 
 class Node :
     def __init__(self, n):
         self.n = n
         self.refs = []
+        self._node_type = 'unknown'
         
+    def node_type(self):
+        if 'decl' in nodes[self.n]:
+            return nodes[self.n]['decl'].node_type
+        else:
+            return 'unknown'
+    
+    def nid(self):
+        return self.n
+    
     def value(self):
         return self.n
 
@@ -21,18 +37,20 @@ class Node :
         r = "refs %s" % len(self.refs)
         # for s in self.refs:
         #     r = r + s[1] + ':'+ s[0]
-            
+
         return r
-    
-    def __repr__(self):
+
+    #def default(self, x):
+    #    return {}
+    #def __repr__(self):
         #return "Node : %s Refs: %s" % (self.n,len(self.refs))
-        return "!Node:id='%s',refs:'%s'!" % (self.n, self.format_refs())
-    
+    #    return "!Node:id='%s',refs:'%s'!" % (self.n, self.format_refs())
+
     #def ref(self, obj):
     #    self.refs.append(obj)
-        
+
     def usedby(self, x, n):
-        
+
         # print "USED:%s" % pprint2.pformat({
         #     'node': self.n,
         #     'usedby':x,
@@ -44,7 +62,7 @@ def reference(n, name):
     global stack
     global astack
 
-    
+
     #raise Exception('what')
     #pdb.set_trace()
 
@@ -52,12 +70,12 @@ def reference(n, name):
         n = n.value
     if isinstance(name,lex.LexToken):
         name = name.value
-        
+
     stack.append([name,n])
     #astack.append([name,n])
 
     #print "ref %s" % n
-    
+
     if n not in nodes:
         nodes[n]= {'count':1, 'node' : Node(n) }
     else:
@@ -66,9 +84,9 @@ def reference(n, name):
             #nodes[n]['refs'].append(nd)
         else:
             nodes[n]['count'] = 1
-            
+
     #nodes[n]['refs']= [  ]
-    
+
     return nodes[n]['node']
 
 
@@ -77,8 +95,8 @@ def declare(n):
     if not isinstance(n, basestring):
         n = n.value
 
-    #print "decl %s" % n
-                
+    #print "decl %s" % pprint.pformat(n)
+
     if n not in nodes:
         nodes[n]= {'decl':1,
                    'node': Node(n)
@@ -88,24 +106,24 @@ def declare(n):
             nodes[n]['decl'] = nodes[n]['decl'] +1
         else:
             nodes[n]['decl'] = 1
-        
+
     return nodes[n]['node']
 
 def statement(x):
-    #print "statement %s" % pprint2.pformat(x)
-    
+    #print "statement %s" % pprint2.pformat2(x)
+    #pickle.dump(x,f)
     global stack
     global astack
-    
+
     if x:
         nid = x.nid()
-        #print 'Statement: %s' % nid
-        
+        #print 'Statement: %s' % pprint.pformat(nid)
+
         #nid = "%s" % x.nid()
-        
+
 
         #print "stmt %s" % nid
-        
+
         #print "Debug",x,x.nid()
         #pprintpprint(x)
         #pprintpprint(x.__dict__)
@@ -123,32 +141,42 @@ def statement(x):
             s = sp[1]
             #print s,sn,x
             nodes[s]['node'].usedby(x,sn)
-        
+
         stack=[]
-        astack=[]        
-        
+        astack=[]
 
-def report():
-    print "Nodes Report:"
-    for n in nodes.keys():
-        d = nodes[n]
-        dc = None
-        if 'decl' in d:
-            dc=d['decl']
 
-        # now we resolve the references
-        
-        pprintpprint({
-            #'tst':1,
-            'n' : n,
-            'data'  : d,
-            'dcl': dc
-        })
-    
-    
-    
+
+
 def attrs(v):
+
     if type (v) == str:
         raise Exception(v)
     #pprintpprint({'push':v})
+    #pickle.dump(v,f)
+
     astack.append(v)
+
+
+
+def report():
+    print "Nodes Report:"
+    #b = pickledb.load('nodes.db', False)
+    f = open ("nodes.pickle","w")
+    pickle.dump(nodes,f)
+    # for n in nodes.keys():
+    #     d = nodes[n]
+    #     dc = None
+    #     if 'decl' in d:
+    #         dc=d['decl']
+
+    #     # now we resolve the references
+    #     b.set(n,d)
+
+    #     # pprintpprint({
+    #     #     #'tst':1,
+    #     #     'n' : n,
+    #     #     'data'  : d,
+    #     #     'dcl': dc
+    #     # })
+    # b.dump()
