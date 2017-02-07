@@ -1,5 +1,12 @@
+testcons:
+	python reader.py tests/constructor.tu d
+	python load_pickle.py
+
+lsof:
+	python runtest.py ../lsof
+
 runall:
-	python runtest.py
+	python runtest.py ./tests
 
 testfield:
 	python reader.py tests/bitfield.tu 
@@ -95,7 +102,7 @@ qual:
 	python reader.py tests/test_one_qual.tu x
 
 op01:
-	python reader.py tests/op_0_1.tu 
+	python reader.py tests/op_0_1.tu  d
 
 op0:
 	python reader.py tests/op_0.tu
@@ -124,8 +131,6 @@ tu3 :
 tu1 :
 	python reader.py tests/testqual.tu 
 
-dummy :
-	python reader.py tests/test4.tu 
 
 tu :
 	python reader.py tests/test.tu 
