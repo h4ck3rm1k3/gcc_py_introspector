@@ -335,10 +335,6 @@ def p_idx_val_list2(psr_val):
     'idx_val_list : idx_val_item'
     psr_val[0] = [psr_val[1]]
 
-
-
-
-
 @parser_rule
 def p_attr_list2(psr_val):
     'attr_list : str_attrs attr_list'
@@ -353,7 +349,7 @@ def p_attr_list4(psr_val):
     psr_val[0] = { 'addr_attrs': psr_val[1],
                    'list' : psr_val[2]
     }
-
+     
 
 #@parser_rule
 def p_attr_lista(psr_val):

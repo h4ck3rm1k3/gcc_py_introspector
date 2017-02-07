@@ -1,3 +1,7 @@
+testcons:
+	python reader.py tests/constructor.tu d
+	python load_pickle.py
+
 lsof:
 	python runtest.py ../lsof
 
