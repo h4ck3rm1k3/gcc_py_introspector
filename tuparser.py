@@ -417,6 +417,10 @@ def p_attr_list4a(psr_val):
     psr_val[0] = psr_val[1]
 
 #@parser_rule
+def p_attr_list_empty(psr_val):
+    'attr_list : '
+
+#@parser_rule
 def p_attr_list3a(psr_val):
     'attr_list : type_attrs'
     psr_val[0] = psr_val[1]

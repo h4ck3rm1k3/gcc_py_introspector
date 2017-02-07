@@ -319,7 +319,7 @@ def t_QUAL(tok):
 
 @token_rule
 def t_NODE(tok):
-    r'\@(?P<val>\d+)\s+'
+    r'\@(?P<val>\d+)(\s+|$)'
     #print "Match %s" % (tok.lexer.lexmatch)
     strval = tok.lexer.lexmatch.group("val")
     #print ("NODEID:%s" % strval)

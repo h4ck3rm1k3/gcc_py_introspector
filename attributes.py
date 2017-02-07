@@ -14,8 +14,8 @@ def debug(*args,**kvargs):
 
 import pprint
 def debug2(*args,**kvargs):
-    pprint.pprint({'args':args,'kvargs':kvargs})
-
+    #pprint.pprint({'args':args,'kvargs':kvargs})
+    pass
 
 class TNode :
     def __init__(self, node_id, node_type, o):
@@ -71,16 +71,13 @@ def parser_rule(f):
         #if len(psr_val.stack) ==  1:
         debug2( 'Parser f', f, doc)
         funcs[f]=1
-        debug(pprint2.pformat2({ 'slice' :psr_val.slice,
+        debug2(pprint2.pformat2({ 'slice' :psr_val.slice,
                         'stack' : psr_val.stack}))
-        debug(pprint2.pformat2(psr_val.__dict__))
+        debug2(pprint2.pformat2(psr_val.__dict__))
         #rpprint2.pprint(dir(psr_val))
         i = 0
 
-        # if isinstance(psr_val,lex.LexToken):
-        debug( psr_val)
-        #     pass
-        # else:
+        debug2( psr_val)
 
         for x in psr_val.slice[1:] :
             pprint.pprint(x)
@@ -91,7 +88,7 @@ def parser_rule(f):
         #         #, pprint2.pformat(dir(x))
         r= f(psr_val)
         x =psr_val.slice[0]
-        debug( "\t\t\tresult:",i,":", pprint2.pformat2(x),"Value:",pprint2.pformat2(get_value(x)))
+        debug2( "\t\t\tresult:",i,":", pprint2.pformat2(x),"Value:",pprint2.pformat2(get_value(x)))
         return r
     wrapper.doc = doc
     return wrapper
@@ -109,19 +106,29 @@ def parser_node_rule(f):
     @wraps(f)
     def wrapper(psr_val):
 
-        node_id= nodes.declare(psr_val.slice[1])
+        debug2( 'Parser node f', f)
+        
         anode_type= psr_val.slice[2].value
 
-        debug( 'Parser node f', node_id, node_type)
+
         debug(pprint2.pformat2({ 'slice' :psr_val.slice,
                                                'stack' : psr_val.stack}))
         debug(pprint2.pformat2(psr_val.__dict__))
         #debug(pprint2.pformat(dir(psr_val)))
         i = 0
-        #for x in psr_val.slice :
-        #    debug( "\t\t\tITEM:",i,":", pprint2.pformat(x),"Value:",pprint2.pformat(get_value(x)))
-        #    i = i +1
-            #, pprint2.pformat(dir(x))
+        for x in psr_val.slice :
+            debug2(
+                "\t\t\tSLICE ITEM:",
+                i,
+                ":",
+                pprint2.pformat2(x),
+                "Value:",
+                pprint2.pformat2(get_value(x)))
+            i = i +1
+            #pprint2.pformat(dir(x))
+            
+        node_id= nodes.declare(psr_val.slice[1])
+        debug( 'Parser node f', node_id, node_type)
 
         r= f(psr_val)
         if anode_type in registry  :
@@ -140,8 +147,9 @@ def parser_node_rule(f):
 
             psr_val[0] = TNode(node_id, anode_type , psr_val)
 
+        
         debug(pprint2.pformat2(psr_val[0]))
-
+        
     wrapper.doc = doc
     return wrapper
 

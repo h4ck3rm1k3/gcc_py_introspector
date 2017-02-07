@@ -495,9 +495,16 @@ class Identifier(Node):
         #print "Nodetype '%s'" %nodetype
         #print "Nodeid '%s'" %nodeid.value
         Node.__init__(self,nodeid, nodetype)
+
+        #print 'SLICE:'
+        #pprint.pformat(nodedata.slice)
+        
         v = nodedata.slice[-1].value
         #pprint2.pprint ({'value':nodeid.value(), 'type': nodetype, 'v': v})
-        self.value = v['string']
+        if 'string' in v:
+            self.value = v['string']
+        else:
+            raise Exception(pprint.pformat(v))
 
         if 'addr' in v:
             self.addr = v['addr']
