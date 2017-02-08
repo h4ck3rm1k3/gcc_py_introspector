@@ -1,5 +1,5 @@
 testcons:
-	python reader.py tests/constructor.tu d
+	python reader.py tests/constructor.tu 
 	python load_pickle.py
 
 lsof:

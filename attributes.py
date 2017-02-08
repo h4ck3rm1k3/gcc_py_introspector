@@ -51,8 +51,8 @@ class TNode :
         )
 
 def get_value(x):
-    if 'value' in x.__dict__:
-        return pprint2.pformat2(x)
+    print pprint2.pformat2(x)
+    if 'value' in x.__dict__:        
         return x.value
     else:
         return None

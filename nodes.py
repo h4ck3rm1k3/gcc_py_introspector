@@ -112,8 +112,8 @@ def declare(n):
     return nodes[n]['node']
 
 def statement(x):
-    #print "statement %s" % pprint2.pformat2(x)
-    #pickle.dump(x,f)
+    print "statement %s" % pprint2.pformat2(x)
+    pickle.dumps(x)
     global stack
     global astack
 
@@ -153,8 +153,9 @@ def statement(x):
 def attrs(v):
 
     if type (v) == str:
-        raise Exception(v)
-    #pprintpprint({'push':v})
+        #raise Exception(v)
+        v = {'unkown': v}
+        pprintpprint({'push':v})
     #pickle.dump(v,f)
 
     astack.append(v)
