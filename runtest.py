@@ -31,7 +31,8 @@ for pair in pairs:
     n = pair[1]
     
     
-    if not os.path.isfile("%s/%s.lasterror.txt" % (directory,n)):       
+    #if not os.path.isfile("%s/%s.lasterror.txt" % (directory,n)):
+    if True:
         print "running test %s" % n
         print " ".join(['python2.7', 'reader.py', "%s/%s" % (directory,n)])
         x = subprocess.call(['python2.7', 'reader.py', "%s/%s" % (directory,n)
