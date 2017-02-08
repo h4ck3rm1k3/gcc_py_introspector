@@ -12,7 +12,9 @@ def p_any_node(psr_val):
     # the node declaration
     psr_val[0]=psr_val[1]
 
+import pprint
 import pprint2
+
 import ply.yacc as yacc # Get the token map from the lexer.  This is required.
 from tu import tokens
 import tuast  # import Link
@@ -31,21 +33,16 @@ def p_node_id(psr_val):
     }
     goto_initial(psr_val)  # begin the string group
 
-@parser_rule
+@parser_node_rule
 def p_node_constructor(psr_val):
-    #            1             2
-    'node : NODE CONSTRUCTOR LEN idx_val_list attr_list'
-    #print "CHECK LIST1 %s" % psr_val[3]
-    # #psr_val[0] = "%s(id: %s, %s )" % (psr_val[2],psr_val[1],psr_val[3])
-    #psr_val[0] = tuast.NodeConstructor(psr_val[2], psr_val[1], psr_val[3])
+    'node : NODE CONSTRUCTOR LEN idx_val_list'
     psr_val[0] = {
         '__type__' :'constructor',
-        'node' : nodes.declare(psr_val[1]),
-        'len' : psr_val[2],
-        'idx_val' : psr_val[3],
-        'attr_list' : psr_val[4],
+        'node' : psr_val[1],
+        'idx_len' : psr_val[3],
+        'idx_list' : psr_val[4],
     }
-    #psr_val[0] = merge_list({'__type__':'attr_list', 'attrs': { 'type' : '' }, 'list': psr_val[2]})
+   # pprint.pprint(psr_val[0])
 
 
 ##########################################
@@ -312,28 +309,51 @@ def p_operator_subs(psr_val):
     psr_val[0] = 'subs'
     #psr_val[0] = operator_base(psr_val)
 
-@parser_rule
+#@parser_rule
 def p_idx_val_item(psr_val):
-    'idx_val_item : ATTR_IDX NODE ATTR_VAL NODE'
+    'idx_val_list : ATTR_IDX NODE ATTR_VAL NODE attr_list'
     nd = nodes.reference(psr_val[2],'idx')
     nd2 = nodes.reference(psr_val[4],'val')
-    psr_val[0] = { 'idx':psr_val[1],
-                   'nodes': nd,
-                   'attrval': psr_val[3],
-                   'node2': nd2
+    addr = psr_val[5]
+    psr_val[0] = {
+        'type' : 'idx_val',
+        'val' : {
+            #'idx':psr_val[1],
+            'idx_node': nd,
+            #'attrval': psr_val[3],
+            'val_node': nd2,
+            'addr' : addr,
+        }
     }
     #nd.ref(psr_val[0])
     #nd2.ref(psr_val[0])
 
-@parser_rule
-def p_idx_val_list(psr_val):
-    'idx_val_list : idx_val_item idx_val_list'
-    psr_val[0] = [psr_val[1],psr_val[2]]
+#@parser_rule
+def p_idx_val_item2(psr_val):
+    'idx_val_list : ATTR_IDX NODE ATTR_VAL NODE idx_val_list'
+    nd = nodes.reference(psr_val[2],'idx')
+    nd2 = nodes.reference(psr_val[4],'val')
+    alist = psr_val[5]
+    psr_val[0] = {
+        'type' : 'idx_val',
+        'val' : {
+        #'idx':psr_val[1],
+            'idx_node': nd,
+            'val_node': nd2,
+            'list' : alist,
+        }
+    }
 
-@parser_rule
-def p_idx_val_list2(psr_val):
-    'idx_val_list : idx_val_item'
-    psr_val[0] = [psr_val[1]]
+
+# @parser_rule
+# def p_idx_val_list(psr_val):
+#     'idx_val_list : idx_val_item idx_val_list'
+#     psr_val[0] = [psr_val[1],psr_val[2]]
+
+# @parser_rule
+# def p_idx_val_list2(psr_val):
+#     'idx_val_list : idx_val_item'
+#     psr_val[0] = [psr_val[1]]
 
 @parser_rule
 def p_attr_list2(psr_val):
