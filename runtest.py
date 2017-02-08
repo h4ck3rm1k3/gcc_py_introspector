@@ -22,23 +22,32 @@ for file in list:
 # Sort list of tuples by the first element, size.
 pairs.sort(key=lambda s: s[0])
 import subprocess
+import os.path
 
 
 # Display pairs.
 for pair in pairs:
 
     n = pair[1]
-    print "running test %s" % n
-    x = subprocess.call(['python', 'reader.py', "%s/%s" % (directory,n)
-                         #,'debug'
-    ])
-    os.rename('lasterror.txt',"%s/%s.lasterror.txt" % (directory,n))
-    os.rename('nodes.pickle',"%s/%s.nodes.pickle" % (directory,n)
     
-    print n,x
-    if x == 0:
-        print "OK"
+    
+    if not os.path.isfile("%s/%s.lasterror.txt" % (directory,n)):       
+        print "running test %s" % n
+        print " ".join(['python2.7', 'reader.py', "%s/%s" % (directory,n)])
+        x = subprocess.call(['python2.7', 'reader.py', "%s/%s" % (directory,n)
+                             #,'debug'
+        ])
+        print "%s %s" % (n,x)
+        os.rename('lasterror.txt',"%s/%s.lasterror.txt" % (directory,n))
+        if os.path.isfile('nodes.pickle') :
+            os.rename('nodes.pickle',"%s/%s.nodes.pickle" % (directory,n))
+        if x == 0:
+            print "OK"
+        else:
+            print "fail"
+
     else:
-        raise Exception("fail")
+        print "skipping test %s" % n
+              
     #python load_pickle.py
 

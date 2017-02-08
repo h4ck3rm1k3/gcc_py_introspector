@@ -3,7 +3,7 @@ testcons:
 	python load_pickle.py
 
 lsof:
-	python runtest.py ../lsof
+	python2.7 runtest.py ../lsof
 
 runall:
 	python runtest.py ./tests
