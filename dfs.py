@@ -16,7 +16,7 @@ def DFS2(G,v):
         if v not in discovered:
             discovered[v]=1
             if v not in G :
-                print "missing %s" % v
+                print("missing %s" % v)
                 raise Exception("Missing %s" % v)
             else:
                 es = G[v]
@@ -69,7 +69,7 @@ def DFS2(G,v):
                             result.append(newobj)
 
                     else:
-                        print "is empty %s" % v, es
+                        print("is empty %s" % v, es)
         else:
             #print "already discovered %s" % v
             pass
@@ -87,7 +87,7 @@ if not os.path.exists("cache"):
     os.makedirs("cache")
 
 def main(input_data):
-    k = input_data.data.keys()
+    k = list(input_data.data.keys())
     for x in k:
         n =  input_data.data[x]
         strings = []
@@ -101,7 +101,7 @@ def main(input_data):
             o =open (filename,"w")
             o.write("data=%s" % pprint.pformat(S))
             o.close()
-            print "wrote %s %s" % (filename, n[0])
+            print("wrote %s %s" % (filename, n[0]))
             #return
         else:
             pass
@@ -112,4 +112,4 @@ if len(sys.argv) > 1 :
     module = importlib.import_module(name)
     main(module)
 else:
-    print "need module name"
+    print("need module name")

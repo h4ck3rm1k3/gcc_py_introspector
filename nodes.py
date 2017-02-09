@@ -92,7 +92,7 @@ def reference(n, name):
 
 def declare(n):
 
-    if not isinstance(n, basestring):
+    if not isinstance(n, str):
         n = n.value
 
     #print "decl %s" % pprint.pformat(n)
@@ -112,7 +112,7 @@ def declare(n):
     return nodes[n]['node']
 
 def statement(x):
-    print "statement %s" % pprint2.pformat2(x)
+    print("statement %s" % pprint2.pformat2(x))
     pickle.dumps(x)
     global stack
     global astack
@@ -163,7 +163,7 @@ def attrs(v):
 
 
 def report():
-    print "Nodes Report:"
+    print("Nodes Report:")
     #b = pickledb.load('nodes.db', False)
     f = open ("nodes.pickle","w")
     pickle.dump(nodes,f)

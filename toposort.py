@@ -37,7 +37,7 @@ def toposort(g):
                     incoming[m][nid] = fn
                     #print 'incoming', fn, m, nid
 
-    print "Incoming:", pprint.pformat(incoming)
+    print("Incoming:", pprint.pformat(incoming))
 
     for n in g.nodes():
         nid = n.node_id()
@@ -52,12 +52,12 @@ def toposort(g):
             #         print 'removing', m, nid
             #         del incoming[m][nid]
                 
-    while len(S.keys()):
+    while len(list(S.keys())):
 
         #print "Keys now",S.keys()
         #print "List now",L
 
-        keys = S.keys()
+        keys = list(S.keys())
         first = keys[0]
         del S[first]
         #remove a node n from S
@@ -87,7 +87,7 @@ def toposort(g):
                                 #print "remove incoming",v,first
                                 del incoming[v][first]
 
-                                if len (incoming[v].keys()) == 0:
+                                if len (list(incoming[v].keys())) == 0:
                                     del incoming[v]
 
                         #if m has no other incoming edges then
@@ -109,13 +109,13 @@ def toposort(g):
                         #S[v] = 1
                         pass
             else:
-                print "first not in idx", first
+                print("first not in idx", first)
 
     #print "Leftover",S.keys()
     
     #print "check for left overs"
-    if len(incoming.keys()):
-        for k in incoming.keys():
+    if len(list(incoming.keys())):
+        for k in list(incoming.keys()):
             if k :
                 if len(incoming[k]) > 0 :
                     #print "Check :" , k, incoming[k]

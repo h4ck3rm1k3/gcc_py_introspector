@@ -24,11 +24,11 @@ class Nodes:
 class NodeIter:
     def __init__(self, data, pos):
         self.data = data
-        self.keys = data.keys()
+        self.keys = list(data.keys())
         self.pos = pos
         self.l = len(data)
 
-    def next(self):
+    def __next__(self):
         p = self.pos
         self.pos = self.pos +1
         if p < self.l:
@@ -67,7 +67,7 @@ class FieldIter:
         self.pos = pos
         self.l = len(data)
 
-    def next(self):
+    def __next__(self):
         p = self.pos
         self.pos = self.pos +1
         if p < self.l:

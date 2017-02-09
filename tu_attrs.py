@@ -571,7 +571,7 @@ def p_attrs_strg_empty(psr_val):
     m=psr_val[1]
     if m:
         #print "simple string list '%s'" % m
-        if isinstance(m, basestring):
+        if isinstance(m, str):
             psr_val[0] = { 'type': 'string' , 'val' :m}
         else:
             psr_val[0] = { 'type': 'string' , 'val' :m.val}

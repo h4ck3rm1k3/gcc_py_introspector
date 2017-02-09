@@ -38,7 +38,7 @@ def reflect(x):
     pass
         
 """ + s
-        print s
+        print(s)
         tree = ast.parse(s)
         #mod2 = meta.decompile(f)
         #source2 = meta.dump_python_source(mod2)
@@ -69,7 +69,7 @@ class EqExpr:
     def example():
         f = 1
         if f == 1:
-            print "body"
+            print("body")
 
     @reflect
     def reflection_of_example():

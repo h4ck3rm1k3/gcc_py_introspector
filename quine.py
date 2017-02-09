@@ -119,7 +119,7 @@ sys.path.append(home + "/py/iast")
 
 # consult
 # ~/py/python/Parser/Python.asdl
-import StringIO
+import io
 class PyAst:
     @classmethod
     def pyast(cls) :
@@ -137,7 +137,7 @@ class PyAst:
                 
     @staticmethod
     def dounparse(tree):
-        output = StringIO.StringIO()       
+        output = io.StringIO()       
         unparse.Unparser(tree, output)
         v = output.getvalue()
         output.close()
@@ -145,7 +145,7 @@ class PyAst:
    
     @classmethod
     def verify(cls):
-        print cls.pyast()
+        print(cls.pyast())
 
 class RedBaron:
     
@@ -155,7 +155,7 @@ class RedBaron:
     
     @classmethod
     def verify(cls):
-        print cls.redbaron()
+        print(cls.redbaron())
     
 class TuNode:
 
@@ -165,7 +165,7 @@ class TuNode:
     
     @classmethod
     def verify(cls):
-        print cls.token()
+        print(cls.token())
 
     @classmethod
     def token(cls):
@@ -320,7 +320,7 @@ def main(args):
     for x in g:
         v = g[x]
         if inspect.isclass(v) :
-            print "Class:"+ x
+            print("Class:"+ x)
             #n = v()
             v.verify()
             # test getting the gcc translation unit codes

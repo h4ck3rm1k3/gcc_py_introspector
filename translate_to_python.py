@@ -219,7 +219,7 @@ def lookup(x):
     elif "_" + x  in _lookup:
         return_lookup['_' + x]
     else:
-        print "unknown " + x
+        print("unknown " + x)
         return unknown
 
 class DeclExpr:
@@ -258,13 +258,13 @@ def rec(x,i=0):
     for l in x:
         n = l #.replace('fld:type','ftype')
         v = x[l]
-        if type(v) is types.DictType:
+        if type(v) is dict:
             #pprint.pprint({"Before ref": v })
             v2 = rec(v,i+1)
             attrs[n] = v2
 
                         
-        elif type(v) in types.StringTypes:
+        elif type(v) in str:
             if n in ('ntype','type','scpe','chain'):
                 pass
             elif v =='':

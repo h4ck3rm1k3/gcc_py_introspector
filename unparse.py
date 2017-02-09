@@ -441,7 +441,7 @@ class Unparser:
             self.dispatch(k)
             self.write(": ")
             self.dispatch(v)
-        interleave(lambda: self.write(", "), write_pair, zip(t.keys, t.values))
+        interleave(lambda: self.write(", "), write_pair, list(zip(t.keys, t.values)))
         self.write("}")
 
     def _Tuple(self, t):
@@ -676,11 +676,11 @@ def testdir(a):
             fullname = os.path.join(a, n)
             if os.path.isfile(fullname):
                 output = io.StringIO()
-                print('Testing %s' % fullname)
+                print(('Testing %s' % fullname))
                 try:
                     roundtrip(fullname, output)
                 except Exception as e:
-                    print('  Failed to compile, exception is %s' % repr(e))
+                    print(('  Failed to compile, exception is %s' % repr(e)))
             elif os.path.isdir(fullname):
                 testdir(fullname)
 

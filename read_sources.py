@@ -12,15 +12,15 @@ class Visitor :
     def _print(self, *vals):
         d = "  " * self.indent
         if isinstance(vals, str):
-            print d + vals
+            print(d + vals)
         elif isinstance(vals[0], tuple):
             #print type(vals)
-            print d + ",".join(*vals)
+            print(d + ",".join(*vals))
         elif isinstance(vals[0], str):
-            print d + vals[0]
+            print(d + vals[0])
         else:
-            print type(vals)
-            print d + pprint.pformat(*vals)
+            print(type(vals))
+            print(d + pprint.pformat(*vals))
 
     def __init__(self):
         self._seen = {}
@@ -331,7 +331,7 @@ class SourceGen:
         CLASS='pointer_type'
 
         def generate(self):
-            print "pointer_type"
+            print("pointer_type")
             self.visit_attrs()
 
     class ReferenceType(Base):
@@ -388,5 +388,5 @@ if len(sys.argv) > 1 :
     module = importlib.import_module(name)
     main(module)
 else:
-    print "need module name"
+    print("need module name")
 

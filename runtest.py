@@ -2,7 +2,7 @@ import os
 import sys
 # The folder containing files.
 directory = sys.argv[1]
-print 'going to read %s' % (directory)
+print(('going to read %s' % (directory)))
 
 # Get all files.
 list = os.listdir(directory)
@@ -10,7 +10,7 @@ list = os.listdir(directory)
 # Loop and add files to list.
 pairs = []
 for file in list:
-    
+
     if (file.endswith(".tu") or file.endswith(".t")) and '#' not in file:
         # Use join to get full file path.
         location = os.path.join(directory, file)
@@ -28,17 +28,17 @@ import subprocess
 for pair in pairs:
 
     n = pair[1]
-    print "running test %s" % n
+    print(("running test %s" % n))
     x = subprocess.call(['python', 'reader.py', "%s/%s" % (directory,n)
                          #,'debug'
     ])
     os.rename('lasterror.txt',"%s/%s.lasterror.txt" % (directory,n))
-    os.rename('nodes.pickle',"%s/%s.nodes.pickle" % (directory,n)
-    
-    print n,x
+    os.rename('nodes.pickle',"%s/%s.nodes.pickle" % (directory,n))
+    print(x)
+    print(n)
+    #print (n,x)
     if x == 0:
-        print "OK"
+        print ("OK")
     else:
         raise Exception("fail")
     #python load_pickle.py
-

@@ -113,7 +113,7 @@ def ftypes():
     for x in results['results']['bindings']:
         t[(x['p']['value'].replace(fld,''))]=1
 
-    pprint.pprint( t.keys())
+    pprint.pprint( list(t.keys()))
     
 #ftypes()
 def clean(x):
@@ -137,4 +137,4 @@ for fld in fields:
         else:
             dot.edge(a, b, label=str(fld))
 
-print(dot.source) 
+print((dot.source)) 

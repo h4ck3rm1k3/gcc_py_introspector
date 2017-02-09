@@ -17,21 +17,21 @@ WHERE {
     ?o rdf:type ?ot.                                                                                                                                            } group by  ?st ?p ?ot
 
 """)
-    print "\t".join(
+    print("\t".join(
         [
             'count',
             'firsto',
             'firsts',
             'st',
             'p',
-            'ot'])
+            'ot']))
     d1 = {}
     d2 = {}
     for x in results['results']['bindings']:
         s=prefix.clean(x['st']['value'])
         o=prefix.clean(x['ot']['value'])
         p=prefix.clean(x['p']['value'])
-        print "\t".join(
+        print("\t".join(
             [
                 x['count']['value'],
                 prefix.clean(x['firsto']['value']),
@@ -39,7 +39,7 @@ WHERE {
                 prefix.clean(x['st']['value']),
                 prefix.clean(x['p']['value']),
                 prefix.clean(x['ot']['value'])
-            ])
+            ]))
             
 
         atype =False

@@ -239,12 +239,12 @@ def rec(x):
         n = l.replace('fld:type','ftype')
         n = n.replace('fld:','')
         v = x[l]
-        if type(v) is types.DictType:
+        if type(v) is dict:
             #pass
             v2 = rec(v)
             args[n] = v2 
                         
-        elif type(v) in types.StringTypes:
+        elif type(v) in str:
             if n in ('ntype','type','scpe','chain'):
                 pass
             elif v =='':
@@ -334,7 +334,7 @@ def recurse(s, deep=0):
     for k in d:
         found = False
         
-        if k in (u'fld:qual',
+        if k in ('fld:qual',
                  'fld:string',
                  'fld:chain'):
             continue
@@ -349,7 +349,7 @@ def recurse(s, deep=0):
         #         'ot' :ot,
         #         'st' : st
         #     }})
-        if type(st) is types.DictType:
+        if type(st) is dict:
             raise Exception("")
         
             #pprint.pprint(dt)
@@ -381,7 +381,7 @@ SELECT ?a  WHERE {
 }
 """)               
     for x in results['results']['bindings']:
-        print x['a']['value']
+        print(x['a']['value'])
         r= recurse(x['a']['value'])
         pprint.pprint(rec(r))
 

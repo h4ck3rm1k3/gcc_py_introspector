@@ -44,7 +44,7 @@ class NodeIter:
         self.l = len(data)
         self.parent = parent
 
-    def next(self):
+    def __next__(self):
         p = self.pos
         self.pos = self.pos +1
         if p < self.l:
@@ -98,9 +98,9 @@ class Node :
 
             n = "".join([f.title() for f in tn.split("_")])
                             
-            print "    class %s(Base):" % n
-            print "        CLASS='%s'\n" % tn
-            print "        def generate(self):\n            print \"%s\"\n" % tn
+            print("    class %s(Base):" % n)
+            print("        CLASS='%s'\n" % tn)
+            print("        def generate(self):\n            print \"%s\"\n" % tn)
 
 
             raise Exception( "missing %s " % tn)
@@ -125,7 +125,7 @@ class FieldIter:
         self.l = len(data)
         self.parent = parent
 
-    def next(self):
+    def __next__(self):
         p = self.pos
         self.pos = self.pos +1
         if p < self.l:
@@ -166,7 +166,7 @@ class FieldTodo :
         return "TODO"
 
     def value(self):
-        print "value", self.data
+        print("value", self.data)
         return self.data[Field.NAME]
 
 class FieldEmpty :

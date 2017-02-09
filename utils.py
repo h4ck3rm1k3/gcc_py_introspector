@@ -39,16 +39,16 @@ def matches(psr_val, debug=True):
 
 
 def debug(psr_val):
-    print("final attrs %s" % dir(psr_val))
-    print("doc %s" % psr_val.__doc__)
+    print(("final attrs %s" % dir(psr_val)))
+    print(("doc %s" % psr_val.__doc__))
     # psr_val.__getitem__
     # psr_val.__getslice__
     # psr_val.__init__
     plen = psr_val.__len__()
-    print("len:%s" % plen)
+    print(("len:%s" % plen))
     # '__module__', '__setitem__', 'error',
-    print(dir(psr_val.lexer))
-    print("pos:%s" % psr_val.lexpos)
+    print((dir(psr_val.lexer)))
+    print(("pos:%s" % psr_val.lexpos))
     # p4: 'action', 'errok', 'errorfunc', 'goto', 'parse', 'parsedebug', 'parseopt', 'parseopt_notrack', 'productions', 'restart', 'statestack', 'symstack']
 #    print "p4:%s" % dir(psr_val.parser)
 #    print "p4action:%s" % psr_val.parser.action
@@ -95,7 +95,7 @@ def count_non_null(tok):
     count = 0 
     for v in tok.lexer.lexmatch.groups():
         if v is not None :
-            print "check %s %d"  % (v, count)
+            print("check %s %d"  % (v, count))
         count = count + 1
 
 

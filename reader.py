@@ -12,10 +12,10 @@ user = os.environ['USER']
 sys.path.append(home + '/rdflib/')
 sys.path.append(home + '/sparqlwrapper/')
 
-import urllib2
-handler=urllib2.HTTPHandler(debuglevel=1)
-opener = urllib2.build_opener(handler)
-urllib2.install_opener(opener)
+#import urllib.request, urllib.error, urllib.parse
+#handler=urllib.request.HTTPHandler(debuglevel=1)
+#opener = urllib.request.build_opener(handler)
+#urllib.request.install_opener(opener)
 #>>> resp=urllib2.urlopen('http://w
 
 
@@ -218,10 +218,10 @@ def lex(l, debug, error_file):
 
     except Exception as exp:
         error_file.write(l + "\n")
-        print "LEX ERROR1 %s %s" % (ptype, pval)
-        print "L",l
-        print "EXP",exp
-        print "Stack",stack
+        print("LEX ERROR1 %s %s" % (ptype, pval))
+        print("L",l)
+        print("EXP",exp)
+        print("Stack",stack)
         # raise exp
     if debug:
         #print "Line %s" % l
@@ -274,7 +274,7 @@ def parse_l(l, debug, error_file, f):
         else:
             report(x,l)
             if debug:
-                print("Results1 %s" % x)
+                print(("Results1 %s" % x))
             else:
                 s = str(x)
                 # if not s in seen:
@@ -283,21 +283,21 @@ def parse_l(l, debug, error_file, f):
                 #         print("Results2 '%s'" % s)
 
         if debug :
-            print "Stack:%s" % stack
-            print "parser %s" % parser
+            print("Stack:%s" % stack)
+            print("parser %s" % parser)
 
         return x
     
     #except QueryBadFormed as e:
     #    raise e
     except Exception as exp:
-        print "parse error : "+ l + "\n"
+        print("parse error : "+ l + "\n")
         error_file.write(l + "\n")
         traceback.print_exc()
-        print "Exp",exp
-        print "EXP Line:%s" % l
+        print("Exp",exp)
+        print("EXP Line:%s" % l)
         f.write(l + "\n")
-        print "EXP Stack:%s" % stack
+        print("EXP Stack:%s" % stack)
         raise exp
     
     #print "Stack:%s" % stack

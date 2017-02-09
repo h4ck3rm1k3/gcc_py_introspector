@@ -16,7 +16,7 @@ sd = shelve.open('example.shelve')
 
 def resolve2(x,seen, role, nt):
 
-    if isinstance(x, basestring):
+    if isinstance(x, str):
         return x
 
     if isinstance(x, dict):
@@ -24,7 +24,7 @@ def resolve2(x,seen, role, nt):
             #print  'resolving dict %s' % pprint.pformat(x)
             return resolve2( x['type'],seen, role, nt)
         else:
-            print  'resolving dict %s' % pprint.pformat(x)
+            print('resolving dict %s' % pprint.pformat(x))
             raise Exception()
     skip = ('min','max','size', 'bpos')
     if role in skip:
@@ -40,8 +40,8 @@ def resolve2(x,seen, role, nt):
         return resolve(node_objs[x.nid()],seen,role)
 
     t = type(x)
-    print 'trying to resolve %s' % t
-    print  'resolving obj %s' % pprint.pformat(x)
+    print('trying to resolve %s' % t)
+    print('resolving obj %s' % pprint.pformat(x))
     raise Exception(x)
 
 
@@ -58,7 +58,7 @@ def process(x,nt, seen):
 
     if 'type' in x:
         t = x['type']
-        if isinstance(t, basestring):
+        if isinstance(t, str):
             v = x['val']
             x = resolve2(v,seen, 'type', nt)
             return { 'name': 'type', 'val' : x}
@@ -137,7 +137,7 @@ class TreeEncoder :
 db = TinyDB('empty.json',cls=TreeEncoder)
 
 #pprint.pprint(node_objs)
-for x in sorted(node_objs.keys(), key=int):
+for x in sorted(list(node_objs.keys()), key=int):
     #print x
     d = node_objs[x]
     #print d['decl'].node_id.nid
@@ -147,6 +147,6 @@ for x in sorted(node_objs.keys(), key=int):
         if nt.endswith('_decl'):
             d2 = resolve(d,{'stack': [], 'seen': {}, 'node_type':nt, 'node_id': x },'start')
             if 'name' in d2:
-                print x, nt,d2['name']['string']
+                print(x, nt,d2['name']['string'])
             #db.insert(d2)
             #sd["%s" % d2['name']['string']]=d2

@@ -315,8 +315,8 @@ class Attr(AttrBase):
             #return "Str: "+ self.value
             return None
         else:
-            if self.value.keys():
-                return [self.name, self.value.keys()]
+            if list(self.value.keys()):
+                return [self.name, list(self.value.keys())]
             else:
                 return None
 
@@ -324,8 +324,8 @@ class Attr(AttrBase):
         if isinstance(self.value, str):
             return self.value
         else:
-            if self.value.values():
-                return [self.name, self.value.values()]
+            if list(self.value.values()):
+                return [self.name, list(self.value.values())]
             else:
                 return None
 

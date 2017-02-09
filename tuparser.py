@@ -403,10 +403,10 @@ def p_attr_list3(psr_val):
 
 
 def p_error(psr_val):
-    print "Check Syntax error in input! %s" % psr_val
+    print("Check Syntax error in input! %s" % psr_val)
     #print "Line Number: %s" % psr_val.lineno
     #print "Line Pos: %s" % psr_val.lexpos
-    print("Parser %s" % parser)
+    print(("Parser %s" % parser))
     raise Exception('error %s' % psr_val)
     #pass
 
