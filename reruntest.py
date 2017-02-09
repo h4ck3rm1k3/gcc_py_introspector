@@ -36,9 +36,8 @@ for pair in pairs:
                              ,'debug'
         ])
         print ("%s %s" % (n,x))
-        os.rename('lasterror.txt',"%s/%s.lasterror.txt" % (directory,n))
-        if os.path.isfile('nodes.pickle') :
-            os.rename('nodes.pickle',"%s/%s.nodes.pickle" % (directory,n))
+        os.unlink('lasterror.txt',"%s/%s.lasterror.txt" % (directory,n))
+
         if x == 0:
             print ("OK")
         else:
@@ -46,4 +45,4 @@ for pair in pairs:
 
     else:
         print ("skipping test %s" % n)
-    #python load_pickle.py
+
