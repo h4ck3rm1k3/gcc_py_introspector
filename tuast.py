@@ -1,7 +1,8 @@
 import re
-from attributes import node_type
+#from attributes import node_type
 import pprint2
 import pprint
+import attributes
 
 class NodeBase:
     def nid(self):
@@ -474,7 +475,7 @@ def pstack(o):
             #print "Stack",s,pprint2.pformat(s.__dict__)
     return r
 
-@node_type('function_decl')
+
 class FunctionDecl(Decl):
     def __init__(self, nodeid, nodetype , nodedata):
         #print "Nodetype '%s'" %nodetype
@@ -489,7 +490,7 @@ class FunctionDecl(Decl):
     def __repr2__(self):
         return "FunctionDecl: %s %s %s" % (self.node_id, pprint2.pformat2(self.__dict__),pstack(self.nodedata))
     
-@node_type('identifier_node')
+#@node_type('identifier_node')
 class Identifier(Node):
     def __init__(self, nodeid, nodetype , nodedata):
         #print "Nodetype '%s'" %nodetype
@@ -511,3 +512,5 @@ class Identifier(Node):
         
     def __str__(self):
         return "Identifier: %s %s " % (self.node_id, self.value)
+attributes.register('identifier_node',Identifier)
+attributes.register('function_decl',FunctionDecl)

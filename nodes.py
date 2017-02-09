@@ -103,8 +103,8 @@ def declare(n):
     else:
         if 'decl' in nodes[n] :
             pprint.pprint(nodes[n]['decl'])
-            raise Exception("Duplicate Decl %s" %n)
-        
+            #raise Exception("Duplicate Decl %s" %n)
+            nodes[n]['decl'] = n
         else:
             nodes[n]['decl'] = 1
 

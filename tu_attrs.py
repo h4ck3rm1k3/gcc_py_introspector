@@ -12,9 +12,16 @@ def p_attr_accs(psr_val):
     ## psr_val[0] = 'accs'
 
 @parser_simple_rule_node
+def p_attr_access(psr_val):
+    'attrs : ATTR_ACCS ACC'
+
+@parser_simple_rule_node
 def p_attr_op0(psr_val):
     'attrs : OP0_ATTR NODE'
 
+@parser_simple_rule_node
+def p_attr_op1(psr_val):
+    'attrs : OP1_ATTR NODE'
 
 @parser_simple_rule_node
 def p_attr_labl(psr_val):
@@ -555,9 +562,24 @@ def p_attrs_prec(psr_val):
     #psr_val[0] = {'prec':psr_val[2]}
 
 @parser_simple_rule
+def p_attrs_prec2(psr_val):
+    #           1     2         3
+    'attrs :  ATTR_PREC SOMEHEX4'
+    goto_initial(psr_val)  # begin the string group
+    #psr_val[0] = {'prec':psr_val[2]}
+
+@parser_simple_rule
 def p_attrs_algn(psr_val):
     #           1     2         3
     'attrs :  ATTR_ALGN SOMEINT'
+    #psr_val[0] = std_attrs(psr_val)
+    goto_initial(psr_val)  # begin the string group
+    #psr_val[0] = {psr_val[1] :psr_val[2] }
+
+@parser_simple_rule
+def p_attrs_algn2(psr_val):
+    #           1     2         3
+    'attrs :  ATTR_ALGN SOMEHEX4'
     #psr_val[0] = std_attrs(psr_val)
     goto_initial(psr_val)  # begin the string group
     #psr_val[0] = {psr_val[1] :psr_val[2] }

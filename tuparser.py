@@ -403,7 +403,8 @@ def p_attr_list3a(psr_val):
     'attr_list : type_attrs'
     psr_val[0] = psr_val[1]
 
-
+def p_error(x):
+    raise Exception(x)
         
 from tu_attrs import *
 from generated_rules import *

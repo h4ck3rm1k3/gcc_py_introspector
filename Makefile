@@ -1,3 +1,6 @@
+rerunall:
+	python3 reruntest.py ./tests2
+
 testsave:
 	python3 reader.py tests/save_expr.tu
 

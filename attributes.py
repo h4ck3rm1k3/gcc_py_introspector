@@ -9,12 +9,12 @@ funcs = {}
 #         pass
         
 def debug(*args,**kvargs):
-    #pprint.pprint({'args':args,'kvargs':kvargs})
+    pprint.pprint({'args':args,'kvargs':kvargs})
     pass
 
 import pprint
 def debug2(*args,**kvargs):
-    #pprint.pprint({'args':args,'kvargs':kvargs})
+    pprint.pprint({'args':args,'kvargs':kvargs})
     pass
 
 class TNode :
@@ -95,6 +95,7 @@ def parser_rule(f):
 
 registry = {}
 types = {}
+
 def parser_node_rule(f):
     """
     parser node rule
@@ -108,7 +109,6 @@ def parser_node_rule(f):
         debug2( 'Parser node f', f)
         
         anode_type= psr_val.slice[2].value
-
 
         debug(pprint2.pformat2({ 'slice' :psr_val.slice,
                                                'stack' : psr_val.stack}))
@@ -127,23 +127,22 @@ def parser_node_rule(f):
             #pprint2.pformat(dir(x))
             
         node_id= nodes.declare(psr_val.slice[1])
-        debug( 'Parser node f', node_id, node_type)
+        debug( 'Parser node f', node_id, anode_type)
 
         r= f(psr_val)
         if anode_type in registry  :
-            debug( "going to create ", node_type)
+            debug( "going to create ", anode_type)
             cls = registry[anode_type]
             obj = cls(node_id, anode_type, psr_val)
             debug( obj)
             psr_val[0] = obj
         else:
             debug(pprint2.pformat2(registry))
-            debug( "going to create default", node_type, node_id)
+            debug( "going to create default", anode_type, node_id)
             if anode_type not in types:
                 types[anode_type]=1
             else:
                 types[anode_type]=types[anode_type]+1
-
             psr_val[0] = TNode(node_id, anode_type , psr_val)
 
         
@@ -185,48 +184,31 @@ def token_rule(f):
     wrapper.doc = doc
     return wrapper
 
-def node_type(name):
-    debug(pprint.pformat({
-        'decl node type function f': name,
-        'name' : name
-        }))
+def register(name, theclass):
+    registry[name]  =  theclass
 
-    class SomeType:
+# def node_type(name):
 
-        class Pickle:
-            pass
-        
-        def __name__(self):
-            return 'Sometype'
-        
-        def __call__(self):
-            return SomeType.Pickle()
-
-        #the_class =  theclass
-        #the_name =  name
-        #@classmethod
-        # def create( self, tid, node_type, val):
-        #     debug( "Self",self)
-        #     debug( "Self.name",self.the_name)
-        #     return self.the_class(tid,val)
-
-        def __init__(self, theclass):
-            debug( {
-                "init": self,
-                "class": theclass,
-                'name': name,
-                })
-            registry[name]  =  theclass
-            #debug( "Created",self, theclass, name)
-        #     self.id_name= name
-        #     self.theclass = theclass
-        #     #node_type, node_id, psr_val
-        #     #self.obj = theclass()
-    
-        #the_name = name
-    global  registry
-    # save this class
-    return SomeType
+#     debug(pprint.pformat({
+#         'decl node type function f': name,
+#         'name' : name
+#         }))
+#         def __init__(self, theclass):
+#             debug( {
+#                 "init": self,
+#                 "class": theclass,
+#                 'name': name,
+#                 })
+#             registry[name]  =  theclass
+#             #debug( "Created",self, theclass, name)
+#         #     self.id_name= name
+#         #     self.theclass = theclass
+#         #     #node_type, node_id, psr_val
+#         #     #self.obj = theclass()    
+#         #the_name = name
+#     global  registry
+#     # save this class
+#     return SomeType
 
 def report():
     debug( 'report')

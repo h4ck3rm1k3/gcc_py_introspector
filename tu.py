@@ -55,7 +55,7 @@ tokens = [
     'SIGNED',
     'LINK',
     'STRUCT',
-#    'ACC',
+    'ACC',
     'MEMBER',
 #    'NOTE',
     'SOMESTRG', # catchall
@@ -543,7 +543,7 @@ def t_HXX_FILE(tok):
 #t_FLOAT = r'[+\-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+\-]?\d+)?'
 t_ARTIFICIAL = r'artificial'
 t_LINK = r'static|undefined|extern'
-#t_ACC = r'pub|priv|prot'
+t_ACC = r'pub|priv|prot'
 t_STRUCT = r'struct|union'
 t_MEMBER = r'member|destructor|binfo|ptrmem'
 #t_NOTE = r'operator|conversion'
