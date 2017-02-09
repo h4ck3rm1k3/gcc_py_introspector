@@ -1,0 +1,1 @@
+@348    function_type    qual: c        unql: @276     size: @12 algn: 8        retn: @26      prms: @285 addr: 7f6cc2dbd738

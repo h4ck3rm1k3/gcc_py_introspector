@@ -1,0 +1,1 @@
+@4      var_decl         name: @5       type: @6       srcp: doc.hxx:2179 note: artificial              chain: @7 init: @8       size: @9       algn: 8 used: 1
