@@ -36,7 +36,7 @@ for pair in pairs:
                              ,'debug'
         ])
         print ("%s %s" % (n,x))
-        os.unlink('lasterror.txt',"%s/%s.lasterror.txt" % (directory,n))
+        #os.unlink('lasterror.txt',"%s/%s.lasterror.txt" % (directory,n))
 
         if x == 0:
             print ("OK")
