@@ -27,32 +27,6 @@ import traceback
 from tu import lex
 from tuparser import parser
 
-import rdflib
-
-use_sparql=False
-
-g=None
-
-if use_sparql :
-    url = "http://localhost:8890/sparql-graph-crud"
-    import rdflib.plugins.stores.sparqlstore
-    store = rdflib.plugins.stores.sparqlstore.SPARQLUpdateStore(
-        url,
-        context_aware=False
-    )
-    g=rdflib.Graph(store)
-else:
-    g=rdflib.Graph()
-    #g.open("testgraph",create=True)
-    
-# from rdflib.store import Store
-# from rdflib.plugin import get as plugin
-
-# import secrets
-
-# Virtuoso = plugin("Virtuoso", Store)
-# store = Virtuoso("DSN=VOS;UID=dba;PWD="+secrets.passw+";WideAsUTF16=Y")
-
 OPRE = r'op\s([0-9]+)\s*:\s\@'
 ERE = r'\s([0-9]+)\s+:\s\@'
 vals = {}
@@ -316,7 +290,7 @@ def main():
     else:
         debug = False
 
-    f = open ('lasterror.txt','wa')
+    f = open ('lasterror.txt','a')
 
     line = ""
     for l in fd.readlines():

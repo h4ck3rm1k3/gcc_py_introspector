@@ -12,6 +12,11 @@ def p_attr_accs(psr_val):
     ## psr_val[0] = 'accs'
 
 @parser_simple_rule_node
+def p_attr_op0(psr_val):
+    'attrs : OP0_ATTR NODE'
+
+
+@parser_simple_rule_node
 def p_attr_labl(psr_val):
     'attrs : ATTR_LABL NODE'
     ## psr_val[0] = 'labl'

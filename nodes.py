@@ -2,9 +2,9 @@ import pprint2
 import ply.lex as lex
 import pdb
 #import pickledb
-import pickle
 import pprint
-
+import tuast
+import pickle
 nodes = {}
 stack = []
 astack = []
@@ -62,7 +62,6 @@ def reference(n, name):
     global stack
     global astack
 
-
     #raise Exception('what')
     #pdb.set_trace()
 
@@ -91,7 +90,7 @@ def reference(n, name):
 
 
 def declare(n):
-
+    #pickle.dumps(n)
     if not isinstance(n, str):
         n = n.value
 
@@ -114,6 +113,7 @@ def declare(n):
 def statement(x):
     #print("statement %s" % pprint2.pformat2(x))
     #pickle.dumps(x)
+    pickle.dumps(x)
     global stack
     global astack
 
@@ -152,6 +152,8 @@ def statement(x):
 
 def attrs(v):
 
+    pickle.dumps(v)
+
     if type (v) == str:
         raise Exception(v)
         #v = {'unkown': v}
@@ -165,7 +167,7 @@ def attrs(v):
 def report():
     print("Nodes Report:")
     #b = pickledb.load('nodes.db', False)
-    f = open ("nodes.pickle","w")
+    f = open ("nodes.pickle","wb")
     pickle.dump(nodes,f)
     # for n in nodes.keys():
     #     d = nodes[n]

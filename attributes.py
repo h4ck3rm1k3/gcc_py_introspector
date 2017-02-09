@@ -9,7 +9,7 @@ funcs = {}
 #         pass
         
 def debug(*args,**kvargs):
-    #pprint2.pprint({'args':args,'kvargs':kvargs})
+    #pprint.pprint({'args':args,'kvargs':kvargs})
     pass
 
 import pprint
@@ -101,7 +101,6 @@ def parser_node_rule(f):
     """
     doc = f.__doc__
     #debug(pprint2.pformat( dir(f)))
-    #("['__call__',\n '__class__',\n '__closure__',\n '__code__',\n '__defaults__',\n '__delattr__',\n '__dict__',\n '__doc__',\n '__format__',\n '__get__',\n '__getattribute__',\n '__globals__',\n '__hash__',\n '__init__',\n '__module__',\n '__name__',\n '__new__',\n '__reduce__',\n '__reduce_ex__',\n '__repr__',\n '__setattr__',\n '__sizeof__',\n '__str__',\n '__subclasshook__',\n 'func_closure',\n 'func_code',\n 'func_defaults',\n 'func_dict',\n 'func_doc',\n 'func_globals',\n 'func_name']",)
     #debug(pprint2.pformat( f.__dict__))
     @wraps(f)
     def wrapper(psr_val):
@@ -158,27 +157,39 @@ def token_rule(f):
     token rule
     """
     doc = f.__doc__
-    #debug(pprint2.pformat( dir(f)))
-    #debug(pprint2.pformat( f.__dict__))
+
+    debug(pprint.pformat({
+        'token decl function f': f,
+        'doc': doc,
+        'dict' : f.__dict__
+        }))
+
     @wraps(f)
     def wrapper(tok):
-        # debug( 'token function f', f, doc, tok)
-        # debug(pprint2.pformat({ 'lexpos' :tok.lexpos,
-        #                 'lineno' :tok.lineno,
-        #                 'type' :tok.type,
-        #                 'value' :tok.value,
-        #                 }))
-
-        debug(pprint2.pformat2(tok.__dict__))
+        debug(pprint.pformat({
+            'call function f': f,
+            'doc': doc,
+            'tok':tok,
+            'lexpos' :tok.lexpos,
+            'lineno' :tok.lineno,
+            'type' :tok.type,
+            'value' :tok.value,
+            'dict' : tok.__dict__
+        }))
+        #debug(pprint2.pformat2())
         #debug(pprint2.pformat(dir(tok)))
-        return f(tok)
+        r= f(tok)
+        debug({"ret:": r})
+        return r
+    
     wrapper.doc = doc
     return wrapper
 
 def node_type(name):
-    #debug(pprint2.pformat(cls))
-    #debug(pprint2.pformat(name))
-    #return cls
+    debug(pprint.pformat({
+        'decl node type function f': name,
+        'name' : name
+        }))
 
     class SomeType:
 
@@ -200,11 +211,13 @@ def node_type(name):
         #     return self.the_class(tid,val)
 
         def __init__(self, theclass):
-            debug( "init", self)
-            debug( "init", theclass)
-            #self.the_class = theclass
+            debug( {
+                "init": self,
+                "class": theclass,
+                'name': name,
+                })
             registry[name]  =  theclass
-            debug( "Created",self, theclass, name)
+            #debug( "Created",self, theclass, name)
         #     self.id_name= name
         #     self.theclass = theclass
         #     #node_type, node_id, psr_val

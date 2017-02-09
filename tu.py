@@ -358,7 +358,7 @@ def t_OP0_ATTR(tok):
     #count_non_null(tok)
     #tok.value = str(tok.lexer.lexmatch.group("val"))
     #tok.value = "SOMEADDR"
-    #print("OP0_ATTR %s " % tok.value)
+    print("OP0_ATTR %s " % tok.value)
     return tok
 
 
