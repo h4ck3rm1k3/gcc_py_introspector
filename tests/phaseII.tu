@@ -31,3 +31,13 @@
 @8314   record_type      name: @10257   size: @20      algn: 8 spec           tag : struct   flds: @10258 fncs: @10259   binf: @10260
 @198051 record_type      qual: c        name: @208489  unql: @208490 size: @208491  algn: 64       vfld: @208492 spec           base: @208493  accs: pub tag : struct   flds: @208494  fncs: @208495 binf: @208496
 @391    function_decl    name: @389     type: @243     scpe: @200 srcp: stl_queue.h:292         note: operator ne             note: pseudo tmpl args: @460     body: undefined link: extern   body: @461
+@1      type_decl        name: @2       type: @3       chain: @4 addr: 7f6cc2ca8390
+@8314   record_type      name: @10257   size: @20      algn: 8 spec           tag : struct   flds: @10258 fncs: @10259   binf: @10260
+@8314   record_type      name: @10257   size: @20      algn: 8 spec           tag : struct   flds: @10258 fncs: @10259   binf: @10260
+@524    function_decl    name: @522     type: @243     scpe: @200 srcp: stl_queue.h:268         note: operator eq             note: pseudo tmpl args: @596     body: undefined link: extern   body: @597
+@1      type_decl        name: @2       type: @3       chain: @4 addr: 7f6cc2ca8390
+@8314   record_type      name: @10257   size: @20      algn: 8 spec           tag : struct   flds: @10258 fncs: @10259   binf: @10260
+@524    function_decl    name: @522     type: @243     scpe: @200 srcp: stl_queue.h:268         note: operator eq             note: pseudo tmpl args: @596     body: undefined link: extern   body: @597
+@1      type_decl        name: @2       type: @3       chain: @4 addr: 7f6cc2ca8390
+@74240  function_decl    name: @16196   type: @83325   scpe: @24765 srcp: style.hxx:168           chain: @83326 note: operator subs           note: member accs: pub      spec: virt     args: @83327 body: undefined               link: extern
+@968    function_decl    name: @1150    type: @1151    scpe: @713 srcp: basic_ios.h:119         chain: @1152 note: operator lnot           note: member accs: pub      args: @1153    body: undefined link: extern

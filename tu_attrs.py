@@ -465,6 +465,21 @@ def p_attrs_note_opge(psr_val):
     'attrs :  ATTR_NOTE OPERATOR_GE'
     psr_val[0] = { 'note': psr_val[1] }
     nodes.attrs(psr_val[0])
+    
+def p_attrs_note_opeq(psr_val):
+    'attrs :  ATTR_NOTE OPERATOR_EQ'
+    psr_val[0] = { 'note': psr_val[1] }
+    nodes.attrs(psr_val[0])
+    
+def p_attrs_note_opnot(psr_val):
+    'attrs :  ATTR_NOTE OPERATOR_LNOT'
+    psr_val[0] = { 'note': psr_val[1] }
+    nodes.attrs(psr_val[0])
+    
+def p_attrs_note_op_subs(psr_val):
+    'attrs :  ATTR_NOTE OPERATOR_SUBS'
+    psr_val[0] = { 'note': psr_val[1] }
+    nodes.attrs(psr_val[0])
 
 def p_attrs_note_opgt(psr_val):
     'attrs :  ATTR_NOTE OPERATOR_GT'
