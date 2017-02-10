@@ -480,6 +480,11 @@ def p_attrs_note_oplt(psr_val):
     'attrs :  ATTR_NOTE OPERATOR_LT'
     psr_val[0] = { 'note': psr_val[1] }
     nodes.attrs(psr_val[0])
+    
+def p_attrs_note_opne(psr_val):
+    'attrs :  ATTR_NOTE OPERATOR_NE'
+    psr_val[0] = { 'note': psr_val[1] }
+    nodes.attrs(psr_val[0])
 
 #@parser_rule
 def p_attrs_note_pt(psr_val):
@@ -572,6 +577,11 @@ def p_attr_bitfield_single(psr_val):
     # this looks like a bug : @10519  field_decl       name: @10537   type: @10538   scpe: @10431 srcp: tcp.h:93                chain: @10539 bitfield       size: @10540   algn: 1 bpos: @757     addr: 7f81279f75f0
     'attrs : SPEC_VALU'
     psr_val[0] = { 'note':'bitfield'}
+    
+def p_attr_spec_single(psr_val):
+    # this looks like a bug : @8314   record_type      name: @10257   size: @20      algn: 8 spec           tag : struct   flds: @10258 fncs: @10259   binf: @10260
+    'attrs : SPEC'
+    psr_val[0] = { 'note':'spec'}
 
 @parser_simple_rule_node
 def p_attr_mngl(psr_val):

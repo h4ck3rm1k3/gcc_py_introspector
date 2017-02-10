@@ -48,7 +48,7 @@ tokens = [
 #    'STRGLEN',
     "NODE",
 #    "TNODE",
-#    'SPEC',
+    'SPEC',
     "BUILTIN_FILE",
     'HXX_FILE',
     'ARTIFICIAL',
@@ -549,7 +549,7 @@ t_ACC = r'pub|priv|prot'
 t_STRUCT = r'struct|union'
 t_MEMBER = r'member|destructor|binfo|ptrmem'
 #t_NOTE = r'operator|conversion'
-#t_SPEC = r'spec\s'
+t_SPEC = r'spec\s'
 t_SPEC_VALU = r'mutable|bitfield|pure|virt'
 
 
