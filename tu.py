@@ -623,7 +623,7 @@ def t_SPEC_REGISTER(t):
 
 @token_rule
 def t_SOMEINT2(tok):
-    r'(?P<val>(0x)?\-?\d+)\s+' # some int
+    r'(?P<val>(0x)?\-?\d+)(\s+|$)' # some int
     strval = tok.lexer.lexmatch.group("val")
     #print "INT const: '%s'" % strval 
     #tok.value = strval

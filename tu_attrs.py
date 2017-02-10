@@ -66,6 +66,11 @@ def p_attr_bases_hex(psr_val):
     ## psr_val[0] = 'bases'
 
 @parser_simple_rule_node
+def p_attr_bases_int(psr_val):
+    'attrs : ATTR_BASES SOMEINT2'
+    ## psr_val[0] = 'bases'
+
+@parser_simple_rule_node
 def p_attr_binf(psr_val):
     'attrs : ATTR_BINF NODE'
     # psr_val[0] = 'binf'
@@ -178,6 +183,11 @@ def p_attr_high(psr_val):
     # psr_val[0] = 'high'
 
 @parser_simple_rule_node
+def p_attr_high_int(psr_val):
+    'attrs : ATTR_HIGH SOMEINT2 '
+    # psr_val[0] = 'high'
+
+@parser_simple_rule_node
 def p_attr_init(psr_val):
     'attrs : ATTR_INIT NODE'
     # psr_val[0] = 'init'
@@ -200,6 +210,11 @@ def p_attr_line(psr_val):
 @parser_simple_rule_node
 def p_attr_low(psr_val):
     'attrs : ATTR_LOW NODE'
+    # psr_val[0] = 'low'
+
+@parser_simple_rule_node
+def p_attr_low_int(psr_val):
+    'attrs : ATTR_LOW SOMEINT2'
     # psr_val[0] = 'low'
 
 @parser_simple_rule_node
@@ -451,8 +466,18 @@ def p_attrs_note_opge(psr_val):
     psr_val[0] = { 'note': psr_val[1] }
     nodes.attrs(psr_val[0])
 
+def p_attrs_note_opgt(psr_val):
+    'attrs :  ATTR_NOTE OPERATOR_GT'
+    psr_val[0] = { 'note': psr_val[1] }
+    nodes.attrs(psr_val[0])
+
 def p_attrs_note_ople(psr_val):
     'attrs :  ATTR_NOTE OPERATOR_LE'
+    psr_val[0] = { 'note': psr_val[1] }
+    nodes.attrs(psr_val[0])
+    
+def p_attrs_note_oplt(psr_val):
+    'attrs :  ATTR_NOTE OPERATOR_LT'
     psr_val[0] = { 'note': psr_val[1] }
     nodes.attrs(psr_val[0])
 

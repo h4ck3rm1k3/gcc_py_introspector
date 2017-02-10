@@ -45,6 +45,17 @@ def p_node_constructor(psr_val):
    # pprint.pprint(psr_val[0])
    
 @parser_node_rule
+def p_node_constructor_vals(psr_val):
+    'node : NODE CONSTRUCTOR LEN val_list'
+    psr_val[0] = {
+        '__type__' :'constructor',
+        'node' : psr_val[1],
+        'idx_len' : psr_val[3],
+        'idx_list' : psr_val[4],
+    }
+   # pprint.pprint(psr_val[0])
+   
+@parser_node_rule
 def p_node_constructor_empty(psr_val):
     'node : NODE CONSTRUCTOR LEN'
     psr_val[0] = {
@@ -336,6 +347,30 @@ def p_idx_val_item(psr_val):
     }
     #nd.ref(psr_val[0])
     #nd2.ref(psr_val[0])
+
+def p_val_item2(psr_val):
+    'val_list : ATTR_VAL NODE val_list'
+    nd = nodes.reference(psr_val[2],'val')
+    val = psr_val[3]
+    psr_val[0] = {
+        'type' : 'val',
+        'val' : {
+            'val_node': nd,
+            'val' : val,
+        }
+    }
+
+def p_val_item(psr_val):
+    'val_list : ATTR_VAL NODE attr_list'
+    nd = nodes.reference(psr_val[2],'val')
+    attr = psr_val[3]
+    psr_val[0] = {
+        'type' : 'val',
+        'val' : {
+            'idx_node': nd,
+            'attr' : attr,
+        }
+    }
 
 #@parser_rule
 def p_idx_val_item2(psr_val):
