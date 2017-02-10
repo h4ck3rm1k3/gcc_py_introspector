@@ -42,6 +42,7 @@ for pair in pairs:
             print ("OK")
         else:
             print ("fail")
+            raise Exception("err")
 
     else:
         print ("skipping test %s" % n)

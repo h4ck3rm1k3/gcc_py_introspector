@@ -7,15 +7,8 @@ funcs = {}
 # class SomeType:
 #     def __call__(self):
 #         pass
-        
-def debug(*args,**kvargs):
-    pprint.pprint({'args':args,'kvargs':kvargs})
-    pass
 
-import pprint
-def debug2(*args,**kvargs):
-    pprint.pprint({'args':args,'kvargs':kvargs})
-    pass
+from debug import debug, debug2
 
 class TNode :
     def __init__(self, node_id, node_type, o):
@@ -69,7 +62,7 @@ def parser_rule(f):
     def wrapper(psr_val):
 
         #if len(psr_val.stack) ==  1:
-        debug2( 'Parser f', f, doc)
+        debug( 'Parser f', f, doc)
         funcs[f]=1
         debug2(pprint2.pformat2({ 'slice' :psr_val.slice,
                         'stack' : psr_val.stack}))
@@ -80,7 +73,7 @@ def parser_rule(f):
         debug2( psr_val)
 
         for x in psr_val.slice[1:] :
-            pprint.pprint(x)
+            pprint2.pprint(x)
             debug2( "\t\t\tITEM:",i,":", pprint2.pformat2(x),"Value:",pprint2.pformat2(get_value(x)))
             nodes.attrs(get_value(x))
             
@@ -101,6 +94,7 @@ def parser_node_rule(f):
     parser node rule
     """
     doc = f.__doc__
+    debug( 'Parser f', f, doc)
     #debug(pprint2.pformat( dir(f)))
     #debug(pprint2.pformat( f.__dict__))
     @wraps(f)
@@ -157,7 +151,7 @@ def token_rule(f):
     """
     doc = f.__doc__
 
-    debug(pprint.pformat({
+    debug(pprint2.pformat({
         'token decl function f': f,
         'doc': doc,
         'dict' : f.__dict__
@@ -165,7 +159,7 @@ def token_rule(f):
 
     @wraps(f)
     def wrapper(tok):
-        debug(pprint.pformat({
+        debug(pprint2.pformat({
             'call function f': f,
             'doc': doc,
             'tok':tok,
@@ -224,7 +218,7 @@ def parser_simple_rule(f):
     #debug(pprint2.pformat( f.__dict__))
     @wraps(f)
     def wrapper(psr_val):
-
+        debug( 'Parser f', f, doc)
         field_name = psr_val.slice[1]
         field_value = psr_val.slice[2]
         debug( 'Parser rule f', field_name, field_value)
@@ -267,7 +261,7 @@ def parser_simple_rule_node(f):
     #debug(pprint2.pformat2( f.__dict__))
     @wraps(f)
     def wrapper(psr_val):
-
+        debug( 'Parser f', f, doc)
         field_name = psr_val.slice[1]
         field_value = nodes.reference(psr_val.slice[2].value,field_name)
         debug( 'Parser rule f', field_name, field_value)

@@ -161,7 +161,7 @@ def attr_base(psr_val):
 
 # merge the attributes in the list with the object
 def merge_list(t) :
-    #pprint2.pprint({'merge':t})
+    
     r =  {}
     if '__type__' in t :
         if t['__type__'] == 'attr_list':
@@ -169,6 +169,7 @@ def merge_list(t) :
                 if t['list']:
                     r=t['list'] # just use this
                 else:
+                    pprint.pprint({'check':t})
                     raise Exception("null")
 
             if 'attrs' in t:

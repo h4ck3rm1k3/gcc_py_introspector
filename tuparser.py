@@ -397,6 +397,10 @@ def p_attr_list4a(psr_val):
 #@parser_rule
 def p_attr_list_empty(psr_val):
     'attr_list : '
+    psr_val[0] = {
+        'type' : 'null',
+        'note' : 'empty list'
+    }
 
 #@parser_rule
 def p_attr_list3a(psr_val):

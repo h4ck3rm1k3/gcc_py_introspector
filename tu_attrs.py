@@ -2,6 +2,8 @@ from attributes import parser_rule,parser_node_rule, parser_simple_rule, parser_
 from utils import goto_initial, create_list, merge_list
 import tuast
 import nodes
+import pprint
+
 class Attr :
     def __init__(self, d):
         self.d = d
@@ -227,6 +229,11 @@ def p_attr_note(psr_val):
     # psr_val[0] = 'note'
 
 @parser_simple_rule_node
+def p_attr_note_member(psr_val):
+    'attrs : ATTR_NOTE MEMBER'
+    # psr_val[0] = 'note'
+
+@parser_simple_rule_node
 def p_attr_nst(psr_val):
     'attrs : ATTR_NST NODE'
     # psr_val[0] = 'nst'
@@ -259,6 +266,11 @@ def p_attr_purp(psr_val):
 @parser_simple_rule
 def p_attr_qual(psr_val):
     'attrs : ATTR_QUAL QUAL'
+    # psr_val[0] = 'qual'
+
+@parser_simple_rule
+def p_attr_qual2(psr_val):
+    'attrs : ATTR_QUAL SOMEHEX4'
     # psr_val[0] = 'qual'
 
 @parser_simple_rule_node
@@ -332,6 +344,14 @@ def p_attr_used(psr_val):
     goto_initial(psr_val)  # go back
     # psr_val[0] = 'used'
 
+
+@parser_simple_rule
+def p_attr_used_hex(psr_val):
+    'attrs : ATTR_USED SOMEHEX4'
+    goto_initial(psr_val)  # go back
+    # psr_val[0] = 'used'
+
+    
 @parser_simple_rule_node
 def p_attr_val(psr_val):
     'attrs : ATTR_VAL NODE'
@@ -393,6 +413,21 @@ def p_attrs_spec2(psr_val):
      'attrs :  SPEC_ATTR SPEC_REGISTER '
      #psr_val[0] = { 'spec': psr_val[2] }
 
+@parser_simple_rule
+def p_attrs_spec3(psr_val):
+     #            1          2        3        4
+     'attrs :  SPEC_ATTR SPEC_VALU'
+     #psr_val[0] = { 'spec': psr_val[2] }
+
+
+def p_attrs_spec4(psr_val):
+     #            1          2        3        4
+     'attrs :  SPEC_ATTR SPEC_VALU SPEC_VALU'
+     psr_val[0] = {
+         'spec': psr_val[2],
+         'spec': psr_val[3]
+    }
+
 
 #@parser_rule
 def p_attrs_note(psr_val):
@@ -400,6 +435,20 @@ def p_attrs_note(psr_val):
     psr_val[0] = { 'note': psr_val[1] }
     nodes.attrs(psr_val[0])
 
+#@parser_rule
+def p_attrs_note_opge(psr_val):
+    'attrs :  ATTR_NOTE OPERATOR_GE'
+    psr_val[0] = { 'note': psr_val[1] }
+    nodes.attrs(psr_val[0])
+
+#@parser_rule
+def p_attrs_note_pt(psr_val):
+    'attrs :  ATTR_NOTE PSEUDO TMPL'
+    psr_val[0] = { 'note': psr_val[1], 'ntype': 'pseudo_tmpl' }
+    nodes.attrs(psr_val[0])
+
+    
+    
 #@parser_rule
 def p_attrs_member(psr_val):
     'attrs : MEMBER'
@@ -605,13 +654,13 @@ def p_attrs_strg_empty(psr_val):
         nodes.attrs(psr_val[0])
     goto_initial(psr_val)
 
-#@parser_rule
-def p_attrs_spec3(psr_val):
-     #          1        2
-     'attrs :  SPEC_VALU'
-     #psr_val[0] = { 'spec_value' : psr_val[1] }
-     psr_val[0] = { 'type' : 'spec', 'val' :psr_val[1]     }
-     nodes.attrs(psr_val[0])
+# #@parser_rule
+# def p_attrs_spec3(psr_val):
+#      #          1        2
+#      'attrs :  SPEC_VALU'
+#      #psr_val[0] = { 'spec_value' : psr_val[1] }
+#      psr_val[0] = { 'type' : 'spec', 'val' :psr_val[1]     }
+#      nodes.attrs(psr_val[0])
 
 #@parser_rule
 def p_attrs_addrs2(psr_val):
@@ -681,6 +730,7 @@ def p_attrs_type3b(psr_val):
     #psr_val[0] = [psr_val[1],psr_val[2],psr_val[3],psr_val[4]]
     nd =nodes.reference(psr_val[2],'type')
     psr_val[0] = {
+        'note' : 'mikewas here',
         'type': 'type',
         'val' : {
             'type': nd,
@@ -692,6 +742,32 @@ def p_attrs_type3b(psr_val):
 
     nodes.attrs(psr_val[0])
 
+    pprint.pformat(psr_val[0])
+
+
+def p_attrs_type4b(psr_val):
+    #           type_     2     3
+    'type_attrs : TYPE_ATTR NODE INT SOMEHEX4'
+    goto_initial(psr_val)  # go back
+    #print 'finished TYPE_ATTR NODE'
+    #psr_val[0] = std_attrs(psr_val)
+    #psr_val[0] = [psr_val[1],psr_val[2],psr_val[3],psr_val[4]]
+    nd =nodes.reference(psr_val[2],'type')
+    psr_val[0] = {
+        'note' : 'mikewas here',
+        'type': 'type',
+        'val' : {
+            'type': nd,
+            'type_name': 'int',
+            'type_size': psr_val[4]
+        }
+    }
+    #nd.ref(psr_val[0])
+
+    nodes.attrs(psr_val[0])
+
+    pprint.pformat(psr_val[0])
+
 #@parser_rule
 def p_attrs_type5(psr_val):
     #           type_     2     3
@@ -701,6 +777,7 @@ def p_attrs_type5(psr_val):
     #psr_val[0] = std_attrs(psr_val)
     nd = nodes.reference(psr_val[2],'type')
     psr_val[0] = {
+        'note': 'mike',
         'type': 'type',
         'val' : {
             'type' : nd
@@ -708,6 +785,7 @@ def p_attrs_type5(psr_val):
     }
     #nd.ref( psr_val[0])
     nodes.attrs(psr_val[0])
+    pprint.pprint(psr_val[0])
     
 #parser_rule
 def p_attrs_strg3(psr_val):

@@ -42,7 +42,8 @@ tokens = [
     'CONSTRUCTOR',
     'QUAL',
 #    'FLOAT',
-#    'PSEUDO_TMPL',
+    'PSEUDO',
+    'TMPL',
     'STRG',
 #    'STRGLEN',
     "NODE",
@@ -274,7 +275,8 @@ while_stmt
 """)
 
 
-#t_PSEUDO_TMPL = 'pseudo|tmpl'
+t_PSEUDO = 'pseudo'
+t_TMPL = 'tmpl'
 #t_DTYPE = 'long|int'
 
 # can be used as a node type or a note
