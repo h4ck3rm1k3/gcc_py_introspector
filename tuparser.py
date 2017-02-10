@@ -43,6 +43,16 @@ def p_node_constructor(psr_val):
         'idx_list' : psr_val[4],
     }
    # pprint.pprint(psr_val[0])
+   
+@parser_node_rule
+def p_node_constructor_empty(psr_val):
+    'node : NODE CONSTRUCTOR LEN'
+    psr_val[0] = {
+        '__type__' :'constructor',
+        'node' : psr_val[1],
+        'idx_len' : psr_val[3],
+    }
+   # pprint.pprint(psr_val[0])
 
 
 ##########################################

@@ -1,7 +1,7 @@
 import sys
 import pprint2
 import pprint
-
+from debug import debug
 def append_list(current_list, node):
     if current_list :
         if isinstance(current_list,list):
@@ -177,7 +177,7 @@ def merge_list(t) :
                     if 'val' in t['attrs']:
                         f = t['attrs']['type']
                         v = t['attrs']['val']
-                        print ("setting %s = %s in %s" %(f,v, pprint.pformat(r)))
+                        #debug ("setting %s = %s in %s" %(f,v, pprint.pformat(r)))
                         r[f]=v
                     else:
 

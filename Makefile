@@ -1,3 +1,6 @@
+testp2:
+	python3 reader.py tests/phaseII.tu d
+
 rerunall:
 	python3 reruntest.py ./tests2
 
