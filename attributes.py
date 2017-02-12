@@ -1,7 +1,7 @@
 from functools import wraps
 import pprint2
 import ply.lex as lex
-import nodes
+#import nodes
 funcs = {}
 
 # class SomeType:

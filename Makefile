@@ -1,3 +1,6 @@
+testload:
+	python3 load_pickle.py tests/empty.tu.nodes.pickle
+
 testp2:
 	python3 reader.py tests/phaseII.tu d
 
@@ -21,8 +24,6 @@ testfield:
 	python3 reader.py tests/bitfield.tu
 	python3 load_pickle.py
 
-testload:
-	python3 load_pickle.py
 
 testlsof:
 	python3 reader.py ../lsof/main.c.001t.tu
