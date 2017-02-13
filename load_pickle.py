@@ -21,6 +21,10 @@ def debug2(x):
     #pprint.pprint(x)
     pass
 
+def debug3(x):
+    pprint.pprint(x)
+    pass
+
 def resolve2(x,seen, role, nt):
     debug({
         'phase':'resolve2',
@@ -58,6 +62,10 @@ def resolve2(x,seen, role, nt):
     raise Exception(x)
 
 def process_stack( name, val, nt, seen):
+
+    if name == 'chain' and nt.endswith('_decl'): # dont chain decls
+        return { 'name': 'chain', 'val': val }
+
     debug({
         'phase':'process_stack',
         'name':name,
@@ -166,13 +174,13 @@ def resolve(d,seen, role):
                 t [v['name']]=v['val']
 
     if role == 'name':
-        print ("role is name")
+        #print ("role is name")
         if 'name' in t:
             print ("name role : %s" % t['name'])
             t=resolve_name(t['name'])
 
     seen['seen'][nid]=t
-    print ( "done seen %s -> %s" % (nid, seen['seen'][nid]))
+    #print ( "done seen %s -> %s" % (nid, seen['seen'][nid]))
     return t
 
 
@@ -210,7 +218,7 @@ for x in ['1',]:#sorted(list(node_objs.keys()), key=int):
                 #print('name:',x, nt,d2['name'])
 
 
-            debug({
+            debug3({
                 'phase':'resolved',
                 #'ni': ni,
                 #'nt': nt,

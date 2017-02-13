@@ -48,3 +48,12 @@ nosetests.xml
 \#*
 *.bak*.err
 */*.err
+*.bak
+*.pickle
+*.lasterror.txt
+*.json
+*.shelve
+hide
+/lasterror.txt
+/output.debug
+/unpickle1.txt
