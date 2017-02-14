@@ -1,18 +1,21 @@
+testempty:
+	python3 gcc/tree/reader.py tests/empty.tu
+
 testload:
-	python3 load_pickle.py tests/empty.tu.nodes.pickle
+	python3 gcc/tree/load_pickle.py tests/empty.tu.nodes.pickle
 
 testp2:
-	python3 reader.py tests/phaseII.tu d
+	python3  gcc/tree/reader.py tests/phaseII.tu 
 
 rerunall:
 	python3 reruntest.py ./tests2
 
 testsave:
-	python3 reader.py tests/save_expr.tu
+	python3 gcc/tree/reader.py tests/save_expr.tu
 
 testcons:
-	python3 reader.py tests/constructor.tu
-	python3 load_pickle.py
+	python3 gcc/tree/reader.py tests/constructor.tu
+	python3 gcc/tree/load_pickle.py
 
 lsof:
 	python3 runtest.py ../lsof
@@ -21,31 +24,29 @@ runall:
 	python3 runtest.py ./tests
 
 testfield:
-	python3 reader.py tests/bitfield.tu
-	python3 load_pickle.py
+	python3 gcc/tree/reader.py tests/bitfield.tu
+	python3 gcc/tree/load_pickle.py
 
 
 testlsof:
-	python3 reader.py ../lsof/main.c.001t.tu
-	python3 load_pickle.py
+	python3 gcc/tree/reader.py ../lsof/main.c.001t.tu
+	python3 gcc/tree/load_pickle.py
 
 testid:
-	python3 reader.py tests/test_id.tu
+	python3 gcc/tree/reader.py tests/test_id.tu
 
 testnote:
-	python3 reader.py tests/test_note.tu
+	python3 gcc/tree/reader.py tests/test_note.tu
 
 testfunc2:
-	python3 reader.py tests/funcdecl2.tu
+	python3 gcc/tree/reader.py tests/funcdecl2.tu
 
 testfunc:
-	python3 reader.py tests/funcdecl1.tu
+	python3 gcc/tree/reader.py tests/funcdecl1.tu
 
 testchain:
-	python3 reader.py tests/test_chain.tu
+	python3 gcc/tree/reader.py tests/test_chain.tu
 
-testempty:
-	python3 reader.py tests/empty.tu
 
 recurse_all :
 	python3 query_function_example_python_all.py
@@ -81,10 +82,10 @@ query :
 
 # read in the TU create the data file in produce rdf files, after this you need to  load them into the database and then run some queries
 testbash1:
-	python3 reader.py /home/jamesmikedupont/bash/build/test1.tu
+	python3 gcc/tree/reader.py /home/jamesmikedupont/bash/build/test1.tu
 
 testbash:
-	python3 reader.py /home/jamesmikedupont/bash/build/eval.c.001t.tu
+	python3 gcc/tree/reader.py /home/jamesmikedupont/bash/build/eval.c.001t.tu
 	cp output.xml b99f78e7d415e80d1590/
 	cp output.xml /tmp/
 	sudo /etc/init.d/tomcat8 stop
@@ -92,43 +93,43 @@ testbash:
 	sudo /etc/init.d/tomcat8 start
 
 qual:
-	python3 reader.py tests/test_one_qual.tu x
+	python3 gcc/tree/reader.py tests/test_one_qual.tu x
 
 op01:
-	python3 reader.py tests/op_0_1.tu  d
+	python3 gcc/tree/reader.py tests/op_0_1.tu  d
 
 op0:
-	python3 reader.py tests/op_0.tu
+	python3 gcc/tree/reader.py tests/op_0.tu
 
 tuaddr :
-	python3 reader.py tests/addr_expr.tu
+	python3 gcc/tree/reader.py tests/addr_expr.tu
 
 tu7 :
-	python3 reader.py tests/report1.tu
+	python3 gcc/tree/reader.py tests/report1.tu
 
 tu8 :
-	python3 reader.py tests/testmissing4.tu
+	python3 gcc/tree/reader.py tests/testmissing4.tu
 
 tu6 :
-	python3 reader.py tests/testmissing4.tu
+	python3 gcc/tree/reader.py tests/testmissing4.tu
 
 tu5 :
-	python3 reader.py tests/testmissing3.tu
+	python3 gcc/tree/reader.py tests/testmissing3.tu
 
 tu4 :
-	python3 reader.py tests/testmissing2.tu
+	python3 gcc/tree/reader.py tests/testmissing2.tu
 
 tu3 :
-	python3 reader.py tests/testmissing.tu
+	python3 gcc/tree/reader.py tests/testmissing.tu
 
 tu1 :
-	python3 reader.py tests/testqual.tu
+	python3 gcc/tree/reader.py tests/testqual.tu
 
 
 tu :
-	python3 reader.py tests/test.tu
+	python3 gcc/tree/reader.py tests/test.tu
 
-FILES=tu.py tuparser.py tuast.py reader.py
+FILES=tu.py tuparser.py tuast.py gcc/tree/reader.py
 
 auto2:
 	~/.local/bin/autopep8 -v -a -a -a -a  -i $(FILES)
@@ -144,7 +145,7 @@ lint :
 	~/.local/bin/pylint --rcfile=.pylintrc  $(FILES)
 
 test100:
-	python3 reader.py tests/test100.tu
+	python3 gcc/tree/reader.py tests/test100.tu
 
 test102:
-	python3 reader.py tests/test102.tu
+	python3 gcc/tree/reader.py tests/test102.tu

@@ -8,11 +8,16 @@ import pickle
 nodes = {}
 stack = []
 astack = []
+import gcc
+import gcc.tree.transform
+r = gcc.tree.transform.Resolver(nodes)
+    
+import gcc.tree.transform
+def debug(x):
+    pass
 
 def pprintpprint(x):
     pprint.pprint(x)
-
-
 
 class Node :
     def __init__(self, n):
@@ -37,98 +42,76 @@ class Node :
         r = "refs %s" % len(self.refs)
         # for s in self.refs:
         #     r = r + s[1] + ':'+ s[0]
-
         return r
-
     #def default(self, x):
     #    return {}
     #def __repr__(self):
         #return "Node : %s Refs: %s" % (self.n,len(self.refs))
     #    return "!Node:id='%s',refs:'%s'!" % (self.n, self.format_refs())
-
     #def ref(self, obj):
     #    self.refs.append(obj)
 
     def usedby(self, x, n):
-
-        # print "USED:%s" % pprint2.pformat({
-        #     'node': self.n,
-        #     'usedby':x,
-        #     'usedby2':x.nid(),
-        #     'role': n})
         self.refs.append([x.nid(),n])
 
 def reference(n, name):
     global stack
     global astack
-
+    global nodes
+    debug("ref %s %s" % (n, name))
     #raise Exception('what')
     #pdb.set_trace()
-
     if isinstance(n,lex.LexToken):
         n = n.value
     if isinstance(name,lex.LexToken):
         name = name.value
-
     stack.append([name,n])
     #astack.append([name,n])
-
-    #print "ref %s" % n
-
     if n not in nodes:
-        nodes[n]= {'count':1, 'node' : Node(n) }
+        nodes[n]= {'count':1, 'node' : Node(n), 'nid': n }
     else:
         if 'count' in  nodes[n]:
             nodes[n]['count'] = nodes[n]['count'] +1
             #nodes[n]['refs'].append(nd)
         else:
             nodes[n]['count'] = 1
-
-    #nodes[n]['refs']= [  ]
-
+            
+        if 'node' not in nodes[n]:
+            nodes[n]['node']= Node(n)
+            
     return nodes[n]['node']
-
 
 def declare(n):
     #pickle.dumps(n)
+    global nodes            
     if not isinstance(n, str):
         n = n.value
-
-    #print "decl %s" % pprint.pformat(n)
-
+    debug("decl %s" % pprint.pformat(n))
     if n not in nodes:
         nodes[n]= {'decl':1,
-                   'node': Node(n)
+                   'node': Node(n),
+                   'nid': n
         }
     else:
         if 'decl' in nodes[n] :
-            pprint.pprint(nodes[n]['decl'])
+            pprintpprint(nodes[n]['decl'])
             #raise Exception("Duplicate Decl %s" %n)
             nodes[n]['decl'] = n
         else:
             nodes[n]['decl'] = 1
-
+    n2 = r.transform(n)    
     return nodes[n]['node']
 
 def statement(x):
-    #print("statement %s" % pprint2.pformat2(x))
+    debug("statement %s" % pprint2.pformat2(x))
     #pickle.dumps(x)
-    pickle.dumps(x)
+    #pickle.dumps(x)
     global stack
     global astack
-
+    global nodes
     if x:
         nid = x.nid()
-        #print 'Statement: %s' % pprint.pformat(nid)
-
-        #nid = "%s" % x.nid()
-
-
-        #print "stmt %s" % nid
-
-        #print "Debug",x,x.nid()
-        #pprintpprint(x)
-        #pprintpprint(x.__dict__)
+        
         if nid in nodes:
             nodes[nid]['decl'] = x
         else:
@@ -141,36 +124,32 @@ def statement(x):
         for sp in stack:
             sn = sp[0]
             s = sp[1]
-            #print s,sn,x
             nodes[s]['node'].usedby(x,sn)
-
         stack=[]
         astack=[]
-
-
-
+        n2 = r.transform(nid)
 
 def attrs(v):
-
-    pickle.dumps(v)
-
     if type (v) == str:
         raise Exception(v)
         #v = {'unkown': v}
         #pprintpprint({'push':v})
     #pickle.dump(v,f)
-
     astack.append(v)
-
-
 
 def report():
     print("Nodes Report:")
     #b = pickledb.load('nodes.db', False)
     f = open ("nodes.pickle","wb")
-    pickle.dump(nodes,f)
-    # for n in nodes.keys():
-    #     d = nodes[n]
+    
+    nodes2= {}
+    
+    for n in nodes.keys():
+        n2 = r.transform(n)
+        nodes2[n]=n2
+        
+    pickle.dump(nodes2,f)        
+        
     #     dc = None
     #     if 'decl' in d:
     #         dc=d['decl']

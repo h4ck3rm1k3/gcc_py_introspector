@@ -1,7 +1,7 @@
 from functools import wraps
 import pprint2
 import ply.lex as lex
-#import nodes
+from gcc.tree.nodes import attrs, declare, reference
 funcs = {}
 
 # class SomeType:
@@ -75,7 +75,7 @@ def parser_rule(f):
         for x in psr_val.slice[1:] :
             pprint2.pprint(x)
             debug2( "\t\t\tITEM:",i,":", pprint2.pformat2(x),"Value:",pprint2.pformat2(get_value(x)))
-            nodes.attrs(get_value(x))
+            attrs(get_value(x))
             
             i = i +1
         #         #, pprint2.pformat(dir(x))
@@ -120,7 +120,7 @@ def parser_node_rule(f):
             i = i +1
             #pprint2.pformat(dir(x))
             
-        node_id= nodes.declare(psr_val.slice[1])
+        node_id= declare(psr_val.slice[1])
         debug( 'Parser node f', node_id, anode_type)
 
         r= f(psr_val)
@@ -263,7 +263,7 @@ def parser_simple_rule_node(f):
     def wrapper(psr_val):
         debug( 'Parser f', f, doc)
         field_name = psr_val.slice[1]
-        field_value = nodes.reference(psr_val.slice[2].value,field_name)
+        field_value = reference(psr_val.slice[2].value,field_name)
         debug( 'Parser rule f', field_name, field_value)
         debug(pprint2.pformat2({ 'slice' :psr_val.slice,
                                'stack' : psr_val.stack}))
