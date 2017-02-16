@@ -5,7 +5,7 @@ import ast
 import tokenize
 import io
 import os
-import pprint
+#import pprint
 
 # Large float and imaginary literals get turned into infinities in the AST.
 # We unparse those infinities to INFSTR.
@@ -660,7 +660,7 @@ def roundtrip(filename, output=sys.stdout):
     with open(filename, "r") as pyfile:
         source = pyfile.read()
     tree = compile(source, filename, "exec", ast.PyCF_ONLY_AST)
-    pprint.pprint(ast.dump(tree))
+    #pprint.pprint(ast.dump(tree))
     Unparser(tree, output)
 
 

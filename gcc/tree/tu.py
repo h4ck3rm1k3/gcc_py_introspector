@@ -22,6 +22,7 @@ states = (
 )
 
 tokens = [
+#    'SPACE',
     'LEN',
     'SPEC_REGISTER',
     'ATTR_ALGN',
@@ -335,11 +336,10 @@ def t_NODE(tok):
     return tok
 
 
-
-@token_rule
+# this is skipped and does not produce a token
 def t_SPACE(tok):
     r'\s+'
-    pass
+    #return { 'skip': True }
 
 #t_ERROR = 'error_mark'
 

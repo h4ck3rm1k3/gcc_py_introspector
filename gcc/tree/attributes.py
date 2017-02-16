@@ -8,7 +8,7 @@ funcs = {}
 #     def __call__(self):
 #         pass
 
-from debug import debug, debug2
+from debug import debug, debug2, debug4
 
 class TNode :
     def __init__(self, node_id, node_type, o):
@@ -172,6 +172,13 @@ def token_rule(f):
         #debug(pprint2.pformat2())
         #debug(pprint2.pformat(dir(tok)))
         r= f(tok)
+        if r is None :
+            debug4(pprint2.pformat({
+                'none returned f': f,
+                'doc': doc,
+                'dict' : f.__dict__
+            }))
+            #raise Exception("None")
         debug({"ret:": r})
         return r
     
@@ -225,6 +232,7 @@ def parser_simple_rule(f):
         debug(pprint2.pformat2({ 'slice' :psr_val.slice,
                                'stack' : psr_val.stack}))
         debug(pprint2.pformat2(psr_val.__dict__))
+        
         #debug(pprint2.pformat(dir(psr_val)))
         #i = 0
         #for x in psr_val.slice :

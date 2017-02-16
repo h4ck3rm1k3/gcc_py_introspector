@@ -1,3 +1,12 @@
+
+import prefix
+import types
+import json
+#import pprint
+import json
+import yaml
+import types
+
 def array_type(**kwargs):
     return "array"
 
@@ -208,14 +217,6 @@ from graphviz import Digraph
 from SPARQLWrapper import SPARQLWrapper, XML, N3, JSONLD, JSON, POST, GET, SELECT, CONSTRUCT, ASK, DESCRIBE
 from SPARQLWrapper.Wrapper import _SPARQL_DEFAULT, _SPARQL_XML, _SPARQL_JSON, _SPARQL_POSSIBLE, _RDF_XML, _RDF_N3, _RDF_JSONLD, _RDF_POSSIBLE
 from SPARQLWrapper.SPARQLExceptions import QueryBadFormed
-
-import prefix
-import types
-import json
-import pprint
-import json
-import yaml
-import types
 
 
 def decl_expr(**kwargs):

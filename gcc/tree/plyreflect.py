@@ -2,7 +2,7 @@
 import inspect
 import tu
 import tuparser
-import pprint
+#import pprint
 import ply
 import sys
 

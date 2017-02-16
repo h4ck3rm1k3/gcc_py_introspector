@@ -1,7 +1,7 @@
 #import sched_dep
 import os
 import sys
-import pprint
+#import pprint
 
 
 #procedure DFS-iterative(G,v):

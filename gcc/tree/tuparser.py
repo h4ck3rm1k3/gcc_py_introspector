@@ -397,11 +397,26 @@ def p_attr_list2(psr_val):
         'list': psr_val[2]
     }
 
+    
+@parser_rule
+def p_attr_list2_end(psr_val):
+    'attr_list : str_attrs'
+    psr_val[0] = {
+        'strattrs': psr_val[1]
+    }
+
 @parser_rule
 def p_attr_list4(psr_val):
     'attr_list : addr_attrs attr_list'
     psr_val[0] = { 'addr_attrs': psr_val[1],
                    'list' : psr_val[2]
+    }
+
+@parser_rule
+def p_attr_list_end(psr_val):
+    'attr_list : addr_attrs'
+    psr_val[0] = { 'addr_attrs': psr_val[1]
+                   
     }
      
 
@@ -425,34 +440,35 @@ def p_attr_list3(psr_val):
 
 
 #@parser_rule
-def p_attr_list2a(psr_val):
-    'attr_list : str_attrs'
-    psr_val[0] = psr_val[1]
+# def p_attr_list2a(psr_val):
+#     'attr_list : str_attrs'
+#     psr_val[0] = psr_val[1]
 
 #@parser_rule
 def p_attr_list(psr_val):
     'attr_list : attrs attr_list'
     psr_val[0] = merge_list({'__type__':'attr_list', 'attrs': psr_val[1], 'list': psr_val[2]})
 
-#@parser_rule
-def p_attr_list4a(psr_val):
-    'attr_list : addr_attrs'
-    psr_val[0] = psr_val[1]
+# #@parser_rule
+# def p_attr_list4a(psr_val):
+#     'attr_list : addr_attrs'
+#     psr_val[0] = psr_val[1]
 
-#@parser_rule
-def p_attr_list_empty(psr_val):
-    'attr_list : '
-    psr_val[0] = {
-        'type' : 'null',
-        'note' : 'empty list'
-    }
-
+# #@parser_rule
+# def p_attr_list_empty(psr_val):
+#     'attr_list : '
+#     psr_val[0] = {
+#         'type' : 'null',
+#         'note' : 'empty list'
+#     }
+ 
 #@parser_rule
 def p_attr_list3a(psr_val):
     'attr_list : type_attrs'
     psr_val[0] = psr_val[1]
 
 def p_error(x):
+    print ("error occur %s" % x)
     raise Exception(x)
         
 from tu_attrs import *

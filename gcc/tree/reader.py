@@ -5,7 +5,7 @@ import sys
 import os
 import pprint2
 import nodes
-
+from debug import debug
 home = os.environ['HOME']
 user = os.environ['USER']
 
@@ -175,7 +175,7 @@ def report(x,l):
     #         #pprint2.pprint( ["no vals", x ] )
     #         raise Exception("TODO")
     
-def lex(l, debug, error_file):
+def lex(l, rundebug, error_file):
     """
     try and lex the input
     this function was removed, it is used to test the lexer.
@@ -197,11 +197,11 @@ def lex(l, debug, error_file):
         print("EXP",exp)
         print("Stack",stack)
         # raise exp
-    if debug:
+    if rundebug:
         #print "Line %s" % l
         pass
 
-def parse_l(l, debug, error_file, f):
+def parse_l(l, rundebug, error_file, f):
     '''
     preprocessing of the line
     '''
@@ -236,7 +236,7 @@ def parse_l(l, debug, error_file, f):
 
     # now try and parse the input
     try:
-        x = parser.parse(l, debug=debug)
+        x = parser.parse(l, debug=rundebug)
 
         if not x:
             error_file.write(l + "\n")
@@ -247,8 +247,8 @@ def parse_l(l, debug, error_file, f):
             #    x = parser.parse(l, debug=True)
         else:
             report(x,l)
-            if debug:
-                print(("Results1 %s" % x))
+            if rundebug:
+                debug(("Results1 %s" % x))
             else:
                 s = str(x)
                 # if not s in seen:
@@ -256,8 +256,8 @@ def parse_l(l, debug, error_file, f):
                 #     if debug:
                 #         print("Results2 '%s'" % s)
 
-        if debug :
-            print("Stack:%s" % stack)
+        if rundebug :
+            debug("Stack:%s" % stack)
             print("parser %s" % parser)
 
         return x
@@ -286,9 +286,9 @@ def main():
     # open the error file in case there are any errors they will be written here.
     error_file = open(sys.argv[1] + ".err", "w")
     if len(sys.argv) > 2:
-        debug = True
+        rundebug = True
     else:
-        debug = False
+        rundebug = False
 
     f = open ('lasterror.txt','a')
 
@@ -300,14 +300,14 @@ def main():
 
         if l[0] == '@':
             if line:
-                nodes.statement(parse_l(line, debug, error_file, f))
+                nodes.statement(parse_l(line, rundebug, error_file, f))
             line = l
         else:
             line = line + " " + l
     fd.close()
 
     if line:
-        nodes.statement(parse_l(line, debug, error_file, f))
+        nodes.statement(parse_l(line, rundebug, error_file, f))
     f.close()
         
 #try:

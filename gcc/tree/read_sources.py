@@ -363,7 +363,7 @@ class SourceGen:
 from types import ClassType
 
 import importlib
-import pprint
+#import pprint
 import sys
 
 def main(module):

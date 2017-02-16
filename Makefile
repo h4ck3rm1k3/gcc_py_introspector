@@ -1,5 +1,13 @@
+testemptyfull:
+	#python3 -mcProfile -s cumulative gcc/tree/reader.py tests/empty.tu
+	PYTHONPATH=~/experiments/gcc_py_introspector/ python3 gcc/tree/reader.py tests/empty.tu
+
+testemptyfullprofile:
+	#python3 -mcProfile -s cumulative gcc/tree/reader.py tests/empty.tu
+	PYTHONPATH=~/experiments/gcc_py_introspector/ python3 -mcProfile -s tottime gcc/tree/reader.py tests/empty.tu
+
 testempty:
-	python3 gcc/tree/reader.py tests/empty.tu
+	python3 gcc/tree/reader.py tests/empty_part.tu debug
 
 testload:
 	python3 gcc/tree/load_pickle.py tests/empty.tu.nodes.pickle

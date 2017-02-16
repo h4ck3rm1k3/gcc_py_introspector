@@ -3,7 +3,7 @@ from graphviz import Digraph
 import prefix
 
 import json
-import pprint
+#import pprint
 
 # print out what field types occur
 def ftypes():

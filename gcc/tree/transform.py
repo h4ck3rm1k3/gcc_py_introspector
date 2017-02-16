@@ -3,18 +3,7 @@ import attributes
 import nodes
 import tuast
 import sys
-import pprint
-def debug(x):
-    #pprint.pprint(x)
-    pass
-
-def debug2(x):
-    #pprint.pprint(x)
-    pass
-
-def debug3(x):
-    pprint.pprint(x)
-    pass
+from debug import debug, debug3, debug2
 
 class Resolver:
     
@@ -36,7 +25,7 @@ class Resolver:
             'seen':seen,
         })
         if isinstance(x, str):
-            print ('instance %s' % x)
+            #print ('instance %s' % x)
             return x
 
         if isinstance(x, dict):
@@ -142,8 +131,10 @@ class Resolver:
         })
         #nt = seen['node_type']
 
+        if 'node' not in d:
+            return None
+        
         nid = d['node'].nid()
-
         nt = d['node'].node_type()
 
         if nid not in seen['seen'] :
@@ -185,13 +176,15 @@ class Resolver:
         #print ( "done seen %s -> %s" % (nid, seen['seen'][nid]))
         return t
 
-
-
     def transform(self, x):
         #print x
         d = self.get_node_objs(x)
 
+        if 'decl' not in d:
+            return None
+        
         ni = d['decl'].node_id
+        
         if isinstance(ni, str):
             #ni=
             pass
@@ -202,8 +195,9 @@ class Resolver:
             nt = d['decl'].node_type
 
             #print (ni,nt)
-            del d['node'].refs
-            d['node']._node_type = nt
+            if 'node' in d:
+                #del d['node'].refs
+                d['node']._node_type = nt
 
 
             #if nt.endswith('_decl'):
@@ -218,7 +212,7 @@ class Resolver:
                     'phase':'resolved',
                     #'ni': ni,
                     #'nt': nt,
-                    'node': d['node'].__dict__,
+                    #'node': d['node'].__dict__,
                     'd': d,
                     'd2': d2
                 })

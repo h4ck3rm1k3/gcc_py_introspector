@@ -310,7 +310,7 @@ class StringConstant(Constant):
 # convert to/from assembler.....
 # convert to/from network package
 import inspect
-import pprint
+#import pprint
 import plyreflect
 
 def main(args):

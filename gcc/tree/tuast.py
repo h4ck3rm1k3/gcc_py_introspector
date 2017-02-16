@@ -505,7 +505,13 @@ class Identifier(Node):
         if 'string' in v:
             self.value = v['string']
         else:
-            raise Exception(pprint.pformat(v))
+            if 'strattrs' in v:
+                if 'string' in v['strattrs']:
+                    self.value = v['strattrs']['string']
+                else:
+                    raise Exception(pprint.pformat(v))
+            else:
+                raise Exception(pprint.pformat(v))
 
         if 'addr' in v:
             self.addr = v['addr']

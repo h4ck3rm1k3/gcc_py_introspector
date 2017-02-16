@@ -2,7 +2,7 @@ import pprint2
 import ply.lex as lex
 import pdb
 #import pickledb
-import pprint
+#import pprint
 import tuast
 import pickle
 nodes = {}
@@ -11,13 +11,8 @@ astack = []
 import gcc
 import gcc.tree.transform
 r = gcc.tree.transform.Resolver(nodes)
-    
+from debug import debug    
 import gcc.tree.transform
-def debug(x):
-    pass
-
-def pprintpprint(x):
-    pprint.pprint(x)
 
 class Node :
     def __init__(self, n):
@@ -86,19 +81,19 @@ def declare(n):
     global nodes            
     if not isinstance(n, str):
         n = n.value
-    debug("decl %s" % pprint.pformat(n))
+    debug("decl %s" % pprint2.pformat(n))
     if n not in nodes:
-        nodes[n]= {'decl':1,
+        nodes[n]= {'decl_count':1,
                    'node': Node(n),
                    'nid': n
         }
     else:
-        if 'decl' in nodes[n] :
-            pprintpprint(nodes[n]['decl'])
+        if 'decl_count' in nodes[n] :
+            debug(nodes[n]['decl_count'])
             #raise Exception("Duplicate Decl %s" %n)
-            nodes[n]['decl'] = n
+            nodes[n]['decl_count'] = n
         else:
-            nodes[n]['decl'] = 1
+            nodes[n]['decl_count'] = 1
     n2 = r.transform(n)    
     return nodes[n]['node']
 
@@ -147,6 +142,7 @@ def report():
     for n in nodes.keys():
         n2 = r.transform(n)
         nodes2[n]=n2
+        debug({'transform':n2})
         
     pickle.dump(nodes2,f)        
         
