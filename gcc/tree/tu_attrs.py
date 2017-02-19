@@ -1,8 +1,8 @@
-from attributes import parser_rule,parser_node_rule, parser_simple_rule, parser_simple_rule_node
-from utils import goto_initial, create_list, merge_list
-import tuast
-import nodes
-import pprint
+from gcc.tree.attributes import parser_rule,parser_node_rule, parser_simple_rule, parser_simple_rule_node
+from gcc.tree.utils import goto_initial, create_list, merge_list
+import gcc.tree.tuast
+import gcc.tree.nodes
+import gcc.tree.pprint2
 
 class Attr :
     def __init__(self, d):
@@ -458,54 +458,54 @@ def p_attrs_spec4(psr_val):
 def p_attrs_note(psr_val):
     'attrs :  ATTR_NOTE ARTIFICIAL'
     psr_val[0] = { 'note': psr_val[1] }
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
 
 #@parser_rule
 def p_attrs_note_opge(psr_val):
     'attrs :  ATTR_NOTE OPERATOR_GE'
     psr_val[0] = { 'note': psr_val[1] }
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
     
 def p_attrs_note_opeq(psr_val):
     'attrs :  ATTR_NOTE OPERATOR_EQ'
     psr_val[0] = { 'note': psr_val[1] }
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
     
 def p_attrs_note_opnot(psr_val):
     'attrs :  ATTR_NOTE OPERATOR_LNOT'
     psr_val[0] = { 'note': psr_val[1] }
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
     
 def p_attrs_note_op_subs(psr_val):
     'attrs :  ATTR_NOTE OPERATOR_SUBS'
     psr_val[0] = { 'note': psr_val[1] }
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
 
 def p_attrs_note_opgt(psr_val):
     'attrs :  ATTR_NOTE OPERATOR_GT'
     psr_val[0] = { 'note': psr_val[1] }
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
 
 def p_attrs_note_ople(psr_val):
     'attrs :  ATTR_NOTE OPERATOR_LE'
     psr_val[0] = { 'note': psr_val[1] }
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
     
 def p_attrs_note_oplt(psr_val):
     'attrs :  ATTR_NOTE OPERATOR_LT'
     psr_val[0] = { 'note': psr_val[1] }
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
     
 def p_attrs_note_opne(psr_val):
     'attrs :  ATTR_NOTE OPERATOR_NE'
     psr_val[0] = { 'note': psr_val[1] }
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
 
 #@parser_rule
 def p_attrs_note_pt(psr_val):
     'attrs :  ATTR_NOTE PSEUDO TMPL'
     psr_val[0] = { 'note': psr_val[1], 'ntype': 'pseudo_tmpl' }
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
 
     
     
@@ -514,7 +514,7 @@ def p_attrs_member(psr_val):
     'attrs : MEMBER'
     # psr_val[0]="MEMBER(%s)" % psr_val[1]
     psr_val[0] = { 'member': psr_val[1] }
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
 
 # @parser_rule
 # def p_attrval_note(psr_val):
@@ -719,10 +719,10 @@ def p_attrs_strg_empty(psr_val):
     if m:
         #print "simple string list '%s'" % m
         if isinstance(m, str):
-            psr_val[0] = { 'type': 'string' , 'val' :m}
+            psr_val[0] = { 'string_val' : m}
         else:
-            psr_val[0] = { 'type': 'string' , 'val' :m.val}
-        nodes.attrs(psr_val[0])
+            psr_val[0] = { 'string_val' :m.val}
+        gcc.tree.nodes.attrs(psr_val[0])
     goto_initial(psr_val)
 
 # #@parser_rule
@@ -731,7 +731,7 @@ def p_attrs_strg_empty(psr_val):
 #      'attrs :  SPEC_VALU'
 #      #psr_val[0] = { 'spec_value' : psr_val[1] }
 #      psr_val[0] = { 'type' : 'spec', 'val' :psr_val[1]     }
-#      nodes.attrs(psr_val[0])
+#      gcc.tree.nodes.attrs(psr_val[0])
 
     
 def p_attrs_addrs2(psr_val):
@@ -740,7 +740,7 @@ def p_attrs_addrs2(psr_val):
     if m:
         #print "address is set to", m
         psr_val[0] = { 'addr': m }
-        nodes.attrs(psr_val[0])
+        gcc.tree.nodes.attrs(psr_val[0])
     goto_initial(psr_val)
     
 #@parser_rule
@@ -750,7 +750,7 @@ def p_attrs_addrs3(psr_val):
     if m:
         #print "address is set to", m
         psr_val[0] = { 'addr': m }
-        nodes.attrs(psr_val[0])
+        gcc.tree.nodes.attrs(psr_val[0])
     goto_initial(psr_val)
     
  
@@ -761,16 +761,16 @@ def p_attrs_type6(psr_val):
     goto_initial(psr_val)  # go back
     #print 'finished TYPE_ATTR NODE'
     #psr_val[0] = std_attrs(psr_val)
-    nd= nodes.reference(psr_val[2], 'type')
+    nd= psr_val[2]
     psr_val[0] = {
-        'type': 'type',
-        'val': {
-            'type' : nd,
-            'type_name' : 'int',
-            'type_size':psr_val[4]
-        }
+        #'type': 'type',
+        #'val': {
+        'type' : nd,
+        'type_name' : 'int',
+        'type_size':psr_val[4]
+        #}
     }
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
     
 #@parser_rule
 def p_attrs_type3(psr_val):
@@ -779,17 +779,17 @@ def p_attrs_type3(psr_val):
     goto_initial(psr_val)  # go back
     #print 'finished TYPE_ATTR NODE'
     #psr_val[0] = std_attrs(psr_val)
-    nd=nodes.reference(psr_val[2],'type')
+    nd=gcc.tree.nodes.reference(psr_val[2],'type')
     psr_val[0] = {
-        'type': 'type',
-        'val': {
-            'type': nd,
+        #'type': 'type',
+        #'val': {
+        #'type': psr_val[2],
             'type_name': 'int',
             'type_size': psr_val[4]
-        }
+        #}
     }
     #nd.ref(psr_val[0])
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
 
 #@parser_rule
 def p_attrs_type3b(psr_val):
@@ -799,18 +799,18 @@ def p_attrs_type3b(psr_val):
     #print 'finished TYPE_ATTR NODE'
     #psr_val[0] = std_attrs(psr_val)
     #psr_val[0] = [psr_val[1],psr_val[2],psr_val[3],psr_val[4]]
-    nd =nodes.reference(psr_val[2],'type')
+    nd =gcc.tree.nodes.reference(psr_val[2],'type')
     psr_val[0] = {
-        'type': 'type',
-        'val' : {
-            'type': nd,
-            'type_name': 'int',
-            'type_size': psr_val[4]
-        }
+        #'type': 'type',
+        #'val' : {
+        #'type': psr_val[2],
+        'type_name': 'int',
+        'type_size': psr_val[4]
+        #}
     }
     #nd.ref(psr_val[0])
 
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
 
 
 
@@ -821,17 +821,17 @@ def p_attrs_type4b(psr_val):
     #print 'finished TYPE_ATTR NODE'
     #psr_val[0] = std_attrs(psr_val)
     #psr_val[0] = [psr_val[1],psr_val[2],psr_val[3],psr_val[4]]
-    nd =nodes.reference(psr_val[2],'type')
+    nd =gcc.tree.nodes.reference(psr_val[2],'type')
     psr_val[0] = {
-        'type': 'type',
-        'val' : {
-            'type': nd,
-            'type_name': 'int',
-            'type_size': psr_val[4]
-        }
+        #'type': 'type',
+        #'val' : {
+        #'type': psr_val[2],
+        'type_name': 'int',
+        'type_size': psr_val[4]
+        #}
     }
     #nd.ref(psr_val[0])
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
 
 
 #@parser_rule
@@ -841,15 +841,15 @@ def p_attrs_type5(psr_val):
     #print 'finished TYPE_ATTR NODE'
     #goto_initial(psr_val)  # go back
     #psr_val[0] = std_attrs(psr_val)
-    nd = nodes.reference(psr_val[2],'type')
+    nd = gcc.tree.nodes.reference(psr_val[2],'type')
     psr_val[0] = {
-        'type': 'type',
-        'val' : {
-            'type' : nd
-        }
+        #'type': 'type',
+        #'val' : {
+        #'type' : psr_val[2]
+        #}
     }
     #nd.ref( psr_val[0])
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
 
     
 #parser_rule
@@ -858,9 +858,9 @@ def p_attrs_strg3(psr_val):
     m=psr_val[2]
     if m:
         #print "simple string '%s'" % m
-        psr_val[0] = {'string':tuast.String2(m)}
+        psr_val[0] = {'string':gcc.tree.tuast.String2(m)}
     goto_initial(psr_val)
-    nodes.attrs(psr_val[0])
+    gcc.tree.nodes.attrs(psr_val[0])
     
 #@parser_rule
 def p_attrs_addrs(psr_val):
@@ -872,4 +872,4 @@ def p_attrs_addrs(psr_val):
     #print 'after hexval'
     goto_initial(psr_val)
     psr_val[0] = { 'addr': m }
-    nodes.attrs({ 'addr': m })
+    gcc.tree.nodes.attrs({ 'addr': m })

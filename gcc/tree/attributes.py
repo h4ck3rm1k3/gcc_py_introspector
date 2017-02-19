@@ -1,50 +1,15 @@
 from functools import wraps
-import pprint2
+from gcc.tree.pprint2 import *
 import ply.lex as lex
 from gcc.tree.nodes import attrs, declare, reference
-funcs = {}
+from gcc.tree.debug import debug, debug2, debug4
+from gcc.tree.tnode import TNode
 
-# class SomeType:
-#     def __call__(self):
-#         pass
-
-from debug import debug, debug2, debug4
-
-class TNode :
-    def __init__(self, node_id, node_type, o):
-        self.node_id=node_id
-        self.node_type=node_type
-        #self.o=o
-    def nid(self):
-        return self.node_id.n
-
-    def pstack(self):
-        r = ""
-        debug( "Stack:%s" % pprint2.pformat(self.o.stack))
-        #debug(pprint2.pformat(dir(self.o)))
-        #debug(pprint2.pformat(self.o.__dict__))
-        for s in self.o.stack:
-            if s.type == '$end':
-                pass
-            else:
-                s1= "pstack[type:%s t2:%s value:%s]," % (s.type, type(s.value), s.value.node_id)
-                r = r + s1
-                debug( "Stack",s,pprint2.pformat(s))
-                #debug( "Stack",s,pprint2.pformat(dir(s)))
-                debug( "Stack",s,pprint2.pformat(s.__dict__))
-        return r
-            
-    def __rep2r__(self):
-        return "!TNode:id='%s',type:'%s',obj:'%s'!" % (
-            self.node_id.n,
-            self.node_type,
-            'pstack'
-            #self.pstack()
-            #pprint2.pformat(self.o.__dict__)
-        )
+#funcs = {}
+import pprint
 
 def get_value(x):
-    #print pprint2.pformat2(x)
+    #pprint.pprint({"get value":x})
     if 'value' in x.__dict__:        
         return x.value
     else:
@@ -63,25 +28,25 @@ def parser_rule(f):
 
         #if len(psr_val.stack) ==  1:
         debug( 'Parser f', f, doc)
-        funcs[f]=1
-        debug2(pprint2.pformat2({ 'slice' :psr_val.slice,
+        #funcs[f]=1
+        debug2(pformat2({ 'slice' :psr_val.slice,
                         'stack' : psr_val.stack}))
-        debug2(pprint2.pformat2(psr_val.__dict__))
-        #rpprint2.pprint(dir(psr_val))
+        debug2(pformat2(psr_val.__dict__))
+        #rpprint(dir(psr_val))
         i = 0
 
         debug2( psr_val)
 
         for x in psr_val.slice[1:] :
-            pprint2.pprint(x)
-            debug2( "\t\t\tITEM:",i,":", pprint2.pformat2(x),"Value:",pprint2.pformat2(get_value(x)))
-            attrs(get_value(x))
+            #pprint.pprint(x)
+            debug2( "\t\t\tITEM:",i,":", pformat2(x),"Value:",pformat2(get_value(x)))
+            #attrs(get_value(x))
             
             i = i +1
-        #         #, pprint2.pformat(dir(x))
+        #         #, pformat(dir(x))
         r= f(psr_val)
         x =psr_val.slice[0]
-        debug2( "\t\t\tresult:",i,":", pprint2.pformat2(x),"Value:",pprint2.pformat2(get_value(x)))
+        debug2( "\t\t\tresult:",i,":", pformat2(x),"Value:",pformat2(get_value(x)))
         return r
     wrapper.doc = doc
     return wrapper
@@ -94,9 +59,9 @@ def parser_node_rule(f):
     parser node rule
     """
     doc = f.__doc__
-    debug( 'Parser f', f, doc)
-    #debug(pprint2.pformat( dir(f)))
-    #debug(pprint2.pformat( f.__dict__))
+    #debug( 'Parser f', f, doc)
+    #debug(pformat( dir(f)))
+    #debug(pformat( f.__dict__))
     @wraps(f)
     def wrapper(psr_val):
 
@@ -104,21 +69,21 @@ def parser_node_rule(f):
         
         anode_type= psr_val.slice[2].value
 
-        debug(pprint2.pformat2({ 'slice' :psr_val.slice,
+        debug(pformat2({ 'slice' :psr_val.slice,
                                                'stack' : psr_val.stack}))
-        debug(pprint2.pformat2(psr_val.__dict__))
-        #debug(pprint2.pformat(dir(psr_val)))
+        debug(pformat2(psr_val.__dict__))
+        #debug(pformat(dir(psr_val)))
         i = 0
         for x in psr_val.slice :
             debug2(
                 "\t\t\tSLICE ITEM:",
                 i,
                 ":",
-                pprint2.pformat2(x),
+                pformat2(x),
                 "Value:",
-                pprint2.pformat2(get_value(x)))
+                pformat2(get_value(x)))
             i = i +1
-            #pprint2.pformat(dir(x))
+            #pformat(dir(x))
             
         node_id= declare(psr_val.slice[1])
         debug( 'Parser node f', node_id, anode_type)
@@ -128,19 +93,23 @@ def parser_node_rule(f):
             debug( "going to create ", anode_type)
             cls = registry[anode_type]
             obj = cls(node_id, anode_type, psr_val)
-            debug( obj)
             psr_val[0] = obj
         else:
-            debug(pprint2.pformat2(registry))
+            debug(pformat2(registry))
             debug( "going to create default", anode_type, node_id)
             if anode_type not in types:
                 types[anode_type]=1
             else:
+
                 types[anode_type]=types[anode_type]+1
-            psr_val[0] = TNode(node_id, anode_type , psr_val)
+            psr_val[0] = {
+                'node_decl': node_id,
+                'type': anode_type ,
+                #'body': psr_val
+            }
 
         
-        debug(pprint2.pformat2(psr_val[0]))
+        debug(pformat2(psr_val[0]))
         
     wrapper.doc = doc
     return wrapper
@@ -151,15 +120,15 @@ def token_rule(f):
     """
     doc = f.__doc__
 
-    debug(pprint2.pformat({
-        'token decl function f': f,
-        'doc': doc,
-        'dict' : f.__dict__
-        }))
+    # debug(pformat({
+    #     'token decl function f': f,
+    #     'doc': doc,
+    #     'dict' : f.__dict__
+    #     }))
 
     @wraps(f)
     def wrapper(tok):
-        debug(pprint2.pformat({
+        debug(pformat({
             'call function f': f,
             'doc': doc,
             'tok':tok,
@@ -169,11 +138,11 @@ def token_rule(f):
             'value' :tok.value,
             'dict' : tok.__dict__
         }))
-        #debug(pprint2.pformat2())
-        #debug(pprint2.pformat(dir(tok)))
+        #debug(pformat2())
+        #debug(pformat(dir(tok)))
         r= f(tok)
         if r is None :
-            debug4(pprint2.pformat({
+            debug4(pformat({
                 'none returned f': f,
                 'doc': doc,
                 'dict' : f.__dict__
@@ -213,30 +182,30 @@ def register(name, theclass):
 
 def report():
     debug( 'report')
-    debug(pprint2.pformat2( types))
-    debug(pprint2.pformat2( funcs))
+    debug(pformat2( types))
+    #debug(pformat2( funcs))
 
 def parser_simple_rule(f):
     """
     parser simple rule
     """
     doc = f.__doc__
-    #debug(pprint2.pformat( dir(f)))
-    #debug(pprint2.pformat( f.__dict__))
+    #debug(pformat( dir(f)))
+    #debug(pformat( f.__dict__))
     @wraps(f)
     def wrapper(psr_val):
         debug( 'Parser f', f, doc)
         field_name = psr_val.slice[1]
         field_value = psr_val.slice[2]
         debug( 'Parser rule f', field_name, field_value)
-        debug(pprint2.pformat2({ 'slice' :psr_val.slice,
+        debug(pformat2({ 'slice' :psr_val.slice,
                                'stack' : psr_val.stack}))
-        debug(pprint2.pformat2(psr_val.__dict__))
+        debug(pformat2(psr_val.__dict__))
         
-        #debug(pprint2.pformat(dir(psr_val)))
+        #debug(pformat(dir(psr_val)))
         #i = 0
         #for x in psr_val.slice :
-        #    debug( "\t\t\tITEM:",i,":", pprint2.pformat(x),"Value:",pprint2.pformat(get_value(x)))
+        #    debug( "\t\t\tITEM:",i,":", pformat(x),"Value:",pformat(get_value(x)))
         #    i = i +1
 
         r= f(psr_val)
@@ -247,15 +216,18 @@ def parser_simple_rule(f):
         #     debug( obj)
         #     psr_val[0] = obj
         # else:
-        #     debug(pprint2.pformat(registry))
+        #     debug(pformat(registry))
         #     debug( "going to create default", node_type)
         #     if node_type not in types:
         #         types[node_type]=1
         #     else:
         #         types[node_type]=types[node_type]+1
 
-        psr_val[0] = { 'node_type' : f.__name__, 'val' :field_value.value, 'name': field_name.value }
-        debug( " attr %s" % pprint2.pformat2( psr_val[0]))
+        psr_val[0] = {
+            #'node_type' : f.__name__,
+            field_name.value : field_value.value
+        }
+        debug( " attr %s" % pformat2( psr_val[0]))
 
     wrapper.doc = doc
     return wrapper
@@ -265,21 +237,21 @@ def parser_simple_rule_node(f):
     parser simple rule
     """
     doc = f.__doc__
-    #debug(pprint2.pformat2( dir(f)))
-    #debug(pprint2.pformat2( f.__dict__))
+    #debug(pformat2( dir(f)))
+    #debug(pformat2( f.__dict__))
     @wraps(f)
     def wrapper(psr_val):
         debug( 'Parser f', f, doc)
         field_name = psr_val.slice[1]
         field_value = reference(psr_val.slice[2].value,field_name)
         debug( 'Parser rule f', field_name, field_value)
-        debug(pprint2.pformat2({ 'slice' :psr_val.slice,
+        debug(pformat2({ 'slice' :psr_val.slice,
                                'stack' : psr_val.stack}))
-        debug(pprint2.pformat2(psr_val.__dict__))
-        #debug(pprint2.pformat2(dir(psr_val)))
+        debug(pformat2(psr_val.__dict__))
+        #debug(pformat2(dir(psr_val)))
         #i = 0
         #for x in psr_val.slice :
-        #    debug( "\t\t\tITEM:",i,":", pprint2.pformat2(x),"Value:",pprint2.pformat2(get_value(x)))
+        #    debug( "\t\t\tITEM:",i,":", pformat2(x),"Value:",pformat2(get_value(x)))
         #    i = i +1
 
         r= f(psr_val)
@@ -290,18 +262,21 @@ def parser_simple_rule_node(f):
         #     debug( obj))
         #     psr_val[0] = obj
         # else:
-        #     debug(pprint2.pformat2(registry)))
+        #     debug(pformat2(registry)))
         #     debug( "going to create default", node_type))
         #     if node_type not in types:
         #         types[node_type]=1
         #     else:
         #         types[node_type]=types[node_type]+1
 
-        psr_val[0] = { 'node_type' : f.__name__, 'val' :field_value, 'name': field_name.value }
+        psr_val[0] = { #'node_type' : f.__name__,
+            field_name.value : field_value
+
+        }
 
         #field_value.ref(psr_val[0])
 
-        debug( " attr %s" % pprint2.pformat2( psr_val[0]))
+        debug( " attr %s" % pformat2( psr_val[0]))
 
     wrapper.doc = doc
     return wrapper

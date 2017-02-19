@@ -1,8 +1,13 @@
 import pprint as orig
 
 def pprint (*argv,**kvargs):
+    return
     #raise Exception('')
-    #return orig.pprint([argv,kvargs])
+    if argv:
+        orig.pprint(argv)
+    if kvargs:
+        orig.pprint(kvargs)
+    
     pass
 
 def pformat (*argv,**kvargs):
@@ -15,5 +20,11 @@ def pformat2 (*argv,**kvargs):
     pass
 
 def dprint (*argv,**kvargs):
+    return
     #return orig.pprint([argv,kvargs])
+    if argv:
+        orig.pprint(argv)
+    if kvargs:
+        orig.pprint(kvargs)
+    
     pass

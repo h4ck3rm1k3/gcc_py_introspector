@@ -1,5 +1,4 @@
-from attributes import parser_node_rule
-
+from gcc.tree.attributes import parser_node_rule
 
 @parser_node_rule
 def p_ADDR_EXPR_node(psr_val):

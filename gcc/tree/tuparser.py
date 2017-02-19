@@ -1,7 +1,7 @@
 '''
 reader
 '''
-from attributes import parser_rule,parser_node_rule, parser_simple_rule
+from gcc.tree.attributes import parser_rule,parser_node_rule, parser_simple_rule
 # this first rule is synthetic and matches any nodes
 
 start = 'anynode'
@@ -13,15 +13,15 @@ def p_any_node(psr_val):
     psr_val[0]=psr_val[1]
 
 import pprint
-import pprint2
+import gcc.tree.pprint2
 
 import ply.yacc as yacc # Get the token map from the lexer.  This is required.
-from tu import tokens
-import tuast  # import Link
-from utils import goto_initial, create_list, merge_list
+from gcc.tree.tu import tokens
+import gcc.tree.tuast  # import Link
+from gcc.tree.utils import goto_initial, create_list, merge_list
 
 # the first rule is important
-import nodes
+import gcc.tree.nodes
 
 @parser_rule
 def p_node_id(psr_val):
@@ -336,14 +336,14 @@ def p_idx_val_item(psr_val):
     nd2 = nodes.reference(psr_val[4],'val')
     addr = psr_val[5]
     psr_val[0] = {
-        'type' : 'idx_val',
-        'val' : {
+        #'type' : 'idx_val',
+        #'val' : {
             #'idx':psr_val[1],
-            'idx_node': nd,
+            #'idx_node': nd,
             #'attrval': psr_val[3],
-            'val_node': nd2,
+            #'val_node': nd2,
             'addr' : addr,
-        }
+        #}
     }
     #nd.ref(psr_val[0])
     #nd2.ref(psr_val[0])
@@ -353,11 +353,11 @@ def p_val_item2(psr_val):
     nd = nodes.reference(psr_val[2],'val')
     val = psr_val[3]
     psr_val[0] = {
-        'type' : 'val',
-        'val' : {
-            'val_node': nd,
-            'val' : val,
-        }
+        #'type' : 'val',
+        #'val' : {
+        'val_node': nd,
+        'value' : val,
+        #}
     }
 
 def p_val_item(psr_val):
@@ -365,11 +365,11 @@ def p_val_item(psr_val):
     nd = nodes.reference(psr_val[2],'val')
     attr = psr_val[3]
     psr_val[0] = {
-        'type' : 'val',
-        'val' : {
-            'idx_node': nd,
-            'attr' : attr,
-        }
+        #'type' : 'val',
+        #'val' : {
+        'idx_node': nd,
+        'attr' : attr,
+        #}
     }
 
 #@parser_rule
@@ -379,14 +379,14 @@ def p_idx_val_item2(psr_val):
     nd2 = nodes.reference(psr_val[4],'val')
     alist = psr_val[5]
     psr_val[0] = {
-        'type' : 'idx_val',
-        'val' : {
+        #'type' : 'idx_val',
+        #'val' : {
         #'idx':psr_val[1],
-            'idx_node': nd,
-            'val_node': nd2,
-            'list' : alist,
-        }
+        'idx_node': nd,
+        'val_node': nd2,
+        'list' : alist,
     }
+    
 
 
 @parser_rule
@@ -471,8 +471,8 @@ def p_error(x):
     print ("error occur %s" % x)
     raise Exception(x)
         
-from tu_attrs import *
-from generated_rules import *
-from generated_rules2 import *
+from gcc.tree.tu_attrs import *
+from gcc.tree.generated_rules import *
+from gcc.tree.generated_rules2 import *
 
 parser = yacc.yacc()

@@ -1,22 +1,20 @@
 import pickle
-import attributes
-import nodes
-import tuast
+import gcc.tree.attributes
+import gcc.tree.nodes
+import gcc.tree.tuast
 import sys
-from debug import debug, debug3, debug2
+from gcc.tree.debug import debug, debug3, debug2
+import pprint
 
 class Resolver:
-    
-    def __init__(self,node_objects):
-        self.node_objs=node_objects
-        
-    def get_node_objs(self,x):
-        if x in self.node_objs:
-            return self.node_objs[x]
-        else:
-            raise Exception(x)
 
-    def resolve2(self,x,seen, role, nt):
+    @staticmethod
+    def get_node_objs( x):
+        d = gcc.tree.nodes.Nodes.get_node_objs(x)
+        return d
+    
+    @staticmethod    
+    def resolve2(x,seen, role, nt):
         debug({
             'phase':'resolve2',
             'x':x,
@@ -31,7 +29,7 @@ class Resolver:
         if isinstance(x, dict):
             if 'type' in x:
                 #print  ('resolving dict %s' % pprint.pformat(x))
-                return self.resolve2( x['type'],seen, role, nt)
+                return Resolver.resolve2( x['type'],seen, role, nt)
             else:
                 #print('resolving dict %s' % pprint.pformat(x))
                 raise Exception()
@@ -41,18 +39,19 @@ class Resolver:
                 return 'short'
 
         if isinstance(x,tuast.Node):
-            return self.resolve(self.get_node_objs(x.nid()),seen,role)
+            return Resolver.resolve(Resolver.get_node_objs(x.nid()),seen,role)
         if isinstance(x,nodes.Node):
-            return self.resolve(self.get_node_objs(x.nid()),seen,role)
+            return Resolver.resolve(Resolver.get_node_objs(x.nid()),seen,role)
         if isinstance(x,attributes.TNode):
-            return self.resolve(self.get_node_objs(x.nid()),seen,role)
+            return Resolver.resolve(Resolver.get_node_objs(x.nid()),seen,role)
 
         t = type(x)
         print('trying to resolve %s' % t)
         print('resolving obj %s' % pprint.pformat(x))
         raise Exception(x)
 
-    def process_stack(self, name, val, nt, seen):
+    @staticmethod
+    def process_stack( name, val, nt, seen):
 
         if name == 'chain' and nt.endswith('_decl'): # dont chain decls
             return { 'name': 'chain', 'val': val }
@@ -64,11 +63,12 @@ class Resolver:
             'nt':nt,
             'seen':seen,
         })
-        #v = self.resolve2(val,seen, name, nt)
-        v = self.resolve(self.get_node_objs(val),seen,name)
+        #v = Resolver.resolve2(val,seen, name, nt)
+        v = Resolver.resolve(Resolver.get_node_objs(val),seen,name)
         return { 'name': name , 'val' : v}
 
-    def process(self, x,nt, seen):
+    @staticmethod
+    def process( x,nt, seen):
         debug2({
             'phase':'process',
             'x':x,
@@ -81,18 +81,18 @@ class Resolver:
             if name == 'chain' and nt.endswith('_decl'): # dont chain decls
                 return { 'name': 'chain', 'val': val }
             else:
-                v = self.resolve2(val,seen, name, nt)
+                v = Resolver.resolve2(val,seen, name, nt)
                 return { 'name': name , 'val' : v}
 
         if 'type' in x:
             t = x['type']
             if isinstance(t, str):
                 v = x['val']
-                x = self.resolve2(v,seen, 'type', nt)
+                x = Resolver.resolve2(v,seen, 'type', nt)
                 return { 'name': 'type', 'val' : x}
             else:
                 #print  'resolving  %s' %
-                x = self.resolve2(t,seen,'type', nt)
+                x = Resolver.resolve2(t,seen,'type', nt)
                 return { 'name': 'type', 'val' : x}
         if 'string' in x:
             #return x['string']
@@ -104,7 +104,8 @@ class Resolver:
 
         raise Exception(  ' process %s' % pprint.pformat(x))
 
-    def resolve_name(self, x):
+    @staticmethod
+    def resolve_name( x):
 
         debug({
             'phase':'resolve_name',
@@ -121,8 +122,8 @@ class Resolver:
 
         raise Exception(x)
 
-
-    def resolve(self, d,seen, role):
+    @staticmethod
+    def resolve( d,seen, role):
         debug({
             'phase':'resolve',
             'd':d,
@@ -154,7 +155,7 @@ class Resolver:
         }
         if 'astack' in d:
             for x in d['astack']:
-                v = self.process( x, nt, seen)
+                v = Resolver.process( x, nt, seen)
                 if v:
                     t [v['name']]=v['val']
 
@@ -162,7 +163,7 @@ class Resolver:
             for x in d['stack']:
                 name = x[0]
                 val = x[1]
-                v = self.process_stack( name, val, nt, seen)
+                v = Resolver.process_stack( name, val, nt, seen)
                 if v:
                     t [v['name']]=v['val']
 
@@ -170,31 +171,43 @@ class Resolver:
             #print ("role is name")
             if 'name' in t:
                 print ("name role : %s" % t['name'])
-                t=self.resolve_name(t['name'])
+                t=Resolver.resolve_name(t['name'])
 
         seen['seen'][nid]=t
         #print ( "done seen %s -> %s" % (nid, seen['seen'][nid]))
         return t
 
-    def transform(self, x):
+    @staticmethod
+    def transform( x):
         #print x
-        d = self.get_node_objs(x)
+        d = Resolver.get_node_objs(x)
 
-        if 'decl' not in d:
+        if d is None:
             return None
         
-        ni = d['decl'].node_id
+        # decl is set when the statement is finished
+        if 'decl' not in d:
+            ni = x
+            #debug(gcc.tree.nodes.Nodes.nodes)
+            #if 'node' in d:
+            #    nt = 
+            #debug(x)
+            #raise Exception("not declared %s %s" % (x, d))
+            #return None
+        else:
+            ni = d['nid']
         
-        if isinstance(ni, str):
-            #ni=
-            pass
-        else: 
-            ni = d['decl'].node_id.nid()
+            if isinstance(ni, str):
+                #ni=
+                pass
+            else: 
+                ni = d['decl'].node_id.nid()
 
-        if 'decl' in d:
-            nt = d['decl'].node_type
+
+            nt = d['decl']['type']
 
             #print (ni,nt)
+
             if 'node' in d:
                 #del d['node'].refs
                 d['node']._node_type = nt
@@ -203,7 +216,7 @@ class Resolver:
             #if nt.endswith('_decl'):
             if True:
 
-                d2 = self.resolve(d,{'stack': [], 'seen': {}, 'node_type':nt, 'node_id': x },'start')
+                d2 = Resolver.resolve(d,{'stack': [], 'seen': {}, 'node_type':nt, 'node_id': x },'start')
                 #if 'name' in d2:
                     #print('name:',x, nt,d2['name'])
 

@@ -3,36 +3,37 @@ reader module
 '''
 import sys
 import os
-import pprint2
-import nodes
-from debug import debug
-home = os.environ['HOME']
-user = os.environ['USER']
-
-sys.path.append(home + '/rdflib/')
-sys.path.append(home + '/sparqlwrapper/')
-
+from gcc.tree.debug import debug
+#home = os.environ['HOME']
+#user = os.environ['USER']
+#sys.path.append(home + '/rdflib/')
+#sys.path.append(home + '/sparqlwrapper/')
 #import urllib.request, urllib.error, urllib.parse
 #handler=urllib.request.HTTPHandler(debuglevel=1)
 #opener = urllib.request.build_opener(handler)
 #urllib.request.install_opener(opener)
 #>>> resp=urllib2.urlopen('http://w
-
-
-
 #pprint2.pprint(sys.path)
 import re
-import tuast
-import traceback
-from tu import lex
-from tuparser import parser
+#import traceback
+
+
+##
+from gcc.tree.tu import lex
+from gcc.tree.tuparser import parser
+import gcc.tree.tuast
+import gcc.tree.pprint2
+import gcc.tree.nodes
+import gcc.tree.attributes
+import gcc.tree.nodes
+
 
 OPRE = r'op\s([0-9]+)\s*:\s\@'
 ERE = r'\s([0-9]+)\s+:\s\@'
 vals = {}
 #seen = {} 
 deps = {}
-filename = sys.argv[1].replace(home,'projects')
+#filename = sys.argv[1].replace(home,'projects')
 domain = 'introspector.xyz'
 nodetypes = {}
 
@@ -77,11 +78,11 @@ def attr(nt):
         attrs[nt] =ntu
     return attrs[nt]
 
-def add_field(g, ni, fname, oid):
-    u = rdflib.URIRef('http://' + domain + '/' + filename + '#' + ni  )
-    p = attr(fname)
-    o = rdflib.URIRef('http://' + domain + '/' + filename + '#' + oid)                        
-    g.add([u, p, o])                        
+# def add_field(g, ni, fname, oid):
+#     u = rdflib.URIRef('http://' + domain + '/' + filename + '#' + ni  )
+#     p = attr(fname)
+#     o = rdflib.URIRef('http://' + domain + '/' + filename + '#' + oid)                        
+#     g.add([u, p, o])                        
 
 def report(x,l):
     #print("Results1 %s -> %s | %s" % (x.node_id, x.keys(),l))
@@ -197,8 +198,11 @@ def lex(l, rundebug, error_file):
         print("EXP",exp)
         print("Stack",stack)
         # raise exp
+    print ("Line %s" % l)
+    #memprofile()
+    
     if rundebug:
-        #print "Line %s" % l
+        #
         pass
 
 def parse_l(l, rundebug, error_file, f):
@@ -238,6 +242,8 @@ def parse_l(l, rundebug, error_file, f):
     try:
         x = parser.parse(l, debug=rundebug)
 
+        #memprofile(l)
+
         if not x:
             error_file.write(l + "\n")
             #print "Error on Line:%s" % l
@@ -267,7 +273,7 @@ def parse_l(l, rundebug, error_file, f):
     except Exception as exp:
         print("parse error : "+ l + "\n")
         error_file.write(l + "\n")
-        traceback.print_exc()
+        #traceback.print_exc()
         print("Exp",exp)
         print("EXP Line:%s" % l)
         f.write(l + "\n")
@@ -281,8 +287,8 @@ def main():
     """
     Reader for a tu file
     """
+    print ("going to open %s" % sys.argv[1])
     fd = open(sys.argv[1])
-
     # open the error file in case there are any errors they will be written here.
     error_file = open(sys.argv[1] + ".err", "w")
     if len(sys.argv) > 2:
@@ -300,32 +306,32 @@ def main():
 
         if l[0] == '@':
             if line:
-                nodes.statement(parse_l(line, rundebug, error_file, f))
+                gcc.tree.nodes.statement(parse_l(line, rundebug, error_file, f))
+
+                
             line = l
         else:
             line = line + " " + l
     fd.close()
 
     if line:
-        nodes.statement(parse_l(line, rundebug, error_file, f))
+        gcc.tree.nodes.statement(parse_l(line, rundebug, error_file, f))
     f.close()
-        
-#try:
-main()
-#except Exception as e:
-#    print "Error occurred '%s'" % e
 
-#debug_file = open("output.debug", "w")
-#debug_file.write("data=%s" % pprint2.pformat(deps))
-#debug_file.close()
+if __name__ == '__main__':
+    main()
+    #except Exception as e:
+    #    print "Error occurred '%s'" % e
 
-#print "\n".join(sorted(seen.keys()))
+    #debug_file = open("output.debug", "w")
+    #debug_file.write("data=%s" % pprint2.pformat(deps))
+    #debug_file.close()
+
+    #print "\n".join(sorted(seen.keys()))
 
 
-#print ""g.serialize("output.xml")
-#types[node_type]=1
-import attributes
-attributes.report()
+    #print ""g.serialize("output.xml")
+    #types[node_type]=1
 
-import nodes
-nodes.report()
+    gcc.tree.attributes.report()
+    gcc.tree.nodes.report()

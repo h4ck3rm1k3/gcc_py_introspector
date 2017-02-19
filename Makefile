@@ -1,10 +1,19 @@
+testload2:
+	PYTHONPATH=~/experiments/gcc_py_introspector/ python3 gcc/tree/load_pickle.py Nodes.nodes.pickle
+
+identifier:
+	#python3 -mcProfile -s cumulative gcc/tree/reader.py tests/empty.tu
+	PYTHONPATH=~/experiments/gcc_py_introspector/ python3 -m memory_profiler ./test.py tests/identifier.tu
+
 testemptyfull:
 	#python3 -mcProfile -s cumulative gcc/tree/reader.py tests/empty.tu
-	PYTHONPATH=~/experiments/gcc_py_introspector/ python3 gcc/tree/reader.py tests/empty.tu
+	#PYTHONPATH=~/experiments/gcc_py_introspector/ python3 gcc/tree/reader.py tests/empty.tu
+	PYTHONPATH=~/experiments/gcc_py_introspector/ python3 -m memory_profiler ./test.py tests/empty.tu
 
 testemptyfullprofile:
 	#python3 -mcProfile -s cumulative gcc/tree/reader.py tests/empty.tu
-	PYTHONPATH=~/experiments/gcc_py_introspector/ python3 -mcProfile -s tottime gcc/tree/reader.py tests/empty.tu
+	PYTHONPATH=~/experiments/gcc_py_introspector/ python3 -mcProfile -s tottime gcc/tree/reader.py tests/empty_part.tu
+	#tests/empty.tu
 
 testempty:
 	python3 gcc/tree/reader.py tests/empty_part.tu debug

@@ -1,5 +1,5 @@
-from attributes import parser_node_rule
-from attributes import parser_rule
+from gcc.tree.attributes import parser_node_rule
+from gcc.tree.attributes import parser_rule
 
 @parser_node_rule
 def p_NTYPE_UNION_TYPE_node(psr_val):

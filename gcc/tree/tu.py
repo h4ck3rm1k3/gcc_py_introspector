@@ -1,15 +1,16 @@
 '''
 lexer
 '''
-
 import ply.lex as lex
   # import ply.yacc as yacc
 from ply.lex import TOKEN
-import pprint2
-DEBUG = 0
+
 import sys
-from attributes import token_rule
-from utils import goto_state,  emit_parser_rule
+import gcc.tree.pprint2
+from gcc.tree.attributes import token_rule
+from gcc.tree.utils import goto_state,  emit_parser_rule
+
+DEBUG = 0
 
 states = (
     ('str','exclusive'),

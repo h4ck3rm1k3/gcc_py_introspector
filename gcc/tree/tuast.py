@@ -1,8 +1,11 @@
 import re
+import gcc.tree.attributes
 #from attributes import node_type
-import pprint2
-import pprint
-import attributes
+import gcc.tree.pprint2
+#import gcc
+#import gcc.tree
+#import pprinto
+
 
 class NodeBase:
     def nid(self):
@@ -518,5 +521,5 @@ class Identifier(Node):
         
     def __str__(self):
         return "Identifier: %s %s " % (self.node_id, self.value)
-attributes.register('identifier_node',Identifier)
-attributes.register('function_decl',FunctionDecl)
+#gcc.tree.attributes.register('identifier_node',Identifier)
+#gcc.tree.attributes.register('function_decl',FunctionDecl)

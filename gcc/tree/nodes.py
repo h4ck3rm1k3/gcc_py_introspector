@@ -1,58 +1,65 @@
-import pprint2
-import ply.lex as lex
 import pdb
-#import pickledb
-#import pprint
-import tuast
+import ply.lex as lex
 import pickle
-nodes = {}
-stack = []
-astack = []
+
+from  gcc.tree.pprint2 import pformat, pformat2
+import gcc.tree.tuast
 import gcc
+from gcc.tree.debug import debug    
 import gcc.tree.transform
-r = gcc.tree.transform.Resolver(nodes)
-from debug import debug    
-import gcc.tree.transform
+from gcc.tree.node import Node
+import pprint
 
-class Node :
-    def __init__(self, n):
-        self.n = n
-        self.refs = []
-        self._node_type = 'unknown'
+#Resolver
+def testsize(x):
+    return
+    if x :
+        l = len(x.keys())
+        s = pprint.pformat(x)
+        print ("debug:%s %s -> %0.1ad" % (
+            l, len(s),
+            len(s)/l
+        ))
+        #print ("debug:%s" % (s))
+    
+class Nodes:
+#debug("Loading Nodes")
+    nodes = {}
+    #stack = []
+    #astack = []
+    aobj = {}
+    aobj2 = {}
+    
+    #@staticmethod
+    #def setup():
+    #    from  gcc.tree.transform import Resolver
+    #    r = Resolver()
+
+    @staticmethod
+    def usedby(nid, x, n):
         
-    def node_type(self):
-        if 'decl' in nodes[self.n]:
-            return nodes[self.n]['decl'].node_type
+        d = gcc.tree.nodes.Nodes.nodes[nid]
+        # if 'refs' in d:
+        #     d['refs'].append([x,n])
+        # else:
+        #     d['refs']=[[x,n]]
+            
+        #self.refs.append([x.nid(),n])
+
+    @staticmethod
+    def get_node_objs(x):
+        if x in gcc.tree.nodes.Nodes.nodes:
+            return gcc.tree.nodes.Nodes.nodes[x]
         else:
-            return 'unknown'
-    
-    def nid(self):
-        return self.n
-    
-    def value(self):
-        return self.n
+            debug({'cannot find':x, 'nodes': gcc.tree.nodes.Nodes.nodes })
+            raise Exception(x)
 
-    def format_refs(self):
-        #r = ""
-        r = "refs %s" % len(self.refs)
-        # for s in self.refs:
-        #     r = r + s[1] + ':'+ s[0]
-        return r
-    #def default(self, x):
-    #    return {}
-    #def __repr__(self):
-        #return "Node : %s Refs: %s" % (self.n,len(self.refs))
-    #    return "!Node:id='%s',refs:'%s'!" % (self.n, self.format_refs())
-    #def ref(self, obj):
-    #    self.refs.append(obj)
-
-    def usedby(self, x, n):
-        self.refs.append([x.nid(),n])
 
 def reference(n, name):
-    global stack
-    global astack
-    global nodes
+    debug(Nodes.nodes)
+    #global stack
+    #global Nodes.astack
+    #global nodes
     debug("ref %s %s" % (n, name))
     #raise Exception('what')
     #pdb.set_trace()
@@ -60,91 +67,131 @@ def reference(n, name):
         n = n.value
     if isinstance(name,lex.LexToken):
         name = name.value
-    stack.append([name,n])
-    #astack.append([name,n])
-    if n not in nodes:
-        nodes[n]= {'count':1, 'node' : Node(n), 'nid': n }
-    else:
-        if 'count' in  nodes[n]:
-            nodes[n]['count'] = nodes[n]['count'] +1
-            #nodes[n]['refs'].append(nd)
-        else:
-            nodes[n]['count'] = 1
+    gcc.tree.nodes.Nodes.aobj2[name]=n
+    #Nodes.astack.append([name,n])
+    if n not in gcc.tree.nodes.Nodes.nodes:
+        gcc.tree.nodes.Nodes.nodes[n]= {
+            #'count':1,
+                         #'node' : Node(n),
+                         'nid': n }
+    #else:
+        #if 'count' in  gcc.tree.nodes.Nodes.nodes[n]:
+        #    gcc.tree.nodes.Nodes.nodes[n]['count'] = gcc.tree.nodes.Nodes.nodes[n]['count'] +1
+            #Nodes.nodes[n]['refs'].append(nd)
+        #else:
+        #    gcc.tree.nodes.Nodes.nodes[n]['count'] = 1
             
-        if 'node' not in nodes[n]:
-            nodes[n]['node']= Node(n)
+        #if 'node' not in gcc.tree.nodes.Nodes.nodes[n]:
+        #    gcc.tree.nodes.Nodes.nodes[n]['node']= Node(n)
             
-    return nodes[n]['node']
+    debug(Nodes.nodes)
+    return gcc.tree.nodes.Nodes.nodes[n]
 
 def declare(n):
     #pickle.dumps(n)
-    global nodes            
+    #global Nodes.nodes
+    #debug(Nodes.nodes)
     if not isinstance(n, str):
         n = n.value
-    debug("decl %s" % pprint2.pformat(n))
-    if n not in nodes:
-        nodes[n]= {'decl_count':1,
-                   'node': Node(n),
+    debug("decl %s" % pformat(n))
+    
+    if n not in gcc.tree.nodes.Nodes.nodes:
+        gcc.tree.nodes.Nodes.nodes[n]= {
+            #'decl_count':1,
+                         #'node': Node(n),
                    'nid': n
         }
+        
     else:
-        if 'decl_count' in nodes[n] :
-            debug(nodes[n]['decl_count'])
-            #raise Exception("Duplicate Decl %s" %n)
-            nodes[n]['decl_count'] = n
-        else:
-            nodes[n]['decl_count'] = 1
-    n2 = r.transform(n)    
-    return nodes[n]['node']
+        # if 'decl_count' in gcc.tree.nodes.Nodes.nodes[n] :
+        #     debug(Nodes.nodes[n]['decl_count'])
+        #     #raise Exception("Duplicate Decl %s" %n)
+        #     gcc.tree.nodes.Nodes.nodes[n]['decl_count'] = n
+        # else:
+        #     gcc.tree.nodes.Nodes.nodes[n]['decl_count'] = 1
+        pass
+    n2 = gcc.tree.transform.Resolver.transform(n)
+    #testsize(n2)
+    #testsize(gcc.tree.nodes.Nodes.nodes)
+    
+    return n
 
 def statement(x):
-    debug("statement %s" % pprint2.pformat2(x))
+    #debug(Nodes.nodes)
+    debug("statement %s" % pformat2(x))
     #pickle.dumps(x)
     #pickle.dumps(x)
-    global stack
-    global astack
-    global nodes
+    #global stack
+    #global Nodes.astack
+    #global Nodes.nodes
     if x:
-        nid = x.nid()
+        #pprint.pprint(x)
+        nid = x['node_decl']
         
-        if nid in nodes:
-            nodes[nid]['decl'] = x
-        else:
-            nodes[nid] = { 'decl' : x }
+        #if nid in gcc.tree.nodes.Nodes.nodes:
+        #    gcc.tree.nodes.Nodes.nodes[nid]['decl'] = x
+        #else:
+        gcc.tree.nodes.Nodes.nodes[nid]['type'] =  x['type']
 
-        nodes[nid]['stack'] =list(stack)
-        nodes[nid]['astack'] =list(astack)
+        #gcc.tree.nodes.Nodes.nodes[nid]['stack'] =list(Nodes.stack)
+
+        gcc.tree.nodes.Nodes.nodes[nid]['attrs'] =Nodes.aobj
+        gcc.tree.nodes.Nodes.nodes[nid]['refs'] =Nodes.aobj2
+        Nodes.aobj={}
+        Nodes.aobj2={}
+
+        #pprint.pprint(gcc.tree.nodes.Nodes.nodes[nid])
+        #pprint.pprint(Nodes.aobj)
 
         # now each of these items
-        for sp in stack:
-            sn = sp[0]
-            s = sp[1]
-            nodes[s]['node'].usedby(x,sn)
-        stack=[]
-        astack=[]
-        n2 = r.transform(nid)
+        #for sp in gcc.tree.nodes.Nodes.stack:
+        #    sn = sp[0]
+        #    s = sp[1]
+        #    gcc.tree.nodes.Nodes.usedby(s,x,sn)
+        #gcc.tree.nodes.Nodes.stack=[]
+        gcc.tree.nodes.Nodes.aobj={}
+        gcc.tree.nodes.Nodes.aobj2={}
+        debug(gcc.tree.nodes.Nodes.nodes)
+        n2 = gcc.tree.transform.Resolver.transform(nid)
+        #testsize(n2)
+        if n2 is None:
+            debug ("expr be null %s" % nid)
+    else:
+        raise Exception("none")
+    debug(gcc.tree.nodes.Nodes.nodes)
 
+    n2 = gcc.tree.transform.Resolver.transform(nid)
+    #testsize(n2)
+    testsize(gcc.tree.nodes.Nodes.nodes)
+    
 def attrs(v):
     if type (v) == str:
         raise Exception(v)
         #v = {'unkown': v}
-        #pprintpprint({'push':v})
+    if 'type' in v:
+        if 'attrs' in v['type']:
+            raise Exception('to complex')
+    #pprint.pprint({'push':v})
     #pickle.dump(v,f)
-    astack.append(v)
+    for x in v.keys():
+        v2 = v[x]
+        gcc.tree.nodes.Nodes.aobj[x]=v2
 
 def report():
-    print("Nodes Report:")
-    #b = pickledb.load('nodes.db', False)
-    f = open ("nodes.pickle","wb")
+    print("Nodes.Nodes Report:")
+    #b = pickledb.load('Nodes.nodes.db', False)
+    f = open ("Nodes.nodes.pickle","wb")
     
-    nodes2= {}
+    #gcc.tree.nodes.Nodes.nodes2= {}
+    #testsize(gcc.tree.nodes.Nodes.nodes)
     
-    for n in nodes.keys():
-        n2 = r.transform(n)
-        nodes2[n]=n2
-        debug({'transform':n2})
+    # for n in gcc.tree.nodes.Nodes.nodes.keys():
+    #     n2 = gcc.tree.transform.Resolver.transform(n)
+    #     #testsize(n2)
+    #     gcc.tree.nodes.Nodes.nodes2[n]=n2
+    #     debug({'transform':n2})
         
-    pickle.dump(nodes2,f)        
+    pickle.dump(Nodes.nodes,f)        
         
     #     dc = None
     #     if 'decl' in d:

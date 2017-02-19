@@ -1,7 +1,7 @@
 import sys
-import pprint2
-#import pprint
-from debug import debug
+import gcc.tree.pprint2
+import pprint
+from gcc.tree.debug import debug
 def append_list(current_list, node):
     if current_list :
         if isinstance(current_list,list):
@@ -138,7 +138,7 @@ def attr_base(psr_val):
 
 # merge the attributes in the list with the object
 def merge_list(t) :
-    
+    #pprint.pprint({'mergelist':t})                    
     r =  {}
     if '__type__' in t :
         if t['__type__'] == 'attr_list':
@@ -150,17 +150,19 @@ def merge_list(t) :
                     raise Exception("null")
 
             if 'attrs' in t:
+                #pprint.pprint(t)
+                
                 if 'type' in t['attrs']:
                     if 'val' in t['attrs']:
                         f = t['attrs']['type']
                         v = t['attrs']['val']
                         #debug ("setting %s = %s in %s" %(f,v, pprint.pformat(r)))
                         r[f]=v
-                    else:
+                    #else:
 
-                        raise Exception(
-                            pprint2.pformat2(t['attrs'])
-                        )
+                        #raise Exception(
+                        #    pprint.pformat(t['attrs'])
+                        #)
 
             
     #pprint2.pprint({'merged': r})
