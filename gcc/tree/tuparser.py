@@ -332,8 +332,8 @@ def p_operator_subs(psr_val):
 #@parser_rule
 def p_idx_val_item(psr_val):
     'idx_val_list : ATTR_IDX NODE ATTR_VAL NODE attr_list'
-    nd = nodes.reference(psr_val[2],'idx')
-    nd2 = nodes.reference(psr_val[4],'val')
+    nd = gcc.tree.nodes.reference(psr_val[2],'idx')
+    nd2 = gcc.tree.nodes.reference(psr_val[4],'val')
     addr = psr_val[5]
     psr_val[0] = {
         #'type' : 'idx_val',
@@ -350,7 +350,7 @@ def p_idx_val_item(psr_val):
 
 def p_val_item2(psr_val):
     'val_list : ATTR_VAL NODE val_list'
-    nd = nodes.reference(psr_val[2],'val')
+    nd = gcc.tree.nodes.reference(psr_val[2],'val')
     val = psr_val[3]
     psr_val[0] = {
         #'type' : 'val',
@@ -362,7 +362,7 @@ def p_val_item2(psr_val):
 
 def p_val_item(psr_val):
     'val_list : ATTR_VAL NODE attr_list'
-    nd = nodes.reference(psr_val[2],'val')
+    nd = gcc.tree.nodes.reference(psr_val[2],'val')
     attr = psr_val[3]
     psr_val[0] = {
         #'type' : 'val',
@@ -375,8 +375,8 @@ def p_val_item(psr_val):
 #@parser_rule
 def p_idx_val_item2(psr_val):
     'idx_val_list : ATTR_IDX NODE ATTR_VAL NODE idx_val_list'
-    nd = nodes.reference(psr_val[2],'idx')
-    nd2 = nodes.reference(psr_val[4],'val')
+    nd = gcc.tree.nodes.reference(psr_val[2],'idx')
+    nd2 = gcc.tree.nodes.reference(psr_val[4],'val')
     alist = psr_val[5]
     psr_val[0] = {
         #'type' : 'idx_val',
