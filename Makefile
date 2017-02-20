@@ -1,3 +1,6 @@
+schema:
+	python schema.py
+
 testload2:
 	PYTHONPATH=~/experiments/gcc_py_introspector/ python3 gcc/tree/load_pickle.py Nodes.nodes.pickle
 
@@ -36,6 +39,8 @@ testcons:
 
 lsof:
 	python3 gcc/tree/runtest.py ../lsof
+imlsof:
+	python3 gcc/tree/runimtest.py ../lsof
 
 runall:
 	python3 runtest.py ./tests
