@@ -35,7 +35,7 @@ testcons:
 	python3 gcc/tree/load_pickle.py
 
 lsof:
-	python3 runtest.py ../lsof
+	python3 gcc/tree/runtest.py ../lsof
 
 runall:
 	python3 runtest.py ./tests

@@ -26,26 +26,30 @@ import os.path
 
 
 # Display pairs.
+import time
+from threading import Thread
+
+def proc(n):
+    print ("running test %s" % n)
+    print (" ".join(['python3', './test.py', "%s/%s" % (directory,n)]))
+    x = subprocess.call(['python3', './test.py', "%s/%s" % (directory,n)
+                         #,'debug'
+    ])
+    print ("%s %s" % (n,x))
+
+    if os.path.isfile('lasterror.txt') :
+        os.rename('lasterror.txt',"%s/%s.lasterror.txt" % (directory,n))
+
+    if os.path.isfile('Nodes.nodes.pickle') :
+        os.rename('Nodes.nodes.pickle',"%s/%s.nodes.pickle" % (directory,n))
+    if x == 0:
+        print ("OK")
+    else:
+        print ("fail")
+            
 for pair in pairs:
 
     n = pair[1]
-
-    #if not os.path.isfile("%s/%s.lasterror.txt" % (directory,n)):
-    if True:
-        print ("running test %s" % n)
-        print (" ".join(['python3', 'reader.py', "%s/%s" % (directory,n)]))
-        x = subprocess.call(['python3', 'reader.py', "%s/%s" % (directory,n)
-                             #,'debug'
-        ])
-        print ("%s %s" % (n,x))
-        os.rename('lasterror.txt',"%s/%s.lasterror.txt" % (directory,n))
-        if os.path.isfile('nodes.pickle') :
-            os.rename('nodes.pickle',"%s/%s.nodes.pickle" % (directory,n))
-        if x == 0:
-            print ("OK")
-        else:
-            print ("fail")
-
-    else:
-        print ("skipping test %s" % n)
-    #python load_pickle.py
+    t = Thread(target=proc, args=(n,))
+    t.start()
+     
