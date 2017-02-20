@@ -762,12 +762,13 @@ def p_attrs_type6(psr_val):
     #print 'finished TYPE_ATTR NODE'
     #psr_val[0] = std_attrs(psr_val)
     nd= psr_val[2]
+    field_value = gcc.tree.nodes.reference(nd,"type")
     psr_val[0] = {
         #'type': 'type',
         #'val': {
-        'type' : nd,
+        #'type' : nd,
         'type_name' : 'int',
-        'type_size':psr_val[4]
+        'type_value':psr_val[4]
         #}
     }
     gcc.tree.nodes.attrs(psr_val[0])
@@ -785,7 +786,7 @@ def p_attrs_type3(psr_val):
         #'val': {
         #'type': psr_val[2],
             'type_name': 'int',
-            'type_size': psr_val[4]
+            'type_value': psr_val[4]
         #}
     }
     #nd.ref(psr_val[0])
@@ -805,7 +806,7 @@ def p_attrs_type3b(psr_val):
         #'val' : {
         #'type': psr_val[2],
         'type_name': 'int',
-        'type_size': psr_val[4]
+        'type_value': psr_val[4]
         #}
     }
     #nd.ref(psr_val[0])
@@ -827,7 +828,7 @@ def p_attrs_type4b(psr_val):
         #'val' : {
         #'type': psr_val[2],
         'type_name': 'int',
-        'type_size': psr_val[4]
+        'type_value': psr_val[4]
         #}
     }
     #nd.ref(psr_val[0])

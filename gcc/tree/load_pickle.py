@@ -19,8 +19,8 @@ pprint.pprint (node_objs)
     
 #r = gcc.tree.transform.Resolver(node_objs)
         
-for x in sorted(list(node_objs.keys()), key=int):
-    pprint.pprint (x)
-    y = gcc.tree.transform.Resolver.transform(x)
-    pprint.pprint (y)
+#for x in sorted(list(node_objs.keys()), key=int):
+    #pprint.pprint (x)
+    #y = gcc.tree.transform.Resolver.transform(x)
+    #pprint.pprint (y)
 
