@@ -1,3 +1,6 @@
+imlsof2:
+	PYTHONPATH=~/experiments/gcc_py_introspector/ python3 gcc/tree/runimtest2.py ../lsof
+
 schema:
 	python schema.py
 

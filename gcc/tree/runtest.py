@@ -42,6 +42,9 @@ def proc(n):
 
     if os.path.isfile('Nodes.nodes.pickle') :
         os.rename('Nodes.nodes.pickle',"%s/%s.nodes.pickle" % (directory,n))
+    else:
+        raise Exception('missing pickle')
+    
     if x == 0:
         print ("OK")
     else:
